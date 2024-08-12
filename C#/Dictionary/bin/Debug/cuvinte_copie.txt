@@ -1,0 +1,36 @@
+Cangur Animale Cangur.png Mamifer din Australia, recunoscut pentru săriturile sale lungi și pentru punga în care își poartă puii.
+Capsuni Alimente Capsuni.png Fructe roșii mici, dulci și suculente, cunoscute pentru aroma lor intensă și folosite în multe deserturi și băuturi.
+Fotbal Sport Fotbal.png Sport de echipă jucat cu o minge sferică, în care jucătorii încearcă să înscrie goluri în poarta adversă folosind doar picioarele.
+Girafa Animale Girafa.png Mamifer erbivor cu gât lung și picioare înalte, recunoscut pentru înălțimea sa impresionantă și pentru limbile lungi.
+Minge Sport Minge.png Obiect sferic, folosit în diferite sporturi pentru joc și competiție, cum ar fi fotbalul, baschetul sau tenisul.
+Palmier Plante Palmier.png Arbore tropical cu trunchi neregulat și frunze lungi în formă de evantai, care crește în regiunile calde și este folosit pentru fructe și fibre.
+Portocaliu Culoare Portocaliu.png Culore asemănătoare cu cea a fructului portocaliu, situată între roșu și galben în spectrul culorilor.
+Vultur Animale Vultur.png Pasăre răpitoare de dimensiuni mari, cunoscută pentru zborul său înalt și pentru capacitatea de a detecta prada de la distanță.
+Avion Transport Avion.png Vehicul aerian cu aripi și motoare, folosit pentru transportul pasagerilor și al mărfurilor pe distanțe lungi.
+Trotineta Transport Trotineta.png Vehicul cu două roți, folosit pentru deplasarea rapidă în oraș, acționat prin împingerea cu picioarele.
+Ceai Băuturi Ceai.png Băutură caldă sau rece preparată din frunze de ceai uscate, adesea consumată pentru gustul său și pentru proprietățile sale relaxante sau revigorante.
+Leu Animale Leu.png Marele Rege al Junglei, cunoscut pentru puterea și noblețea sa.
+Elefant Animale Elefant.png Mamifer imens cu trompa lungă și colți mari, adesea găsit în pădurile tropicale și savane.
+Tigru Animale Tigru.png Felină mare și puternică, recunoscută pentru dungi și agilitatea sa.
+Zebra Animale Zebra.png Animal erbivor din Africa, recunoscut pentru dungi albe și negre de pe corp.
+Lebădă Animale Lebada.png Pasăre elegantă, adesea asociată cu frumusețea și grația.
+Broccoli Alimente Broccoli.png Legumă verde cu aspect de copac mic, bogată în vitamine și nutrienți.
+Chitară Muzică Chitara.png Instrument muzical cu corzi, folosit pentru interpretarea melodiilor și acompaniament.
+Pian Muzică Pian.png Instrument muzical cu clape, recunoscut pentru sunetul său profund și versatilitate.
+Scrabble Jocuri Scrabble.png Joc de societate în care jucătorii formează cuvinte pe o placă de joc folosind litere pe care le primesc aleatoriu.
+Balon Sport Balon.png Sferă umflată cu aer, folosită în diferite sporturi precum fotbal, baschet sau volei.
+Monopoly Jocuri Monopoly.png Joc de societate în care jucătorii cumpără, vând și închiriază proprietăți pentru a câștiga bani și a ruina adversarii.
+Telescop Știință Telescop.png Instrument optic utilizat pentru observarea obiectelor îndepărtate în spațiu.
+Geniu Personalități Geniu.png Persoană cu inteligență excepțională și realizări remarcabile în domeniul său.
+Ocean Geografie Ocean.png Mare întinsă de apă sărată care acoperă aproximativ 70% din suprafața Pământului.
+Elicopter Transport Elicopter.png Aparat de zbor cu aripi rotative, capabil să decoleze și să aterizeze vertical și să efectueze manevre complexe.
+Energie Știință Energie.png Capacitatea de a efectua lucru sau de a produce schimbări, măsurată în unități precum joule sau kilocalorie.
+Fluture Animale Fluture.png Insectă zburătoare cu aripi colorate și frumoase, cunoscută pentru metamorfoza sa și pentru polenizarea plantelor.
+Galaxie Știință Galaxie.png Sistem masiv de stele, nori de gaz și praf cosmic, adesea având milioane sau miliarde de stele și alte obiecte astronomice.
+Hibrid Mașini Hibrid.png Vehicul care folosește două sau mai multe surse de energie, cum ar fi motorul cu combustie internă și un motor electric.
+Kiwi Alimente Kiwi.png Fruct mic, de obicei de culoare verde cu pulpă verde și semințe negre, bogat în vitamina C și fibre.
+Măgar Animale Măgar.png Animal domestic din familia Equidae, asemănător cu calul dar mai mic și cu urechile lungi.
+Nebuloasă Știință Nebuloasa.png Regiune mare de gaz și praf cosmic în spațiu, care poate fi locul de naștere a unor noi stele și sisteme planetare.
+Ochelari Accesorii Ochelari.png Dispozitiv optic purtat pe ochi pentru corectarea v
+Caine Animale caine.png Mamifer, prietenos și loial, adesea crescut ca animal de companie și pentru diverse activități, cum ar fi paznici sau ghizi.
+

@@ -1,0 +1,25 @@
+﻿<Window x:Class="Dictionar.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Aplicație Dicționar" Height="400" Width="600">
+    <Grid Cursor="Arrow" Background="#FFDFA40B" Height="400">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Dictionar interactiv" FontSize="36" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,20,0,10" FontFamily="Bookman Old Style" FontStyle="Italic" Foreground="#FFFCFCFC"/>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
+            <Button Content="Administrativ" Click="btnAdmin_Click" FontSize="24" FontWeight="Bold" Height="34" Background="#FFB2A80F" Foreground="#FFE6E4E4"/>
+            <Button Content="Cautare de cuvinte" Click="btnSearch_Click" Margin="5" FontSize="24" FontWeight="Bold" Background="#FFB2A80F" Foreground="#FFF9F9F9"/>
+            <Button Content="Divertisment" Click="btnEntertainment_Click" FontSize="24" Height="34" FontWeight="Bold" Foreground="#FFFEF9F9" Background="#FFB2A80F"/>
+        </StackPanel>
+
+        <Frame x:Name="moduleFrame" Grid.Row="1" Width="400" Margin="100,22,100,0" Height="200">
+            <Frame.Background>
+                <ImageBrush ImageSource="/Poza main.jpeg"/>
+            </Frame.Background>
+        </Frame>
+    </Grid>
+</Window>
