@@ -36,12 +36,3 @@ This repository contains a variety of projects representing implementations of d
 ---
 
 ## 🚀 Getting Started
-
-
-### **How to Use This README:**
-- Replace `https://github.com/your-username/project-collection.git` with your actual GitHub repository link.
-- Update **your-email@example.com** with your contact email.
-- If you're using a specific license (like MIT), ensure there's a corresponding `LICENSE` file in your repository.
-
-Let me know if you need additional customizations! 🚀
-
