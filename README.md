@@ -24,14 +24,16 @@ This repository contains a variety of projects representing implementations of d
 6. **🎮 Other Games and Mini Projects**  
    A collection of pre-implemented games and small-scale projects, showcasing different programming techniques and algorithm implementations.
 
+ 7. **CNN Model for Image Classification**
+    This project implements a Convolutional Neural Network (CNN) for image classification. It uses a dataset of images for training the model, which classifies the images into predefined categories
 ---
 
 ## 🛠 Technologies Used
 
-- **Languages:** Java, C#
-- **IDEs:** Visual Studio, IntelliJ
+- **Languages:** Java, C#, Python
+- **IDEs:** Visual Studio, IntelliJ, Jupyter Notebook
 - **Databases:** MySQL, PostgreSQL
-- **Concepts:** CRUD operations, Graph Algorithms (DFS, Topological Sorting), UI/UX design
+- **Concepts:** CRUD operations, Graph Algorithms (DFS, Topological Sorting), UI/UX design, Deep Learning (CNN, Image Classification)
 
 ---
 
