@@ -1,0 +1,17 @@
+﻿<Window x:Class="Dictionar.AdministratorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Modulul Administrativ" Height="400" Width="600" Background="#DFA40B">
+    <Grid Height="400">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Modulul Administrativ" FontSize="48" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,10,0,20" Foreground="#FFF0F0F0" VerticalAlignment="Bottom" />
+        <Button Content="Editează cuvânt" Click="btnEditare_Click" Margin="45,145,360,96" Grid.Row="1" Grid.Column="0" FontWeight="Bold" FontSize="24" Background="#FFE6CA0E" />
+        <Button Content="Adaugă cuvânt" Click="btnAdauga_Click" Margin="45,34,360,206" Grid.Row="1" Grid.Column="0" FontWeight="Bold" FontSize="24" Background="#FFE6CA0E" />
+        <Button Content="Afișează cuvinte" Click="btnAfisare_Click" Margin="354,34,45,206" Grid.Row="1" Grid.Column="0" FontWeight="Bold" FontSize="24" Background="#FFE6CA0E" />
+        <Button Content="Șterge cuvânt" Click="btnStergere_Click" Margin="354,145,45,96" Grid.Row="1" Grid.Column="0" FontWeight="Bold" FontSize="24" Background="#FFE6CA0E" />
+    </Grid>
+</Window>
