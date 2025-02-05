@@ -1,0 +1,43 @@
+﻿<Window x:Class="Dictionar.AdaugareCuvantWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="AdaugareCuvantWindow" Height="300" Width="600" Background="#DFA40B">
+    <Grid RenderTransformOrigin="0.499,0.607" Margin="0,10,0,5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" MinHeight="24.28"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" MinHeight="19.96"/>
+        </Grid.RowDefinitions>
+
+        <!-- Denumire cuvânt -->
+        <TextBlock Grid.Row="0" Text="Denumire cuvânt:" FontWeight="Bold" Foreground="#FFF1EBEB" Margin="10,9,253,2" FontSize="14"/>
+        <TextBox x:Name="tbDenumireCuvant" Grid.Row="0" Margin="161,8,22,2"/>
+
+        <!-- Denumire categorie -->
+        <TextBlock Grid.Row="1" Text="Denumire categorie:" FontWeight="Bold" Foreground="#FFF1EBEB" Margin="10,10,246,10" FontSize="14"/>
+        <ComboBox x:Name="cbCategorie" Grid.Row="1" Margin="375,10,22,10"/>
+
+        <!-- Denumire categorie -->
+        <TextBlock Grid.Row="1" Text="Denumire categorie:" FontWeight="Bold" Foreground="#FFF1EBEB" Margin="10,10,246,10" FontSize="14"/>
+        <TextBox x:Name="tbDenumireCategorie" Grid.Row="1" Margin="161,10,230,10"/>
+
+
+        <!-- Selectare poza -->
+        <Button Content="Selectează poză" Click="btnSelectarePoza_Click" Grid.Row="3" Margin="161,3,22,3"/>
+        <TextBox x:Name="tbNumePoza" Grid.Row="3" Margin="161,3,22,19" Grid.RowSpan="3" Visibility="Collapsed"/>
+        <!-- Numele fișierului selectat -->
+        <TextBox x:Name="tbNumePozaSelectata" Grid.Row="4" Margin="161,3,22,19" Grid.RowSpan="3" IsEnabled="False"/>
+
+        <!-- Descriere -->
+        <TextBlock Grid.Row="5" Text="Descriere:" FontWeight="Bold" Foreground="#FFF1EBEB" Margin="10,26,281,-36" FontSize="14"/>
+        <TextBox x:Name="tbDescriere" Grid.Row="5" Margin="161,19,22,-43"/>
+
+        <!-- Buton de verificare -->
+        <Button x:Name="btnVerificare" Content="Validare cuvânt" Grid.Row="5" HorizontalAlignment="Center" Click="btnVerificare_Click" Margin="0,107,0,-122" RenderTransformOrigin="0.384,1.012" Width="260" FontSize="18"/>
+        <TextBlock Grid.Row="3" FontWeight="Bold" Foreground="#FFF1EBEB" Margin="10,3,246,3" FontSize="14"><Run Text="Poz"/><Run Text="ă"/><Run Language="ro-ro" Text=":"/></TextBlock>
+        <Button x:Name="btnEditare" Content="Editare" Grid.Row="5" HorizontalAlignment="Left" Click="btnEditare_Click" Margin="460,107,0,-122" RenderTransformOrigin="0.384,1.012" Width="130" FontSize="18"/>
+    </Grid>
+</Window>
