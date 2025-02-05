@@ -1,0 +1,81 @@
+﻿<Window x:Class="Dame.Views.MenuWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Dame.Views"
+        xmlns:viewModels="clr-namespace:Dame.ViewModels" d:DataContext="{d:DesignInstance Type=viewModels:AboutInfoViewModel}"
+        mc:Ignorable="d"
+        Title="MenuWindow" Height="450" Width="800">
+    
+    <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="/Resources/MenuWindow.jpeg"/>
+        </Grid.Background>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,20">
+            <Menu>
+                <MenuItem Header="File" HorizontalAlignment="Center" Height="35" Width="150"  HorizontalContentAlignment="Center" RenderTransformOrigin="0.525,2.958" BorderBrush="#FFFCF0E7" Background="#FFD79F47" FontSize="13" FontFamily="Arial" FontWeight="Bold">
+                    <MenuItem Header="New Game" Click="Button_NewGame_Click"/>
+                    <MenuItem Header="Save" Click="SaveGame_Click"/>
+                    <MenuItem Header="Open" Click="LoadGame_Click"/>
+                    <MenuItem Header="Statistics" Click="Button_Statistics_Click"/>
+                </MenuItem>
+            </Menu>
+
+            <Menu Height="35" Width="150">
+                <MenuItem Header="Help" HorizontalAlignment="Center" Width="150" Height="34" HorizontalContentAlignment="Center" Background="#FFD79F47" BorderBrush="#FFF4F4F4" Foreground="#FF161313" FontFamily="Arial" FontSize="13" FontWeight="Bold">
+                    <MenuItem Header="About" Click="About_Click"/>
+                </MenuItem>
+            </Menu>
+
+            <Menu>
+                <MenuItem Header="Configurations" HorizontalAlignment="Center" Height="35" Width="150" HorizontalContentAlignment="Center" BorderBrush="#FFF0E1E1" Foreground="Black" Background="#FFD79F47" VerticalAlignment="Center" FontWeight="Bold" FontSize="13" FontFamily="Arial">
+                    <MenuItem Header="Board Size">
+                        <MenuItem Header="4x4" Click="MenuItem_BoardSize_Click"/>
+                        <MenuItem Header="6x6" Click="MenuItem_BoardSize_Click"/>
+                        <MenuItem Header="8x8" Click="MenuItem_BoardSize_Click"/>
+                    </MenuItem>
+                    
+                    <MenuItem Header="Allow Multiple Jump">
+                        <CheckBox IsChecked="{Binding AllowMultipleJump}"
+                        Checked="Allow_Multiple_Jump_Checked" Unchecked="Allow_Multiple_Jump_Unchecked"/>
+                    </MenuItem>
+
+
+                    <MenuItem Header="Make King Piece">
+                        <CheckBox x:Name="makeKingCheckBox" IsChecked="{Binding MakeKingPiece}"
+                        Checked="MakePieceKing_Checked" Unchecked="MakePieceKing_Unchecked"/>
+                    </MenuItem>
+
+                    <MenuItem Header="Start King">
+                        <CheckBox x:Name="startKingCheckBox"
+                        Checked="StartKing_Checked" Unchecked="StartKing_Unchecked" />
+                    </MenuItem>
+
+
+                </MenuItem>
+            </Menu>
+        </StackPanel>
+
+        <StackPanel x:Name="aboutPanel" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="632" Height="260" Visibility="Collapsed">
+            <Border Background="LightYellow" CornerRadius="5" Height="261">
+                <StackPanel Margin="5">
+                    <Label Content="Nume student:" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding StudentName}" Margin="5" TextWrapping="Wrap"/>
+                    <Label Content="Adresa de mail institutionala:" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding EmailAddress}" Margin="5" TextWrapping="Wrap"/>
+                    <Label Content="Grupa:" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding Group}" Margin="5" TextWrapping="Wrap"/>
+                    <Label Content="Descriere Joc:" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding GameDescription}" Margin="5" TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+
+    </Grid>
+</Window>

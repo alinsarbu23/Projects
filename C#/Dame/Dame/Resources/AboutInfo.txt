@@ -1,0 +1,5 @@
+Sarbu Alin
+alin.sarbu@student.unitbv.ro
+10LF323
+Jocul de dame este un joc de strategie între doi jucători care se joacă pe o tablă de 64 de pătrate (8x8), pe care sunt plasate inițial 12 piese pentru fiecare jucător. Piesele sunt plasate pe diagonalele din partea de jos și de sus a tablei. Obiectivul jocului este să capturezi sau să blochezi toate piesele adversarului, lăsându-l fără mișcări valide.
+

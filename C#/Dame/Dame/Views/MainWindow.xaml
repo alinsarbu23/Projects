@@ -1,0 +1,42 @@
+﻿<Window x:Class="Dame.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Dame"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="600" Width="800">
+    <Grid x:Name="mainwindow">
+        <Grid.Background>
+            <ImageBrush ImageSource="/Resources/MainWindow.jpg"/>
+        </Grid.Background>
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,13,0,0" FontSize="36" FontWeight="Bold" Foreground="#FFE8D4C6" FontFamily="Bahnschrift" FontStyle="Italic"><Run Language="ro-ro" Text="Dame"/></TextBlock>
+
+        <Button x:Name="NavigateToMenuButton"
+        Content="Checkers"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Bottom"
+        Width="150"
+        Height="35"
+        Command="{Binding NavigateToMenuCommand}"
+        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+        FontSize="16"
+        FontWeight="Bold"
+        FontFamily="Times New Roman"
+        Foreground="#FFFFF7F1"
+        Background="#6F4E3528"
+        BorderBrush="{x:Null}"
+        IsDefault="True"
+        FontStyle="Italic"
+        Margin="0,0,0,20" 
+            >
+            <Button.Effect>
+                <DropShadowEffect/>
+            </Button.Effect>
+            <Button.Triggers>
+            </Button.Triggers>
+        </Button>
+
+
+    </Grid>
+</Window>
