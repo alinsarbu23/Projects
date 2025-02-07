@@ -18,7 +18,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GameSquad")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+57497b8878a755c60820273ad620b06f8736e863")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+2b9766f57bbfdcfd8b3c00e6a147c8a34ec87204")]
 [assembly: System.Reflection.AssemblyProductAttribute("GameSquad")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GameSquad")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
