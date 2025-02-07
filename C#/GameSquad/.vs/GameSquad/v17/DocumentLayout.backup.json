@@ -1,12 +1,54 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "D:\\Projects\\C#\\GameSquad\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{FC6A3725-4DFD-4A91-9504-DC5983B9A2DB}|GameSquad\\GameSquad.csproj|d:\\projects\\c#\\gamesquad\\gamesquad\\model\\position.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FC6A3725-4DFD-4A91-9504-DC5983B9A2DB}|GameSquad\\GameSquad.csproj|solutionrelative:gamesquad\\model\\position.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FC6A3725-4DFD-4A91-9504-DC5983B9A2DB}|GameSquad\\GameSquad.csproj|d:\\projects\\c#\\gamesquad\\gamesquad\\model\\match.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FC6A3725-4DFD-4A91-9504-DC5983B9A2DB}|GameSquad\\GameSquad.csproj|solutionrelative:gamesquad\\model\\match.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Position.cs",
+              "DocumentMoniker": "D:\\Projects\\C#\\GameSquad\\GameSquad\\Model\\Position.cs",
+              "RelativeDocumentMoniker": "GameSquad\\Model\\Position.cs",
+              "ToolTip": "D:\\Projects\\C#\\GameSquad\\GameSquad\\Model\\Position.cs",
+              "RelativeToolTip": "GameSquad\\Model\\Position.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-07T10:33:05.088Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Match.cs",
+              "DocumentMoniker": "D:\\Projects\\C#\\GameSquad\\GameSquad\\Model\\Match.cs",
+              "RelativeDocumentMoniker": "GameSquad\\Model\\Match.cs",
+              "ToolTip": "D:\\Projects\\C#\\GameSquad\\GameSquad\\Model\\Match.cs",
+              "RelativeToolTip": "GameSquad\\Model\\Match.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-07T10:32:58.598Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
     }
   ]
 }

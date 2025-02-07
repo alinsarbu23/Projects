@@ -19,14 +19,15 @@ namespace GameSquad.Model
         public int GoalsScored { get; set; }
 
         [NotNull]
-        public int Assists {  get; set; }
+        public int Assists { get; set; }
 
+        [MaxLength(150)]
         public string? Description { get; set; }
 
         [NotNull]
         public DateTime Date { get; set; }
 
-        [NotNull]
-        public String UserId { get; set; }
+        [NotNull, MaxLength(36)]
+        public string UserId { get; set; }
     }
 }

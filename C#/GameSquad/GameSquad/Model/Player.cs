@@ -12,18 +12,18 @@ namespace GameSquad.Model
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 
-        [NotNull]
+        [NotNull, MaxLength(20)]
         public string FirstName { get; set; }
 
-        [NotNull]
+        [NotNull, MaxLength(20)]
         public string LastName { get; set; }
 
         public int? Age { get; set; }
 
         [NotNull]
-        public int Position { get; set; }
+        public int PositionId { get; set; }
 
-        [NotNull]
+        [NotNull, MaxLength(36)]
         public string UserId { get; set; }
     }
 }

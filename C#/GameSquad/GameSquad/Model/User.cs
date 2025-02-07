@@ -9,13 +9,13 @@ namespace GameSquad.Model
 {
     public class User
     {
-        [PrimaryKey, Unique]
+        [PrimaryKey, Unique, MaxLength(36)]
         public string Id { get; set; }
 
-        [Unique, NotNull]
-        public string username {  get; set; }
+        [Unique, NotNull, MaxLength(20)]
+        public string Username { get; set; }
 
-        [NotNull]
-        public string password { get; set; }
+        [NotNull, MaxLength(20)]
+        public string Password { get; set; }
     }
 }

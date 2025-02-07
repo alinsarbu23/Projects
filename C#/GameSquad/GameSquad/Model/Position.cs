@@ -12,7 +12,7 @@ namespace GameSquad.Model
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 
-        [NotNull, Unique]
+        [NotNull, Unique, MaxLength(2)]
         public string Code { get; set; }
     }
 }

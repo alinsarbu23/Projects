@@ -12,7 +12,7 @@ namespace GameSquad.Model
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 
-        [NotNull]
+        [NotNull, MaxLength(20)]
         public string Name { get; set; }
 
         [NotNull]
@@ -21,7 +21,7 @@ namespace GameSquad.Model
         [NotNull]
         public DateTime CreationDate { get; set; }
 
-        [NotNull]
+        [NotNull, MaxLength(36)]
         public string UserId { get; set; }
     }
 

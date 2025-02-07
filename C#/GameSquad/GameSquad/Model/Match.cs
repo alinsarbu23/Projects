@@ -26,7 +26,7 @@ namespace GameSquad.Model
         public string? Description { get; set; }
         public int? MvpPlayerId { get; set; }
 
-        [NotNull]
+        [NotNull, MaxLength(36)]
         public string UserId { get; set; }
     }
 }
