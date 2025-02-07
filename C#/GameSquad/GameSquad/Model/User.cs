@@ -15,7 +15,7 @@ namespace GameSquad.Model
         [Unique, NotNull]
         public string username {  get; set; }
 
-        [Unique,NotNull]
+        [NotNull]
         public string password { get; set; }
     }
 }
