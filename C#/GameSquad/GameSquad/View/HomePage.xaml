@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GameSquad.View.HomePage">
+    
+    <StackLayout Padding="20">
+        <Label Text="Welcome!" FontSize="24" />
+        <Label Text="{Binding CurrentUser.Username}" FontSize="20" />
+        <Label Text="{Binding TodayDate}" />
+
+        <Button Text="Logout" Command="{Binding LogoutCommand}" />
+    </StackLayout>
+    
+</ContentPage>

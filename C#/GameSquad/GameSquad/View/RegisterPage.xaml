@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GameSquad.View.RegisterPage">
+
+    <StackLayout Padding="20">
+
+        <Label Text="Create Account" TextColor="Black" FontSize="24"/>
+
+        <Label Text="Username:" FontSize="24"/>
+        <Entry Text="{Binding Username}" />
+
+        <Label Text="Password:" FontSize="24"/>
+        <Entry Text="{Binding Password}" />
+
+        <Button Text="Register" Command="{Binding RegisterCommand}"/>
+        <Entry Text="{Binding Message}"/>
+
+
+
+    </StackLayout>
+
+</ContentPage>

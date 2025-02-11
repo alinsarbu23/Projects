@@ -1,12 +1,105 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "D:\\Projects\\C#\\GameSquad\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{FC6A3725-4DFD-4A91-9504-DC5983B9A2DB}|GameSquad\\GameSquad.csproj|d:\\projects\\c#\\gamesquad\\gamesquad\\mauiprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FC6A3725-4DFD-4A91-9504-DC5983B9A2DB}|GameSquad\\GameSquad.csproj|solutionrelative:gamesquad\\mauiprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FC6A3725-4DFD-4A91-9504-DC5983B9A2DB}|GameSquad\\GameSquad.csproj|d:\\projects\\c#\\gamesquad\\gamesquad\\service\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FC6A3725-4DFD-4A91-9504-DC5983B9A2DB}|GameSquad\\GameSquad.csproj|solutionrelative:gamesquad\\service\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FC6A3725-4DFD-4A91-9504-DC5983B9A2DB}|GameSquad\\GameSquad.csproj|d:\\projects\\c#\\gamesquad\\gamesquad\\service\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FC6A3725-4DFD-4A91-9504-DC5983B9A2DB}|GameSquad\\GameSquad.csproj|solutionrelative:gamesquad\\service\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FC6A3725-4DFD-4A91-9504-DC5983B9A2DB}|GameSquad\\GameSquad.csproj|d:\\projects\\c#\\gamesquad\\gamesquad\\view\\loginpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FC6A3725-4DFD-4A91-9504-DC5983B9A2DB}|GameSquad\\GameSquad.csproj|solutionrelative:gamesquad\\view\\loginpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FC6A3725-4DFD-4A91-9504-DC5983B9A2DB}|GameSquad\\GameSquad.csproj|d:\\projects\\c#\\gamesquad\\gamesquad\\viewmodel\\authviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FC6A3725-4DFD-4A91-9504-DC5983B9A2DB}|GameSquad\\GameSquad.csproj|solutionrelative:gamesquad\\viewmodel\\authviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MauiProgram.cs",
+              "DocumentMoniker": "D:\\Projects\\C#\\GameSquad\\GameSquad\\MauiProgram.cs",
+              "RelativeDocumentMoniker": "GameSquad\\MauiProgram.cs",
+              "ToolTip": "D:\\Projects\\C#\\GameSquad\\GameSquad\\MauiProgram.cs",
+              "RelativeToolTip": "GameSquad\\MauiProgram.cs",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAYwA8AAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-11T12:56:27.314Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "UserService.cs",
+              "DocumentMoniker": "D:\\Projects\\C#\\GameSquad\\GameSquad\\Service\\UserService.cs",
+              "RelativeDocumentMoniker": "GameSquad\\Service\\UserService.cs",
+              "ToolTip": "D:\\Projects\\C#\\GameSquad\\GameSquad\\Service\\UserService.cs",
+              "RelativeToolTip": "GameSquad\\Service\\UserService.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAQwCQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-11T12:55:45.545Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AuthService.cs",
+              "DocumentMoniker": "D:\\Projects\\C#\\GameSquad\\GameSquad\\Service\\AuthService.cs",
+              "RelativeDocumentMoniker": "GameSquad\\Service\\AuthService.cs",
+              "ToolTip": "D:\\Projects\\C#\\GameSquad\\GameSquad\\Service\\AuthService.cs",
+              "RelativeToolTip": "GameSquad\\Service\\AuthService.cs",
+              "ViewState": "AgIAABYAAAAAAAAAAAAAAC0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-11T12:55:42.127Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "AuthViewModel.cs",
+              "DocumentMoniker": "D:\\Projects\\C#\\GameSquad\\GameSquad\\ViewModel\\AuthViewModel.cs",
+              "RelativeDocumentMoniker": "GameSquad\\ViewModel\\AuthViewModel.cs",
+              "ToolTip": "D:\\Projects\\C#\\GameSquad\\GameSquad\\ViewModel\\AuthViewModel.cs",
+              "RelativeToolTip": "GameSquad\\ViewModel\\AuthViewModel.cs",
+              "ViewState": "AgIAABwAAAAAAAAAAAAYwDQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-11T12:53:59.283Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "LoginPage.xaml.cs",
+              "DocumentMoniker": "D:\\Projects\\C#\\GameSquad\\GameSquad\\View\\LoginPage.xaml.cs",
+              "RelativeDocumentMoniker": "GameSquad\\View\\LoginPage.xaml.cs",
+              "ToolTip": "D:\\Projects\\C#\\GameSquad\\GameSquad\\View\\LoginPage.xaml.cs",
+              "RelativeToolTip": "GameSquad\\View\\LoginPage.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-11T12:53:50.484Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
     }
   ]
 }

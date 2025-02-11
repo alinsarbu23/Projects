@@ -20,7 +20,6 @@ namespace GameSquad.Model
 
         [NotNull]
         public int Score2 { get; set; }
-
         public int? MinutesPlayed { get; set; }
         public int? TargetScore { get; set; }
         public string? Description { get; set; }
