@@ -1,14 +1,10 @@
 ﻿using GameSquad.Model;
 using GameSquad.Service;
 using GameSquad.View;
-using System;
-using System.Collections.Generic;
+using GameSquad.ViewModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-
 
 namespace GameSquad.ViewModel
 {
@@ -45,8 +41,8 @@ namespace GameSquad.ViewModel
 
         private async Task NavigateToRegister()
         {
-            await Application.Current.MainPage.Navigation.PushAsync(new RegisterPage());
+            var registerViewModel = new RegisterViewModel(new AuthService(new UserService(new DatabaseService())));
+            await Application.Current.MainPage.Navigation.PushAsync(new RegisterPage(registerViewModel));
         }
     }
 }
-

@@ -21,11 +21,11 @@ namespace GameSquad.Service
             var existingUser = await _database.Table<User>().Where(u => u.Username == user.Username).FirstOrDefaultAsync();
             if (existingUser != null)
             {
-                return false;
+                return false; 
             }
 
             await _database.InsertAsync(user);
-            return true;
+            return true; 
         }
 
         public async Task<User> AuthenticateUser(string username, string password)

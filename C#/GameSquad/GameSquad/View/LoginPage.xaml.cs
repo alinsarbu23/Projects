@@ -5,9 +5,14 @@ namespace GameSquad.View;
 
 public partial class LoginPage : ContentPage
 {
-	public LoginPage()
-	{
-		InitializeComponent();
-        BindingContext = new AuthViewModel(new AuthService());
+    public LoginPage()
+    {
+        InitializeComponent();
+    }
+
+    public LoginPage(AuthViewModel authViewModel)
+    {
+        InitializeComponent();
+        BindingContext = authViewModel;
     }
 }

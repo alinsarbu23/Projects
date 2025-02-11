@@ -1,4 +1,6 @@
-﻿using GameSquad.View;
+﻿using GameSquad.Service;
+using GameSquad.View;
+using GameSquad.ViewModel;
 
 namespace GameSquad
 {
@@ -8,12 +10,8 @@ namespace GameSquad
         {
             InitializeComponent();
 
-            MainPage = new NavigationPage(new LoginPage());
-        }
-
-        protected override Window CreateWindow(IActivationState? activationState)
-        {
-            return new Window(new AppShell());
+            MainPage = new LoginPage();
         }
     }
 }
+

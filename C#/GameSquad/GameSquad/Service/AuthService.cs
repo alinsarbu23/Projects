@@ -11,7 +11,7 @@ namespace GameSquad.Service
     public class AuthService
     {
         private readonly UserService _userService;
-        private User? _currentUser;
+        private User _currentUser;
 
         public AuthService(UserService userService)
         {
@@ -31,7 +31,8 @@ namespace GameSquad.Service
         {
             _currentUser = null;
         }
-        public User? GetCurrentUser()
+
+        public User GetCurrentUser()
         {
             return _currentUser;
         }
@@ -40,6 +41,5 @@ namespace GameSquad.Service
         {
             return await _userService.RegisterUser(user);
         }
-
     }
 }

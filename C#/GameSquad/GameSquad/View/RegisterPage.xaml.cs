@@ -1,9 +1,13 @@
-namespace GameSquad.View;
+using GameSquad.ViewModel;
 
-public partial class RegisterPage : ContentPage
+namespace GameSquad.View
 {
-	public RegisterPage()
-	{
-		InitializeComponent();
-	}
+    public partial class RegisterPage : ContentPage
+    {
+        public RegisterPage(RegisterViewModel viewModel)
+        {
+            InitializeComponent();
+            BindingContext = viewModel;
+        }
+    }
 }
