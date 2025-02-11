@@ -1,7 +1,5 @@
-﻿using GameSquad.Model;
-using GameSquad.Service;
+﻿using GameSquad.Service;
 using GameSquad.View;
-using GameSquad.ViewModel;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -44,5 +42,6 @@ namespace GameSquad.ViewModel
             var registerViewModel = new RegisterViewModel(new AuthService(new UserService(new DatabaseService())));
             await Application.Current.MainPage.Navigation.PushAsync(new RegisterPage(registerViewModel));
         }
+
     }
 }

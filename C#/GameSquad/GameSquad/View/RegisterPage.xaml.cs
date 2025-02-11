@@ -4,10 +4,10 @@ namespace GameSquad.View
 {
     public partial class RegisterPage : ContentPage
     {
-        public RegisterPage(RegisterViewModel viewModel)
+        public RegisterPage(RegisterViewModel registerViewModel)
         {
             InitializeComponent();
-            BindingContext = viewModel;
+            BindingContext = registerViewModel;
         }
     }
 }

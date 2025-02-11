@@ -1,13 +1,9 @@
-﻿using GameSquad.Model;
-using GameSquad.Service;
-using GameSquad.View;
-using System;
-using System.Collections.Generic;
+﻿using GameSquad.Service;
+using GameSquad.Model;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using GameSquad.View;
 
 namespace GameSquad.ViewModel
 {
@@ -49,4 +45,3 @@ namespace GameSquad.ViewModel
         }
     }
 }
-

@@ -8,11 +8,7 @@ public partial class LoginPage : ContentPage
     public LoginPage()
     {
         InitializeComponent();
+        BindingContext = new AuthViewModel(new AuthService(new UserService(new DatabaseService())));
     }
 
-    public LoginPage(AuthViewModel authViewModel)
-    {
-        InitializeComponent();
-        BindingContext = authViewModel;
-    }
 }
