@@ -30,9 +30,9 @@ This repository contains a variety of projects representing implementations of d
 
 ## 🛠 Technologies Used
 
-- **Languages:** Java, C#, Python
+- **Programming Languages:** Java, C#, Python
 - **IDEs:** Visual Studio, IntelliJ, Jupyter Notebook
-- **Databases:** MySQL, PostgreSQL
+- **Databases:** MySQL, PostgreSQL, SQLite
 - **Concepts:** CRUD operations, Graph Algorithms (DFS, Topological Sorting), UI/UX design, Deep Learning (CNN, Image Classification)
 
 ---
