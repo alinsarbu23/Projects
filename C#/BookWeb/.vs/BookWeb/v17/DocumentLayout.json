@@ -1,0 +1,54 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\asarbu\\OneDrive - ENDAVA\\Documents\\Endava\\Projects\\Off-topic\\BookWeb\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{9A540B9A-AFED-4354-A9E2-610FB5952C7A}|BookWeb\\BookWeb.csproj|c:\\users\\asarbu\\onedrive - endava\\documents\\endava\\projects\\off-topic\\bookweb\\bookweb\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9A540B9A-AFED-4354-A9E2-610FB5952C7A}|BookWeb\\BookWeb.csproj|solutionrelative:bookweb\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9A540B9A-AFED-4354-A9E2-610FB5952C7A}|BookWeb\\BookWeb.csproj|c:\\users\\asarbu\\onedrive - endava\\documents\\endava\\projects\\off-topic\\bookweb\\bookweb\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9A540B9A-AFED-4354-A9E2-610FB5952C7A}|BookWeb\\BookWeb.csproj|solutionrelative:bookweb\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "HomeController.cs",
+              "DocumentMoniker": "C:\\Users\\asarbu\\OneDrive - ENDAVA\\Documents\\Endava\\Projects\\Off-topic\\BookWeb\\BookWeb\\Controllers\\HomeController.cs",
+              "RelativeDocumentMoniker": "BookWeb\\Controllers\\HomeController.cs",
+              "ToolTip": "C:\\Users\\asarbu\\OneDrive - ENDAVA\\Documents\\Endava\\Projects\\Off-topic\\BookWeb\\BookWeb\\Controllers\\HomeController.cs",
+              "RelativeToolTip": "BookWeb\\Controllers\\HomeController.cs",
+              "ViewState": "AgIAABEAAAAAAAAAAAAwwCEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-03T08:53:03.107Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\asarbu\\OneDrive - ENDAVA\\Documents\\Endava\\Projects\\Off-topic\\BookWeb\\BookWeb\\Program.cs",
+              "RelativeDocumentMoniker": "BookWeb\\Program.cs",
+              "ToolTip": "C:\\Users\\asarbu\\OneDrive - ENDAVA\\Documents\\Endava\\Projects\\Off-topic\\BookWeb\\BookWeb\\Program.cs",
+              "RelativeToolTip": "BookWeb\\Program.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAIwBQAAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-03T07:45:18.799Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
