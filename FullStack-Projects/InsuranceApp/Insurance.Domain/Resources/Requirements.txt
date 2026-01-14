@@ -1,0 +1,90 @@
+﻿GOALS:
+
+1. Clear domain models (Domain)
+
+2. REST API endpoints (Controllers)
+
+3. API First
+
+3.1 ORDER
+
+1. API contract (endpoints + request/response)
+2. DTOs (Application)
+3. Controllers (API) – without business logic
+   (only Infra.Interfaces.Services are used, which will be implemented later;
+   no service implementation at this stage, only interfaces and method signatures)
+4. Services (Application) – method signatures only, no full implementation
+   (at this stage, we only run the application to verify that everything exists)
+5. Domain models
+6. Infrastructure (DB, repositories)
+   Then we continue from where we left off, in reverse order:
+   - we scaffold everything first (steps 1–4),
+   - then implement starting from Domain,
+   - then Infrastructure,
+   - then Application,
+   - finally Controllers, exceptions, API user, and anything else needed.
+
+4. BUSINESS RULES
+
+1. Unique CNP (for example)
+2. The identifier should not be easily changed
+3. A client can own multiple buildings (FK)
+4. A building must be linked to an existing city
+5. The client cannot be changed; a building belongs to a single client
+6. A city belongs to a single county
+7. A county belongs to a single country
+8. FluentValidation can be used for cases such as:
+   - required fields
+   - email format
+   - CNP length
+   - positive numbers
+   - simple field combinations
+
+5. Code easy to extend (API, Services, Domain, Infrastructure)
+
+6. Unit tests + integration tests (for API) – at least 80% coverage
+
+7. Code quality, readability, maintainability
+
+
+FUNCTIONAL REQUIREMENTS:
+
+1. CreateClient
+2. UpdateClient
+3. GetClients
+4. GetClient
+5. SearchClient
+6. CreateBuilding
+7. UpdateBuilding
+8. GetBuildings
+9. GetBuilding
+
+
+NON-FUNCTIONAL REQUIREMENTS:
+(To be addressed before final source implementation)
+
+
+API SPECIFICATION:
+
+GET  /api/brokers/clients?name={name}&identifier={idNumber}
+GET  /api/brokers/clients/{clientId}
+POST /api/brokers/clients
+PUT  /api/brokers/clients/{clientId}
+
+GET  /api/brokers/clients/{clientId}/buildings
+GET  /api/brokers/buildings/{buildingId}
+POST /api/brokers/clients/{clientId}/buildings
+PUT  /api/brokers/buildings/{buildingId}
+
+GET  /api/brokers/countries
+GET  /api/brokers/countries/{countryId}/counties
+GET  /api/brokers/counties/{countyId}/cities
+
+
+STATUS CODES:
+
+200 OK (success)
+201 Created (for creations)
+400 Bad Request (validation errors)
+404 Not Found
+500 Internal Server Error
