@@ -8,9 +8,7 @@
 
   <ItemGroup>
     <Folder Include="Interfaces\Repositories\" />
-    <Folder Include="Interfaces\Services\" />
     <Folder Include="Mappers\" />
-    <Folder Include="DTOs\" />
     <Folder Include="Validators\" />
     <Folder Include="Services\" />
   </ItemGroup>
