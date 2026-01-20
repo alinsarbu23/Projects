@@ -3,8 +3,6 @@ GO
 
 DELETE FROM Buildings;
 DELETE FROM BuildingTypes;
-DELETE FROM CompanyClients;
-DELETE FROM IndividualClients;
 DELETE FROM Clients;
 DELETE FROM Cities;
 DELETE FROM Counties;

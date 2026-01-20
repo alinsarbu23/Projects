@@ -1,6 +1,5 @@
-﻿using Insurance.Domain.Models;
-
-namespace Insurance.Application.Interfaces.Repositories;
+﻿using Insurance.Application.Interfaces.Repositories;
+using Insurance.Domain.Models;
 
 public interface IBuildingRepository : IRepository<Building>
 {

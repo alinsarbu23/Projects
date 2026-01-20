@@ -15,17 +15,10 @@ public class ClientsController : ControllerBase
         _clientService = clientService;
     }
 
-    [HttpPost("individuals")]
-    public async Task<IActionResult> CreateIndividual([FromBody] CreateIndividualClientDto dto)
+    [HttpPost]
+    public async Task<IActionResult> CreateClient([FromBody] CreateClientDto dto)
     {
-        var clientId = await _clientService.CreateIndividualClientAsync(dto);
-        return CreatedAtAction(nameof(GetClientById), new { clientId }, null);
-    }
-
-    [HttpPost("companies")]
-    public async Task<IActionResult> CreateCompany([FromBody] CreateCompanyClientDto dto)
-    {
-        var clientId = await _clientService.CreateCompanyClientAsync(dto);
+        var clientId = await _clientService.CreateClientAsync(dto);
         return CreatedAtAction(nameof(GetClientById), new { clientId }, null);
     }
 
@@ -36,14 +29,12 @@ public class ClientsController : ControllerBase
         return NoContent();
     }
 
-
     [HttpPut("{clientId:guid}/identifier")]
     public async Task<IActionResult> UpdateClientIdentifier(Guid clientId, [FromBody] UpdateClientIdentifierDto dto)
     {
         await _clientService.UpdateClientIdentifierAsync(clientId, dto);
         return NoContent();
     }
-
 
     [HttpGet("{clientId:guid}")]
     public async Task<ActionResult<GetClientByIdDto>> GetClientById(Guid clientId)
@@ -52,11 +43,18 @@ public class ClientsController : ControllerBase
         return Ok(client);
     }
 
-
+    /// <summary>
+    /// Search clients by name (partial) or identifier (exact), with paging.
+    /// Validation is handled via FluentValidation (to be added).
+    /// </summary>
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyList<GetClientsDto>>> SearchClients([FromQuery] string? name, [FromQuery] string? identifier)
+    public async Task<ActionResult<IReadOnlyList<GetClientsDto>>> SearchClients(
+        [FromQuery] string? name,
+        [FromQuery] string? identifier,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10)
     {
-        var clients = await _clientService.SearchClientsAsync(name, identifier);
+        var clients = await _clientService.SearchClientsAsync(name, identifier, page, pageSize);
         return Ok(clients);
     }
 }

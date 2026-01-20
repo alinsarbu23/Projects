@@ -1,7 +1,6 @@
 ﻿USE InsuranceDb;
 GO
 
--- Foreign Keys
 ALTER TABLE Counties
 ADD CONSTRAINT FK_Counties_Countries
 FOREIGN KEY (CountryId) REFERENCES Countries(Id);
@@ -9,14 +8,6 @@ FOREIGN KEY (CountryId) REFERENCES Countries(Id);
 ALTER TABLE Cities
 ADD CONSTRAINT FK_Cities_Counties
 FOREIGN KEY (CountyId) REFERENCES Counties(Id);
-
-ALTER TABLE IndividualClients
-ADD CONSTRAINT FK_IndividualClients_Clients
-FOREIGN KEY (ClientId) REFERENCES Clients(Id);
-
-ALTER TABLE CompanyClients
-ADD CONSTRAINT FK_CompanyClients_Clients
-FOREIGN KEY (ClientId) REFERENCES Clients(Id);
 
 ALTER TABLE Buildings
 ADD CONSTRAINT FK_Buildings_Clients
@@ -30,7 +21,6 @@ ALTER TABLE Buildings
 ADD CONSTRAINT FK_Buildings_BuildingTypes
 FOREIGN KEY (BuildingTypeId) REFERENCES BuildingTypes(Id);
 
--- Check Constraints
 ALTER TABLE Clients
 ADD CONSTRAINT CK_Clients_ClientType
 CHECK (ClientType IN ('INDIVIDUAL', 'COMPANY'));
@@ -42,3 +32,4 @@ CHECK (SurfaceArea > 0);
 ALTER TABLE Buildings
 ADD CONSTRAINT CK_Buildings_InsuredValue
 CHECK (InsuredValue > 0);
+GO

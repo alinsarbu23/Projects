@@ -1,22 +1,17 @@
-﻿namespace Insurance.Application.Interfaces.Repositories;
+﻿using Insurance.Domain.Models;
 
-using Insurance.Domain.Models;
+namespace Insurance.Application.Interfaces.Repositories;
 
 public interface IClientRepository
 {
-    Task AddIndividualAsync(IndividualClient client);
-    Task AddCompanyAsync(CompanyClient client);
+    Task AddAsync(Client client);
 
-    Task<IndividualClient?> GetIndividualByIdAsync(Guid clientId);
-    Task<CompanyClient?> GetCompanyByIdAsync(Guid clientId);
+    Task<Client?> GetByIdAsync(Guid clientId);
 
-    Task<IReadOnlyList<IndividualClient>> SearchIndividualsAsync(string? name, string? cnp);
+    Task<IReadOnlyList<Client>> SearchAsync(string? name, string? identifier);
 
-    Task<IReadOnlyList<CompanyClient>> SearchCompaniesAsync(string? name, string? cui);
+    Task UpdateAsync(Client client);
 
-    Task UpdateIndividualAsync(IndividualClient client);
-    Task UpdateCompanyAsync(CompanyClient client);
-
-    Task<bool> IndividualExistsByCnpAsync(string cnp);
-    Task<bool> CompanyExistsByCuiAsync(string cui);
+    Task<bool> ExistsByCnpAsync(string cnp);
+    Task<bool> ExistsByCuiAsync(string cui);
 }
