@@ -8,8 +8,11 @@ public interface IClientRepository
 
     Task<Client?> GetByIdAsync(Guid clientId);
 
-    Task<IReadOnlyList<Client>> SearchAsync(string? name, string? identifier);
-
+    Task<IReadOnlyList<Client>> SearchAsync(
+        string? name,
+        string? identifier,
+        int page,
+        int pageSize);
     Task UpdateAsync(Client client);
 
     Task<bool> ExistsByCnpAsync(string cnp);
