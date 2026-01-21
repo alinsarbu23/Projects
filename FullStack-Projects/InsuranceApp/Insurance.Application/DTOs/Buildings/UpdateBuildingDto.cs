@@ -2,12 +2,12 @@
 
 public class UpdateBuildingDto
 {
-    public required string Street { get; init; }
-    public required string StreetNumber { get; init; }
-    public int? ConstructionYear { get; init; }
-    public int? NumberOfFloors { get; init; }
-    public required decimal SurfaceArea { get; init; }
-    public required decimal InsuredValue { get; init; }
-    public bool FloodRisk { get; init; }
-    public bool EarthquakeRisk { get; init; }
+    public required string Street { get; set; }
+    public required string StreetNumber { get; set; }
+    public int? ConstructionYear { get; set; }
+    public int? NumberOfFloors { get; set; }
+    public required decimal SurfaceArea { get; set; }
+    public required decimal InsuredValue { get; set; }
+    public bool FloodRisk { get; set; }
+    public bool EarthquakeRisk { get; set; }
 }

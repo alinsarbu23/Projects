@@ -2,8 +2,8 @@
 
 public class ClientBuildingSummaryDto
 {
-    public Guid Id { get; init; }
-    public string City { get; init; }
-    public string BuildingType { get; init; }
-    public decimal InsuredValue { get; init; }
+    public Guid Id { get; set; }
+    public string City { get; set; }
+    public string BuildingType { get; set; }
+    public decimal InsuredValue { get; set; }
 }

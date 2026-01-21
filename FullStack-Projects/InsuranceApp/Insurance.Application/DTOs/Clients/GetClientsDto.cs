@@ -2,12 +2,12 @@
 
 public class GetClientsDto
 {
-    public Guid Id { get; init; }
-    public string ClientType { get; init; }
-    public string Name { get; init; }
+    public Guid Id { get; set; }
+    public string ClientType { get; set; }
+    public string Name { get; set; }
 
     /// <summary>
     /// CNP for INDIVIDUAL, CUI for COMPANY
     /// </summary>
-    public string Identifier { get; init; }
+    public string Identifier { get; set; }
 }

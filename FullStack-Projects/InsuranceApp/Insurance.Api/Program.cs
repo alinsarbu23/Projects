@@ -1,5 +1,7 @@
 using Insurance.Application.Interfaces.Repositories;
 using Insurance.Application.Interfaces.Services;
+using Insurance.Application.Mappers;
+using Insurance.Application.Services;
 using Insurance.Infrastructure;
 using Insurance.Infrastructure.Mappers;
 using Insurance.Infrastructure.Repositories;
@@ -23,11 +25,14 @@ builder.Services.AddDbContext<InsuranceDbContext>(options =>
     options.UseSqlServer(connectionString);
 });
 
-builder.Services.AddAutoMapper(typeof(DaoMapperConfig));
+builder.Services.AddAutoMapper(
+    typeof(DtoMapperConfig),
+    typeof(DaoMapperConfig)
+);
 
-//builder.Services.AddScoped<IClientService, ClientService>();
-//builder.Services.AddScoped<IGeographyService, GeographyService>();
-//builder.Services.AddScoped<IBuildingService, BuildingService>();
+builder.Services.AddScoped<IClientService, ClientService>();
+builder.Services.AddScoped<IGeographyService, GeographyService>();
+builder.Services.AddScoped<IBuildingService, BuildingService>();
 
 builder.Services.AddScoped<IGeographyRepository, GeographyRepository>();
 builder.Services.AddScoped<IClientRepository, ClientRepository>();

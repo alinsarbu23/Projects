@@ -1,8 +1,10 @@
-﻿namespace Insurance.Application.DTOs.Clients;
+﻿using Insurance.Domain.Enums;
+
+namespace Insurance.Application.DTOs.Clients;
 
 public class CreateClientDto
 {
-    public required string ClientType { get; init; } 
+    public required ClientType ClientType { get; init; } 
 
     public required string Name { get; init; }
 
