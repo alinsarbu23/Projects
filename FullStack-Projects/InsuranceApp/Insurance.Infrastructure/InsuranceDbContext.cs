@@ -17,15 +17,17 @@ public partial class InsuranceDbContext : DbContext
     public DbSet<Client> Clients => Set<Client>();
     public DbSet<Country> Countries => Set<Country>();
     public DbSet<County> Counties => Set<County>();
+    public DbSet<ClientIdentifier> ClientIdentifiers { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.ApplyConfiguration(new CountryConfiguration());
+        modelBuilder.ApplyConfiguration(new CountyConfiguration());
+        modelBuilder.ApplyConfiguration(new CityConfiguration());
         modelBuilder.ApplyConfiguration(new BuildingConfiguration());
         modelBuilder.ApplyConfiguration(new BuildingTypeConfiguration());
         modelBuilder.ApplyConfiguration(new ClientConfiguration());
-        modelBuilder.ApplyConfiguration(new CityConfiguration());
-        modelBuilder.ApplyConfiguration(new CountyConfiguration());
-        modelBuilder.ApplyConfiguration(new CountryConfiguration());
+        modelBuilder.ApplyConfiguration(new ClientIdentifierConfiguration());
 
         OnModelCreatingPartial(modelBuilder);
     }

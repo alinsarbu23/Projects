@@ -1,4 +1,5 @@
-﻿using Insurance.Infrastructure.DAOs;
+﻿using Insurance.Domain.Enums;
+using Insurance.Infrastructure.DAOs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -38,5 +39,17 @@ public class ClientConfiguration : IEntityTypeConfiguration<Client>
               .IsUnique()
               .HasFilter("[Cui] IS NOT NULL")
               .HasDatabaseName("UX_Clients_Cui");
+
+        entity.HasData(
+            new Client
+            {
+                Id = Guid.Parse("dddddddd-dddd-dddd-dddd-dddddddddddd"),
+                ClientType = ClientType.Individual.ToString(),
+                Name = "Test Client",
+                Cnp = "1800101223344",
+                Email = "test@insurance.ro",
+                Phone = "0700000000",
+                Address = "Test Address"
+            });
     }
 }

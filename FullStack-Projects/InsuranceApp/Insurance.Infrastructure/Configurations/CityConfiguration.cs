@@ -6,23 +6,41 @@ namespace Insurance.Infrastructure.Configurations;
 
 public class CityConfiguration : IEntityTypeConfiguration<City>
 {
-    public static readonly Guid BucharestCityId =
-        Guid.Parse("33333333-3333-3333-3333-333333333333");
-
     public void Configure(EntityTypeBuilder<City> entity)
     {
-        entity.HasKey(e => e.Id);
-        entity.Property(e => e.Name).HasMaxLength(100);
-        entity.Property(e => e.Code).HasMaxLength(20);
+        entity.HasKey(x => x.Id);
 
-        entity.HasIndex(e => new { e.CountyId, e.Code }).IsUnique();
+        entity.Property(x => x.Name)
+              .IsRequired()
+              .HasMaxLength(100);
 
-        entity.HasData(new City
-        {
-            Id = BucharestCityId,
-            CountyId = CountyConfiguration.BucharestCountyId,
-            Name = "Bucharest",
-            Code = "RO-B"
-        });
+        entity.Property(x => x.Code)
+              .IsRequired()
+              .HasMaxLength(20);
+
+        entity.HasIndex(x => new { x.CountyId, x.Code })
+              .IsUnique();
+
+        entity.HasOne(x => x.County)
+              .WithMany(c => c.Cities)
+              .HasForeignKey(x => x.CountyId)
+              .OnDelete(DeleteBehavior.Cascade);
+
+        entity.HasData(
+            new City
+            {
+                Id = Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc"),
+                Name = "Bucharest",
+                Code = "B",
+                CountyId = Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb")
+            },
+            new City
+            {
+                Id = Guid.Parse("cccccccc-cccc-cccc-cccc-dddddddddddd"),
+                Name = "Cluj-Napoca",
+                Code = "CJ",
+                CountyId = Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-cccccccccccc")
+            }
+        );
     }
 }

@@ -6,21 +6,35 @@ namespace Insurance.Infrastructure.Configurations;
 
 public class CountyConfiguration : IEntityTypeConfiguration<County>
 {
-    public static readonly Guid BucharestCountyId =
-        Guid.Parse("22222222-2222-2222-2222-222222222222");
-
     public void Configure(EntityTypeBuilder<County> entity)
     {
-        entity.HasKey(e => e.Id);
-        entity.Property(e => e.Name).HasMaxLength(100);
+        entity.HasKey(x => x.Id);
 
-        entity.HasIndex(e => new { e.CountryId, e.Name }).IsUnique();
+        entity.Property(x => x.Name)
+              .IsRequired()
+              .HasMaxLength(100);
 
-        entity.HasData(new County
-        {
-            Id = BucharestCountyId,
-            CountryId = CountryConfiguration.RomaniaId,
-            Name = "Bucharest"
-        });
+        entity.HasIndex(x => new { x.CountryId, x.Name })
+              .IsUnique();
+
+        entity.HasOne(x => x.Country)
+              .WithMany(c => c.Counties)
+              .HasForeignKey(x => x.CountryId)
+              .OnDelete(DeleteBehavior.Cascade);
+
+        entity.HasData(
+            new County
+            {
+                Id = Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
+                Name = "Bucharest",
+                CountryId = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")
+            },
+            new County
+            {
+                Id = Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-cccccccccccc"),
+                Name = "Cluj",
+                CountryId = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")
+            }
+        );
     }
 }
