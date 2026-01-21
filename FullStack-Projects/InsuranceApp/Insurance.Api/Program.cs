@@ -1,3 +1,4 @@
+using Insurance.Api.Middleware;
 using Insurance.Application.Interfaces.Repositories;
 using Insurance.Application.Interfaces.Services;
 using Insurance.Application.Mappers;
@@ -53,9 +54,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseMiddleware<ExceptionMiddleware>();
+
 app.UseAuthorization();
 //app.UseAuthentication();
-//app.UseMiddleware<ExceptionMiddleware>();
+
 
 app.MapControllers();
 
