@@ -8,16 +8,19 @@ public class UnitOfWork : IUnitOfWork
     public IClientRepository Clients { get; }
     public IBuildingRepository Buildings { get; }
     public IGeographyRepository Geography { get; }
+    public IClientIdentifierRepository ClientIdentifiers { get; }
 
     public UnitOfWork(
         InsuranceDbContext context, 
         IClientRepository clientRepository, 
         IBuildingRepository buildingRepository,
-        IGeographyRepository geographyRepository)
+        IGeographyRepository geographyRepository,
+        IClientIdentifierRepository clientIdentifierRepository)
     {
         Clients = clientRepository;
         Buildings = buildingRepository;
         Geography = geographyRepository;
+        ClientIdentifiers = clientIdentifierRepository;
         _context = context;
     }
 

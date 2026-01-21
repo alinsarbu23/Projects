@@ -19,22 +19,22 @@ public class ClientService : IClientService
 
     public async Task<Guid> CreateClientAsync(CreateClientDto clientDto)
     {
-        if(clientDto.ClientType == ClientType.Individual && string.IsNullOrEmpty(clientDto.Cnp))
+        if (clientDto.ClientType == ClientType.Individual && string.IsNullOrEmpty(clientDto.Cnp))
         {
             throw new ArgumentException("CNP is required for individual clients.");
         }
 
-        if(clientDto.ClientType == ClientType.Company && string.IsNullOrEmpty(clientDto.Cui))
+        if (clientDto.ClientType == ClientType.Company && string.IsNullOrEmpty(clientDto.Cui))
         {
             throw new ArgumentException("CUI is required for company clients.");
         }
 
-        if(!string.IsNullOrWhiteSpace(clientDto.Cnp) && await _unitOfWork.Clients.ExistsByCnpAsync(clientDto.Cnp))
+        if (!string.IsNullOrWhiteSpace(clientDto.Cnp) && await _unitOfWork.Clients.ExistsByCnpAsync(clientDto.Cnp))
         {
             throw new ArgumentException("A client with the current CNP already exists.");
         }
 
-        if(!string.IsNullOrWhiteSpace(clientDto.Cui) && await _unitOfWork.Clients.ExistsByCuiAsync(clientDto.Cui))
+        if (!string.IsNullOrWhiteSpace(clientDto.Cui) && await _unitOfWork.Clients.ExistsByCuiAsync(clientDto.Cui))
         {
             throw new ArgumentException("A client with the current CUI already exists.");
         }
@@ -52,9 +52,9 @@ public class ClientService : IClientService
         };
 
         await _unitOfWork.Clients.AddAsync(client);
-        var rowsAffected =  await _unitOfWork.SaveChangesAsync();
+        var rowsAffected = await _unitOfWork.SaveChangesAsync();
 
-        if(rowsAffected == 0)
+        if (rowsAffected == 0)
         {
             throw new InvalidOperationException("Failed to create client.");
         }
@@ -70,7 +70,7 @@ public class ClientService : IClientService
 
         var dto = _mapper.Map<GetClientByIdDto>(client);
 
-        
+
         dto.ClientType = client.ClientType.ToString();
         if (client.ClientType == ClientType.Individual)
         {
@@ -90,13 +90,13 @@ public class ClientService : IClientService
     public async Task<IReadOnlyList<GetClientsDto>> SearchClientsAsync(string? name, string? identifier, int page, int pageSize)
     {
         var clients = await _unitOfWork.Clients.SearchAsync(name, identifier, page, pageSize);
-        if (clients == null || !clients.Any()) 
+        if (clients == null || !clients.Any())
         {
             throw new KeyNotFoundException("No clients found matching the criteria.");
         }
 
         var clientsDto = _mapper.Map<IReadOnlyList<GetClientsDto>>(clients);
-        foreach(var clientDto in clientsDto)
+        foreach (var clientDto in clientsDto)
         {
             var client = clients.First(client => client.Id == clientDto.Id);
             clientDto.ClientType = client.ClientType.ToString();
@@ -118,57 +118,67 @@ public class ClientService : IClientService
     public async Task UpdateClientAsync(Guid clientId, UpdateClientDto clientDto)
     {
         var existingClient = await _unitOfWork.Clients.GetByIdAsync(clientId);
-        
-        if(existingClient == null)
+
+        if (existingClient == null)
         {
             throw new KeyNotFoundException("Client not found.");
         }
 
         existingClient.Email = clientDto.Email;
         existingClient.Phone = clientDto.Phone;
-        existingClient.Address = clientDto.Address; 
+        existingClient.Address = clientDto.Address;
 
         await _unitOfWork.Clients.UpdateAsync(existingClient);
 
         var rowsAffected = await _unitOfWork.SaveChangesAsync();
 
-        if(rowsAffected == 0)
+        if (rowsAffected == 0)
         {
             throw new InvalidOperationException("Failed to update client.");
         }
     }
 
-    public async Task UpdateClientIdentifierAsync(Guid clientId, UpdateClientIdentifierDto updateClientIdentifierDto)
+    public async Task UpdateClientIdentifierAsync(Guid clientId, UpdateClientIdentifierDto dto)
     {
         var client = await _unitOfWork.Clients.GetByIdAsync(clientId);
+
         if(client == null)
         {
             throw new KeyNotFoundException("Client not found.");
         }
 
-        if(client.ClientType == ClientType.Individual)
+        var lastChangeDate = await _unitOfWork.ClientIdentifiers.GetLastChangeDateAsync(clientId);
+
+        if (lastChangeDate.HasValue && DateTime.UtcNow < lastChangeDate.Value.AddMonths(1))
         {
-            if(await _unitOfWork.Clients.ExistsByCnpAsync(updateClientIdentifierDto.NewIdentifier))
-            {
-                throw new ArgumentException("A client with the new CNP already exists.");
-            }
-            client.Cnp = updateClientIdentifierDto.NewIdentifier;
+            throw new InvalidOperationException("Client identifier can only be changed once per month.");
         }
+
+        var oldIdentifier = client.ClientType == ClientType.Individual ? client.Cnp : client.Cui;
+
+        if (client.ClientType == ClientType.Individual)
+        {
+            client.Cnp = dto.NewIdentifier;
+        } 
         else
         {
-            if(await _unitOfWork.Clients.ExistsByCuiAsync(updateClientIdentifierDto.NewIdentifier))
-            {
-                throw new ArgumentException("A client with the new CUI already exists.");
-            }
-            client.Cui = updateClientIdentifierDto.NewIdentifier;
+            client.Cui = dto.NewIdentifier;
         }
+            
 
-        await _unitOfWork.Clients.UpdateAsync(client);
-        var rowsAffected = await _unitOfWork.SaveChangesAsync();
-        if(rowsAffected == 0)
+        var audit = new ClientIdentifier
         {
-            throw new InvalidOperationException("Failed to update client identifier.");
-        }
+            Id = Guid.NewGuid(),
+            ClientId = client.Id,
+            OldIdentifier = oldIdentifier!,
+            NewIdentifier = dto.NewIdentifier,
+            IdentifierType = client.ClientType.ToString(),
+            ChangedAt = DateTime.UtcNow
+        };
 
+        await _unitOfWork.ClientIdentifiers.AddAsync(audit);
+        await _unitOfWork.Clients.UpdateAsync(client);
+        await _unitOfWork.SaveChangesAsync();
     }
+
 }

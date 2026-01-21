@@ -6,6 +6,7 @@ using Insurance.Infrastructure;
 using Insurance.Infrastructure.Mappers;
 using Insurance.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,7 @@ builder.Services.AddDbContext<InsuranceDbContext>(options =>
 });
 
 builder.Services.AddAutoMapper(
+    _ => { },
     typeof(DtoMapperConfig),
     typeof(DaoMapperConfig)
 );
@@ -37,6 +39,8 @@ builder.Services.AddScoped<IBuildingService, BuildingService>();
 builder.Services.AddScoped<IGeographyRepository, GeographyRepository>();
 builder.Services.AddScoped<IClientRepository, ClientRepository>();
 builder.Services.AddScoped<IBuildingRepository, BuildingRepository>();
+builder.Services.AddScoped<IClientIdentifierRepository, ClientIdentifierRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 var app = builder.Build();
 
