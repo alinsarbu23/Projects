@@ -1,10 +1,12 @@
 ﻿using Insurance.Infrastructure.Configurations;
 using Insurance.Infrastructure.DAOs;
+using Insurance.Infrastructure.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Insurance.Infrastructure;
 
-public partial class InsuranceDbContext : DbContext
+public partial class InsuranceDbContext : IdentityDbContext<ApiUser>
 {
     public InsuranceDbContext(DbContextOptions<InsuranceDbContext> options)
         : base(options)
@@ -17,10 +19,12 @@ public partial class InsuranceDbContext : DbContext
     public DbSet<Client> Clients => Set<Client>();
     public DbSet<Country> Countries => Set<Country>();
     public DbSet<County> Counties => Set<County>();
-    public DbSet<ClientIdentifier> ClientIdentifiers { get; set; }
+    public DbSet<ClientIdentifier> ClientIdentifiers => Set<ClientIdentifier>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder.ApplyConfiguration(new CountryConfiguration());
         modelBuilder.ApplyConfiguration(new CountyConfiguration());
         modelBuilder.ApplyConfiguration(new CityConfiguration());
@@ -28,9 +32,6 @@ public partial class InsuranceDbContext : DbContext
         modelBuilder.ApplyConfiguration(new BuildingTypeConfiguration());
         modelBuilder.ApplyConfiguration(new ClientConfiguration());
         modelBuilder.ApplyConfiguration(new ClientIdentifierConfiguration());
-
-        OnModelCreatingPartial(modelBuilder);
+        modelBuilder.ApplyConfiguration(new RoleConfiguration());
     }
-
-    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

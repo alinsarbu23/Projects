@@ -1,10 +1,13 @@
 ﻿using Insurance.Application.DTOs.Clients;
 using Insurance.Application.Interfaces.Services;
+using Insurance.Infrastructure.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Insurance.Api.Controllers;
 
 [ApiController]
+[Authorize(Roles = Roles.Broker)]
 [Route("api/brokers/clients")]
 public class ClientsController : ControllerBase
 {

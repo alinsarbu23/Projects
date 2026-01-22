@@ -1,9 +1,12 @@
 ﻿using Insurance.Application.DTOs.Geography;
 using Insurance.Application.Interfaces.Services;
+using Insurance.Infrastructure.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Insurance.Api.Controllers
 {
+    [Authorize(Roles = Roles.Broker)]
     [ApiController]
     [Route("api/brokers")]
     public class GeographyController : ControllerBase
