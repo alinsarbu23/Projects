@@ -24,11 +24,6 @@ public class ClientIdentifierRepository : IClientIdentifierRepository
         await _context.ClientIdentifiers.AddAsync(dao);
     }
 
-    public async Task<int> CountByClientIdAsync(Guid clientId)
-    {
-        return await _context.ClientIdentifiers.AsNoTracking().CountAsync(x => x.ClientId == clientId);
-    }
-
     public async Task<DateTime?> GetLastChangeDateAsync(Guid clientId)
     {
         return await _context.ClientIdentifiers.AsNoTracking()

@@ -19,22 +19,14 @@ public class ClientService : IClientService
 
     public async Task<Guid> CreateClientAsync(CreateClientDto clientDto)
     {
-        if (clientDto.ClientType == ClientType.Individual && string.IsNullOrEmpty(clientDto.Cnp))
-        {
-            throw new ArgumentException("CNP is required for individual clients.");
-        }
-
-        if (clientDto.ClientType == ClientType.Company && string.IsNullOrEmpty(clientDto.Cui))
-        {
-            throw new ArgumentException("CUI is required for company clients.");
-        }
-
-        if (!string.IsNullOrWhiteSpace(clientDto.Cnp) && await _unitOfWork.Clients.ExistsByCnpAsync(clientDto.Cnp))
+        if (!string.IsNullOrWhiteSpace(clientDto.Cnp) &&
+            await _unitOfWork.Clients.ExistsByCnpAsync(clientDto.Cnp))
         {
             throw new ArgumentException("A client with the current CNP already exists.");
         }
 
-        if (!string.IsNullOrWhiteSpace(clientDto.Cui) && await _unitOfWork.Clients.ExistsByCuiAsync(clientDto.Cui))
+        if (!string.IsNullOrWhiteSpace(clientDto.Cui) &&
+            await _unitOfWork.Clients.ExistsByCuiAsync(clientDto.Cui))
         {
             throw new ArgumentException("A client with the current CUI already exists.");
         }
@@ -60,8 +52,8 @@ public class ClientService : IClientService
         }
 
         return client.Id;
-
     }
+
 
     public async Task<GetClientByIdDto> GetClientByIdAsync(Guid clientId)
     {

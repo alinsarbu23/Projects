@@ -1,19 +1,24 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Insurance.Api.Middleware;
 using Insurance.Application.Interfaces.Repositories;
 using Insurance.Application.Interfaces.Services;
 using Insurance.Application.Mappers;
 using Insurance.Application.Services;
+using Insurance.Application.Validators.Clients;
 using Insurance.Infrastructure;
 using Insurance.Infrastructure.Mappers;
 using Insurance.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateClientDtoValidator>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
