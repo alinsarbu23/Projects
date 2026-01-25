@@ -51,13 +51,15 @@ public class ClientsController : ControllerBase
     /// Validation is handled via FluentValidation (to be added).
     /// </summary>
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyList<GetClientsDto>>> SearchClients(
+    public async Task<ActionResult<PagedClientsDto>> SearchClients(
         [FromQuery] string? name,
         [FromQuery] string? identifier,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10)
     {
-        var clients = await _clientService.SearchClientsAsync(name, identifier, page, pageSize);
-        return Ok(clients);
+        var result = await _clientService
+            .SearchClientsAsync(name, identifier, page, pageSize);
+
+        return Ok(result);
     }
 }

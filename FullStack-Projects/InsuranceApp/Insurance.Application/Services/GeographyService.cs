@@ -17,8 +17,8 @@ public class GeographyService : IGeographyService
 
     public async Task<IReadOnlyList<GetCitiesByCountyDto>> GetCitiesByCountyAsync(Guid countyId)
     {
-        var contries = await _unitOfWork.Geography.GetCitiesByCountyIdAsync(countyId);
-        return _mapper.Map<IReadOnlyList<GetCitiesByCountyDto>>(contries);
+        var countries = await _unitOfWork.Geography.GetCitiesByCountyIdAsync(countyId);
+        return _mapper.Map<IReadOnlyList<GetCitiesByCountyDto>>(countries);
     }
 
     public async Task<IReadOnlyList<GetCountiesByCountryDto>> GetCountiesByCountryAsync(Guid countryId)

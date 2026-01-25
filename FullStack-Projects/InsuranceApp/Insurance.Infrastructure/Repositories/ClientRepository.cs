@@ -22,6 +22,25 @@ public class ClientRepository : IClientRepository
         await _context.Clients.AddAsync(clientDao);
     }
 
+    public async Task<int> CountAsync(string? name, string? identifier)
+    {
+        var query = _context.Clients.AsNoTracking().AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(name))
+        {
+            query = query.Where(c => c.Name.Contains(name));
+        }
+            
+        if (!string.IsNullOrWhiteSpace(identifier))
+        {
+            query = query.Where(c => c.Cnp == identifier || c.Cui == identifier);
+        }
+            
+
+        return await query.CountAsync();
+    }
+
+
     public Task<bool> ExistsByCnpAsync(string cnp)
     {
         return _context.Clients.AsNoTracking().AnyAsync(client => client.Cnp == cnp);

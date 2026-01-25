@@ -15,6 +15,6 @@ namespace Insurance.Application.Interfaces.Services
         /// <summary>
         /// Search by partial name and exact identifier (CNP or CUI).
         /// </summary>
-        Task<IReadOnlyList<GetClientsDto>> SearchClientsAsync(string? name, string? identifier, int page, int pageSize);
+        Task<PagedClientsDto> SearchClientsAsync(string? name, string? identifier, int page, int pageSize);
     }
 }

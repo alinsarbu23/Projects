@@ -27,15 +27,18 @@ public class AuthManager : IAuthManager
         _config = config;
     }
 
-
     public async Task<AuthResponseDto> RegisterAsync(RegisterDto dto)
     {
         if (await _userManager.FindByEmailAsync(dto.Email) != null)
+        {
             throw new ArgumentException("User with this email already exists.");
-
+        }
+            
         if (!await _roleManager.RoleExistsAsync(dto.Role))
+        {
             throw new ArgumentException($"Role '{dto.Role}' does not exist.");
-
+        }
+            
         var user = new ApiUser
         {
             UserName = dto.Email,
@@ -45,18 +48,11 @@ public class AuthManager : IAuthManager
         var result = await _userManager.CreateAsync(user, dto.Password);
         if (!result.Succeeded)
         {
-            var errors = string.Join("; ",
-                result.Errors.Select(e => e.Description));
-            throw new ArgumentException(errors);
+            throw new ArgumentException(string.Join("; ", result.Errors.Select(e => e.Description)));
         }
+            
 
-        var roleResult = await _userManager.AddToRoleAsync(user, dto.Role);
-        if (!roleResult.Succeeded)
-        {
-            var errors = string.Join("; ",
-                roleResult.Errors.Select(e => e.Description));
-            throw new ArgumentException(errors);
-        }
+        await _userManager.AddToRoleAsync(user, dto.Role);
 
         return new AuthResponseDto
         {
@@ -64,17 +60,15 @@ public class AuthManager : IAuthManager
         };
     }
 
-
-
     public async Task<AuthResponseDto> LoginAsync(LoginDto dto)
     {
-        var user = await _userManager.FindByEmailAsync(dto.Email);
-        if (user == null)
-            throw new ArgumentException("Invalid credentials.");
+        var user = await _userManager.FindByEmailAsync(dto.Email)?? throw new ArgumentException("Invalid credentials.");
 
-        var valid = await _userManager.CheckPasswordAsync(user, dto.Password);
-        if (!valid)
+        if (!await _userManager.CheckPasswordAsync(user, dto.Password))
+        {
             throw new ArgumentException("Invalid credentials.");
+        }
+
 
         var role = (await _userManager.GetRolesAsync(user)).First();
 
@@ -88,6 +82,7 @@ public class AuthManager : IAuthManager
     {
         var key = _config["Jwt:Key"]!;
         var issuer = _config["Jwt:Issuer"]!;
+        var expiresMinutes = int.Parse(_config["Jwt:ExpiresMinutes"]!);
 
         var claims = new[]
         {
@@ -103,7 +98,7 @@ public class AuthManager : IAuthManager
             issuer,
             issuer,
             claims,
-            expires: DateTime.UtcNow.AddHours(1),
+            expires: DateTime.UtcNow.AddMinutes(expiresMinutes),
             signingCredentials:
                 new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256)
         );

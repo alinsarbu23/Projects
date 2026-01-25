@@ -10,6 +10,8 @@ public interface IClientRepository
 
     Task<IReadOnlyList<Client>> SearchAsync(string? name, string? identifier, int page, int pageSize);
     Task UpdateAsync(Client client);
+    Task<int> CountAsync(string? name, string? identifier);
+
 
     Task<bool> ExistsByCnpAsync(string cnp);
     Task<bool> ExistsByCuiAsync(string cui);
