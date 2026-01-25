@@ -15,6 +15,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Insurance.Application", "In
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Insurance.Infrastructure", "Insurance.Infrastructure\Insurance.Infrastructure.csproj", "{40584B7C-D55B-4358-823C-F799771C702C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Insurance.UnitTests", "Insurance.UnitTests\Insurance.UnitTests.csproj", "{12C05243-9940-44EE-A7D7-9C1BB075E7E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Insurance.IntegrationTests", "Insurance.IntegrationTests\Insurance.IntegrationTests.csproj", "{61041BED-C25E-4286-8F91-C1BB8C038EA2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +41,14 @@ Global
 		{40584B7C-D55B-4358-823C-F799771C702C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{40584B7C-D55B-4358-823C-F799771C702C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{40584B7C-D55B-4358-823C-F799771C702C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12C05243-9940-44EE-A7D7-9C1BB075E7E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12C05243-9940-44EE-A7D7-9C1BB075E7E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12C05243-9940-44EE-A7D7-9C1BB075E7E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12C05243-9940-44EE-A7D7-9C1BB075E7E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61041BED-C25E-4286-8F91-C1BB8C038EA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61041BED-C25E-4286-8F91-C1BB8C038EA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61041BED-C25E-4286-8F91-C1BB8C038EA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61041BED-C25E-4286-8F91-C1BB8C038EA2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,6 +58,8 @@ Global
 		{0DF57528-0342-42FF-8FDD-19927999EAC0} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{50AAC731-87B4-4220-8D90-707395F0EDC0} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{40584B7C-D55B-4358-823C-F799771C702C} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{12C05243-9940-44EE-A7D7-9C1BB075E7E9} = {AFF156EC-94C1-4B1F-B5E4-E2ACCF20CE0C}
+		{61041BED-C25E-4286-8F91-C1BB8C038EA2} = {AFF156EC-94C1-4B1F-B5E4-E2ACCF20CE0C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {886583CD-B638-46BF-A18B-97198249BDA1}
