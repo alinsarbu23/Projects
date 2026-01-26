@@ -5,26 +5,21 @@ using Insurance.Infrastructure.DAOs;
 using Insurance.UnitTests.Helpers;
 using Xunit;
 using DaoBuilding = Insurance.Infrastructure.DAOs.Building;
-using DaoCity = Insurance.Infrastructure.DAOs.City;
 // DAO
 using DaoClient = Insurance.Infrastructure.DAOs.Client;
 using DaoClientIdentifier = Insurance.Infrastructure.DAOs.ClientIdentifier;
 using DaoCountry = Insurance.Infrastructure.DAOs.Country;
-using DaoCounty = Insurance.Infrastructure.DAOs.County;
 using DomainBuilding = Insurance.Domain.Models.Building;
-using DomainCity = Insurance.Domain.Models.Geography.City;
 // Domain
 using DomainClient = Insurance.Domain.Models.Client;
 using DomainClientIdentifier = Insurance.Domain.Models.ClientIdentifier;
 using DomainCountry = Insurance.Domain.Models.Geography.Country;
-using DomainCounty = Insurance.Domain.Models.Geography.County;
 
 namespace Insurance.UnitTests.Mappers;
 
 public class DaoMapperTests
 {
     private readonly IMapper _mapper;
-
     public DaoMapperTests()
     {
         _mapper = MapperFactory.Create();

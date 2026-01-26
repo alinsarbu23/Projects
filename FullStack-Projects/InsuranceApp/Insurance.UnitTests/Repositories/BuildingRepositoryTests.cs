@@ -169,5 +169,4 @@ public class BuildingRepositoryTests
 
         updated!.Name.Should().Be("New");
     }
-
 }

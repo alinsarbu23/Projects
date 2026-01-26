@@ -28,8 +28,7 @@ public class BuildingsControllerTests
             }
         };
 
-        service.Setup(x => x.GetBuildingsForClientAsync(clientId))
-            .ReturnsAsync(expected);
+        service.Setup(x => x.GetBuildingsForClientAsync(clientId)).ReturnsAsync(expected);
 
         var controller = new BuildingsController(service.Object);
 
@@ -86,8 +85,7 @@ public class BuildingsControllerTests
         var clientId = Guid.NewGuid();
         var buildingId = Guid.NewGuid();
 
-        service.Setup(x => x.CreateBuildingAsync(clientId, It.IsAny<CreateBuildingDto>()))
-            .ReturnsAsync(buildingId);
+        service.Setup(x => x.CreateBuildingAsync(clientId, It.IsAny<CreateBuildingDto>())).ReturnsAsync(buildingId);
 
         var result = await controller.CreateBuilding(clientId, new CreateBuildingDto
         {
@@ -108,15 +106,13 @@ public class BuildingsControllerTests
         created!.RouteValues!["buildingId"].Should().Be(buildingId);
     }
 
-
     [Fact]
     public async Task UpdateBuilding_ShouldReturnNoContent()
     {
         var service = new Mock<IBuildingService>();
         var buildingId = Guid.NewGuid();
 
-        service.Setup(x => x.UpdateBuildingAsync(buildingId, It.IsAny<UpdateBuildingDto>()))
-            .Returns(Task.CompletedTask);
+        service.Setup(x => x.UpdateBuildingAsync(buildingId, It.IsAny<UpdateBuildingDto>())).Returns(Task.CompletedTask);
 
         var controller = new BuildingsController(service.Object);
 

@@ -44,10 +44,9 @@ public class GeographyControllerTests
         var service = new Mock<IGeographyService>();
         var controller = new GeographyController(service.Object);
 
-        service.Setup(x => x.GetCountriesAsync())
-            .ReturnsAsync(new List<GetCountriesDto>
+        service.Setup(x => x.GetCountriesAsync()).ReturnsAsync(new List<GetCountriesDto>
             {
-            new GetCountriesDto { Id = Guid.NewGuid(), Name = "Romania" }
+                new GetCountriesDto { Id = Guid.NewGuid(), Name = "Romania" }
             });
 
         var result = await controller.GetCountries();
@@ -72,8 +71,7 @@ public class GeographyControllerTests
             new GetCitiesByCountyDto { Id = Guid.NewGuid(), Name = "Cluj-Napoca", Code = "CJ" }
         };
 
-        service.Setup(x => x.GetCitiesByCountyAsync(countyId))
-            .ReturnsAsync(expected);
+        service.Setup(x => x.GetCitiesByCountyAsync(countyId)).ReturnsAsync(expected);
 
         var controller = new GeographyController(service.Object);
 
@@ -86,6 +84,4 @@ public class GeographyControllerTests
         payload.Should().NotBeNull();
         payload![0].Code.Should().Be("CJ");
     }
-
-
 }

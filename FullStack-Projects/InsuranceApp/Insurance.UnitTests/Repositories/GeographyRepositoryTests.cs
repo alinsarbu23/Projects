@@ -89,5 +89,4 @@ public class GeographyRepositoryTests
         result[0].Name.Should().Be("A");
         result[1].Name.Should().Be("B");
     }
-
 }

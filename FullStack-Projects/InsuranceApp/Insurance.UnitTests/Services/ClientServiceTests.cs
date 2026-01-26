@@ -235,7 +235,6 @@ public class ClientServiceTests
         result.Items[0].Identifier.Should().Be("RO999");
     }
 
-
     [Fact]
     public async Task UpdateClientIdentifierAsync_ShouldThrow_WhenChangedTooRecently()
     {

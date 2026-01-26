@@ -19,7 +19,6 @@ namespace Insurance.Api.Controllers
             _buildingService = buildingService;
         }
 
-
         [HttpGet("clients/{clientId:guid}/buildings")]
         public async Task<ActionResult<IReadOnlyList<ClientBuildingSummaryDto>>> GetBuildingsForClient(Guid clientId)
         {

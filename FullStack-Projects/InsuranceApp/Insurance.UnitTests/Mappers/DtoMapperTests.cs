@@ -106,7 +106,6 @@ public class DtoMapperTests
         dto.Identifier.Should().Be("1234567890123");
     }
 
-
     [Fact]
     public void Building_To_ClientBuildingSummaryDto_ShouldMapBasicFields()
     {

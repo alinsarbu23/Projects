@@ -32,5 +32,4 @@ public class ClientIdentifierRepository : IClientIdentifierRepository
             .Select(x => x.ChangedAt)
             .FirstOrDefaultAsync();
     }
-
 }

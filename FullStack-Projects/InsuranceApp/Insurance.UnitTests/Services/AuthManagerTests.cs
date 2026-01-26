@@ -6,7 +6,6 @@ using Microsoft.Extensions.Configuration;
 using Insurance.Infrastructure.Services;
 using Insurance.Infrastructure.Identity;
 using Insurance.Application.DTOs.Identity;
-using Insurance.Application.Dtos.Identity;
 
 namespace Insurance.UnitTests.Services;
 

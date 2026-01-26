@@ -10,4 +10,3 @@ public class ClientIdentifier
     public Guid? ChangedByUserId { get; set; }
     public DateTime ChangedAt { get; set; }
 }
-

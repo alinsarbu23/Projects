@@ -11,9 +11,7 @@ namespace Insurance.UnitTests.Services;
 
 public class BuildingServiceTests
 {
-    private static BuildingService Create(
-        Mock<IUnitOfWork> uow,
-        Mock<IBuildingRepository> buildingsRepo)
+    private static BuildingService Create(Mock<IUnitOfWork> uow, Mock<IBuildingRepository> buildingsRepo)
     {
         uow.Setup(x => x.Buildings).Returns(buildingsRepo.Object);
         return new BuildingService(MapperFactory.Create(), uow.Object);

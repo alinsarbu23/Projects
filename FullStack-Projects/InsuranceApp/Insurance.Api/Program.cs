@@ -56,9 +56,6 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-
-
-
 var connectionString = builder.Configuration.GetConnectionString("InsuranceDb");
 
 builder.Services.AddDbContext<InsuranceDbContext>(options =>
@@ -81,7 +78,6 @@ builder.Services
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<InsuranceDbContext>();
 
-
 builder.Services.AddScoped<IGeographyRepository, GeographyRepository>();
 builder.Services.AddScoped<IClientRepository, ClientRepository>();
 builder.Services.AddScoped<IBuildingRepository, BuildingRepository>();
@@ -103,7 +99,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddAuthorization();
-
 
 var app = builder.Build();
 

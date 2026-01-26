@@ -51,7 +51,6 @@ public class AuthManager : IAuthManager
             throw new ArgumentException(string.Join("; ", result.Errors.Select(e => e.Description)));
         }
             
-
         await _userManager.AddToRoleAsync(user, dto.Role);
 
         return new AuthResponseDto

@@ -232,5 +232,4 @@ public class ClientRepositoryTests
         updated!.Street.Should().Be("New");
         updated.InsuredValue.Should().Be(500);
     }
-
 }

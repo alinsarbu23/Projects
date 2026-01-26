@@ -13,7 +13,6 @@ public class GetBuildingByIdDto
     public int? NumberOfFloors { get; init; }
     public decimal SurfaceArea { get; init; }
     public decimal InsuredValue { get; init; }
-
     public bool FloodRisk { get; init; }
     public bool EarthquakeRisk { get; init; }
 }

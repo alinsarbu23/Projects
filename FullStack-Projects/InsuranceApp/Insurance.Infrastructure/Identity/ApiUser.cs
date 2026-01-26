@@ -2,7 +2,4 @@
 
 namespace Insurance.Infrastructure.Identity;
 
-public class ApiUser:IdentityUser
-{
-
-}
+public class ApiUser:IdentityUser {}

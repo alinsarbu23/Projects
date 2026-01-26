@@ -23,4 +23,3 @@ public class CreateClientDtoValidator:AbstractValidator<CreateClientDto>
         RuleFor(x => x.Cui).NotEmpty().When(x => x.ClientType == ClientType.Company).WithMessage("CUI is required for company clients.");
     }
 }
-

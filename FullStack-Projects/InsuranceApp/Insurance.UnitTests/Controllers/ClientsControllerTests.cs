@@ -38,9 +38,7 @@ public class ClientsControllerTests
 
         result.Should().NotBeNull();
 
-        _clientServiceMock.Verify(
-            x => x.CreateClientAsync(It.IsAny<CreateClientDto>()),
-            Times.Once);
+        _clientServiceMock.Verify(x => x.CreateClientAsync(It.IsAny<CreateClientDto>()), Times.Once);
     }
 
     [Fact]
@@ -59,9 +57,7 @@ public class ClientsControllerTests
 
         result.Should().NotBeNull();
 
-        _clientServiceMock.Verify(
-            x => x.UpdateClientAsync(clientId, It.IsAny<UpdateClientDto>()),
-            Times.Once);
+        _clientServiceMock.Verify(x => x.UpdateClientAsync(clientId, It.IsAny<UpdateClientDto>()), Times.Once);
     }
 
     [Fact]
@@ -106,9 +102,7 @@ public class ClientsControllerTests
 
         result.Should().NotBeNull();
 
-        _clientServiceMock.Verify(
-            x => x.GetClientByIdAsync(It.IsAny<Guid>()),
-            Times.Once);
+        _clientServiceMock.Verify(x => x.GetClientByIdAsync(It.IsAny<Guid>()), Times.Once);
     }
 
     [Fact]
@@ -128,8 +122,6 @@ public class ClientsControllerTests
 
         result.Should().NotBeNull();
 
-        _clientServiceMock.Verify(
-            x => x.SearchClientsAsync(null, null, 1, 10),
-            Times.Once);
+        _clientServiceMock.Verify(x => x.SearchClientsAsync(null, null, 1, 10), Times.Once);
     }
 }
