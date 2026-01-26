@@ -60,8 +60,6 @@ public class AuthManagerTests
         return config;
     }
 
-    // ---------------- REGISTER ----------------
-
     [Fact]
     public async Task RegisterAsync_ShouldThrow_WhenEmailAlreadyExists()
     {
@@ -107,8 +105,6 @@ public class AuthManagerTests
             });
         });
     }
-
-    // ---------------- LOGIN ----------------
 
     [Fact]
     public async Task LoginAsync_ShouldThrow_WhenUserNotFound()

@@ -209,7 +209,6 @@ public class ClientServiceTests
         }
     }
 
-
     [Fact]
     public async Task SearchClientsAsync_ShouldSetIdentifierCorrectly()
     {

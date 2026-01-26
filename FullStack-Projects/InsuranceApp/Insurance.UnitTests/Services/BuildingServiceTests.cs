@@ -216,7 +216,6 @@ public class BuildingServiceTests
         });
     }
 
-
     [Fact]
     public async Task UpdateBuildingAsync_ShouldThrow_WhenSaveChangesReturnsZero()
     {
