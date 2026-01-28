@@ -6,7 +6,9 @@ using DomainCountry = Insurance.Domain.Models.Geography.Country;
 using DomainCounty = Insurance.Domain.Models.Geography.County;
 using DomainCity = Insurance.Domain.Models.Geography.City;
 using DomainClientIdentifier = Insurance.Domain.Models.ClientIdentifier;
+using DomainBuildingType = Insurance.Domain.Models.BuildingType;
 
+using DaoBuildingType = Insurance.Infrastructure.DAOs.BuildingType;
 using DaoClient = Insurance.Infrastructure.DAOs.Client;
 using DaoBuilding = Insurance.Infrastructure.DAOs.Building;
 using DaoCountry = Insurance.Infrastructure.DAOs.Country;
@@ -28,5 +30,6 @@ public class DaoMapperConfig : Profile
         CreateMap<DaoClientIdentifier, DomainClientIdentifier>().ReverseMap();
 
         CreateMap<DaoBuilding, DomainBuilding>().ReverseMap();
+        CreateMap<DaoBuildingType, DomainBuildingType>().ReverseMap();
     }
 }

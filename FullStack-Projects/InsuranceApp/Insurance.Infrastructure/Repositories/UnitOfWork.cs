@@ -9,18 +9,25 @@ public class UnitOfWork : IUnitOfWork
     public IBuildingRepository Buildings { get; }
     public IGeographyRepository Geography { get; }
     public IClientIdentifierRepository ClientIdentifiers { get; }
+    public IBuildingTypeRepository BuildingTypes { get; }
+    public ICityRepository Cities { get; }
+
 
     public UnitOfWork(
         InsuranceDbContext context, 
         IClientRepository clientRepository, 
         IBuildingRepository buildingRepository,
         IGeographyRepository geographyRepository,
-        IClientIdentifierRepository clientIdentifierRepository)
+        IClientIdentifierRepository clientIdentifierRepository,
+        IBuildingTypeRepository buildingTypes,
+        ICityRepository cities)
     {
         Clients = clientRepository;
         Buildings = buildingRepository;
         Geography = geographyRepository;
         ClientIdentifiers = clientIdentifierRepository;
+        BuildingTypes = buildingTypes;
+        Cities = cities;
         _context = context;
     }
 

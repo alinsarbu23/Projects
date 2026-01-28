@@ -38,15 +38,32 @@ public class BuildingRepository : IBuildingRepository
 
     public async Task<IReadOnlyList<Building>> GetBuildingsByClientIdAsync(Guid clientId)
     {
-        var buildingsDao = await _context.Buildings.AsNoTracking().Where(building => building.ClientId == clientId).ToListAsync();
+        var buildingsDao = await _context.Buildings
+            .AsNoTracking()
+            .Where(b => b.ClientId == clientId)
+            .Include(b => b.City)
+                .ThenInclude(c => c.County)
+                    .ThenInclude(co => co.Country)
+            .Include(b => b.BuildingType)
+            .ToListAsync();
+
         return _mapper.Map<IReadOnlyList<Building>>(buildingsDao);
     }
 
     public async Task<Building?> GetByIdAsync(Guid id)
     {
-        var buildingDao = await _context.Buildings.AsNoTracking().FirstOrDefaultAsync(b => b.Id == id);
+        var buildingDao = await _context.Buildings
+            .AsNoTracking()
+            .Include(b => b.City)
+                .ThenInclude(c => c.County)
+                    .ThenInclude(co => co.Country)
+            .Include(b => b.BuildingType)
+            .FirstOrDefaultAsync(b => b.Id == id);
+
         return _mapper.Map<Building?>(buildingDao);
     }
+
+
 
     public Task UpdateAsync(Building entity)
     {

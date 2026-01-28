@@ -39,6 +39,13 @@ public class ClientRepository : IClientRepository
 
         return await query.CountAsync();
     }
+
+    public Task<bool> ExistsAsync(Guid clientId)
+    {
+        return _context.Clients.AsNoTracking().AnyAsync(c => c.Id == clientId);
+    }
+
+
     public Task<bool> ExistsByCnpAsync(string cnp)
     {
         return _context.Clients.AsNoTracking().AnyAsync(client => client.Cnp == cnp);
