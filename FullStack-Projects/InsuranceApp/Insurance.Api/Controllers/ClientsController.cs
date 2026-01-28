@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace Insurance.Api.Controllers;
 
 [ApiController]
-[Authorize(Roles = Roles.Broker)]
 [Route("api/brokers/clients")]
 public class ClientsController : ControllerBase
 {

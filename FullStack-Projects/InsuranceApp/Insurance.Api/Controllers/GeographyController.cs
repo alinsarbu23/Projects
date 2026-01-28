@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Insurance.Api.Controllers
 {
-    [Authorize(Roles = Roles.Broker)]
     [ApiController]
     [Route("api/brokers")]
     public class GeographyController : ControllerBase
