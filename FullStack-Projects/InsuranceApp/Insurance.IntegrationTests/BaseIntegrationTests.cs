@@ -2,9 +2,7 @@
 using System.Net.Http.Headers;
 using Xunit;
 
-namespace Insurance.IntegrationTests;
-
-public abstract class BaseIntegrationTest: IClassFixture<CustomWebApplicationFactory>
+public abstract class BaseIntegrationTest: IClassFixture<CustomWebApplicationFactory>, IAsyncLifetime
 {
     protected readonly HttpClient Client;
 
@@ -13,8 +11,16 @@ public abstract class BaseIntegrationTest: IClassFixture<CustomWebApplicationFac
         Client = factory.CreateClient();
     }
 
+    public async Task InitializeAsync()
+    {
+        await DatabaseReset.ResetAsync();
+    }
+
+    public Task DisposeAsync() => Task.CompletedTask;
+
     protected void Authenticate(string token)
     {
-        Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        Client.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("Bearer", token);
     }
 }
