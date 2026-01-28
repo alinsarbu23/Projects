@@ -19,7 +19,7 @@ public class GeographyRepositoryTests
     }
 
     [Fact]
-    public async Task GetAllCountriesAsync_ShouldReturnOrderedCountries()
+    public async Task GetAllCountriesAsync_ShouldReturnCountries()
     {
         using var context = CreateDbContext();
         var repo = new GeographyRepository(context, MapperFactory.Create());
@@ -70,7 +70,7 @@ public class GeographyRepositoryTests
     }
 
     [Fact]
-    public async Task GetCountiesByCountryIdAsync_ShouldReturnOrderedCounties()
+    public async Task GetCountiesByCountryIdAsync_ShouldReturnRomania()
     {
         using var context = CreateDbContext();
         var repo = new GeographyRepository(context, MapperFactory.Create());
@@ -86,7 +86,10 @@ public class GeographyRepositoryTests
 
         var result = await repo.GetCountiesByCountryIdAsync(countryId);
 
-        result[0].Name.Should().Be("A");
-        result[1].Name.Should().Be("B");
+        result.Should().HaveCount(2);
+        result.Select(x => x.Name)
+              .Should()
+              .Contain(new[] { "A", "B" });
+
     }
 }

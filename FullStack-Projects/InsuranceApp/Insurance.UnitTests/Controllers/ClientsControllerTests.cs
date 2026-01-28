@@ -50,6 +50,7 @@ public class ClientsControllerTests
             clientId,
             new UpdateClientDto
             {
+                Name = "Test",
                 Email = "a@a.ro",
                 Phone = "0700",
                 Address = "Addr"
@@ -57,8 +58,11 @@ public class ClientsControllerTests
 
         result.Should().NotBeNull();
 
-        _clientServiceMock.Verify(x => x.UpdateClientAsync(clientId, It.IsAny<UpdateClientDto>()), Times.Once);
+        _clientServiceMock.Verify(
+            x => x.UpdateClientAsync(clientId, It.IsAny<UpdateClientDto>()),
+            Times.Once);
     }
+
 
     [Fact]
     public async Task UpdateClientIdentifier_ShouldCallService()

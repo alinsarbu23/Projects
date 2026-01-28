@@ -15,6 +15,7 @@ public class UpdateClientDtoValidatorTests
 
         var dto = new UpdateClientDto
         {
+            Name = "Test",
             Email = email!,
             Phone = "0700",
             Address = "Addr"
@@ -26,13 +27,31 @@ public class UpdateClientDtoValidatorTests
     }
 
     [Fact]
+    public void ShouldFail_WhenNewIdentifierIsTooLong()
+    {
+        var validator = new UpdateClientIdentifierDtoValidator();
+
+        var dto = new UpdateClientIdentifierDto
+        {
+            NewIdentifier = new string('1', 14)
+        };
+
+        var result = validator.Validate(dto);
+
+        result.IsValid.Should().BeFalse();
+    }
+
+
+
+    [Fact]
     public void ShouldPass_WhenDataIsValid()
     {
         var validator = new UpdateClientDtoValidator();
 
         var dto = new UpdateClientDto
         {
-            Email = "test@test.ro",
+            Name = "Test",
+            Email = "a@a.ro",
             Phone = "0700",
             Address = "Addr"
         };

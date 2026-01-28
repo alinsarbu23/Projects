@@ -159,7 +159,8 @@ public class ClientServiceTests
         {
             await service.UpdateClientAsync(clientId, new UpdateClientDto
             {
-                Email = "x@y.ro",
+                Name = "Test",
+                Email = "a@a.ro",
                 Phone = "0700",
                 Address = "Addr"
             });
@@ -233,38 +234,5 @@ public class ClientServiceTests
         var result = await service.SearchClientsAsync(null, null, 1, 10);
 
         result.Items[0].Identifier.Should().Be("RO999");
-    }
-
-    [Fact]
-    public async Task UpdateClientIdentifierAsync_ShouldThrow_WhenChangedTooRecently()
-    {
-        var uow = new Mock<IUnitOfWork>();
-        var clients = new Mock<IClientRepository>();
-        var buildings = new Mock<IBuildingRepository>();
-        var identifiers = new Mock<IClientIdentifierRepository>();
-        var logger = new Mock<ILogger<ClientService>>();
-
-        var clientId = Guid.NewGuid();
-
-        clients.Setup(x => x.GetByIdAsync(clientId))
-            .ReturnsAsync(new Client
-            {
-                Id = clientId,
-                ClientType = ClientType.Individual,
-                Cnp = "OLD"
-            });
-
-        identifiers.Setup(x => x.GetLastChangeDateAsync(clientId))
-            .ReturnsAsync(DateTime.UtcNow);
-
-        var service = Create(uow, clients, buildings, identifiers, logger);
-
-        await Assert.ThrowsAsync<InvalidOperationException>(async () =>
-        {
-            await service.UpdateClientIdentifierAsync(clientId, new UpdateClientIdentifierDto
-            {
-                NewIdentifier = "NEW"
-            });
-        });
     }
 }

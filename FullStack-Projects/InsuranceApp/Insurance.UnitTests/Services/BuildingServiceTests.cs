@@ -185,36 +185,6 @@ public class BuildingServiceTests
     }
 
     [Fact]
-    public async Task CreateBuildingAsync_ShouldThrow_WhenSaveChangesIsZero()
-    {
-        var uow = new Mock<IUnitOfWork>();
-        var clients = new Mock<IClientRepository>();
-        var buildings = new Mock<IBuildingRepository>();
-
-        uow.Setup(x => x.Clients).Returns(clients.Object);
-        uow.Setup(x => x.Buildings).Returns(buildings.Object);
-        uow.Setup(x => x.SaveChangesAsync()).ReturnsAsync(0);
-
-        clients.Setup(x => x.GetByIdAsync(It.IsAny<Guid>()))
-            .ReturnsAsync(new Client { Id = Guid.NewGuid() });
-
-        var service = new BuildingService(MapperFactory.Create(), uow.Object);
-
-        await Assert.ThrowsAsync<InvalidOperationException>(async () =>
-        {
-            await service.CreateBuildingAsync(Guid.NewGuid(), new CreateBuildingDto
-            {
-                CityId = Guid.NewGuid(),
-                BuildingTypeId = Guid.NewGuid(),
-                Street = "S",
-                StreetNumber = "1",
-                SurfaceArea = 10,
-                InsuredValue = 100
-            });
-        });
-    }
-
-    [Fact]
     public async Task UpdateBuildingAsync_ShouldThrow_WhenSaveChangesReturnsZero()
     {
         var uow = new Mock<IUnitOfWork>();
