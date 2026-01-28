@@ -14,13 +14,16 @@ namespace Insurance.Infrastructure.Services;
 public class AuthManager : IAuthManager
 {
     private readonly UserManager<ApiUser> _userManager;
+    private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IConfiguration _config;
 
     public AuthManager(
         UserManager<ApiUser> userManager,
+        RoleManager<IdentityRole> roleManager,
         IConfiguration config)
     {
         _userManager = userManager;
+        _roleManager = roleManager;
         _config = config;
     }
 
@@ -29,6 +32,12 @@ public class AuthManager : IAuthManager
         if (await _userManager.FindByEmailAsync(dto.Email) != null)
         {
             throw new ArgumentException("User with this email already exists.");
+        }
+
+        if (!await _roleManager.RoleExistsAsync(Roles.Broker))
+        {
+            throw new InvalidOperationException(
+                $"Role '{Roles.Broker}' is not configured.");
         }
 
         var user = new ApiUser
@@ -40,12 +49,15 @@ public class AuthManager : IAuthManager
         var result = await _userManager.CreateAsync(user, dto.Password);
         if (!result.Succeeded)
         {
-            throw new ArgumentException(string.Join("; ", result.Errors.Select(e => e.Description)));
+            throw new ArgumentException(
+                string.Join("; ", result.Errors.Select(e => e.Description)));
         }
+
+        await _userManager.AddToRoleAsync(user, Roles.Broker);
 
         return new AuthResponseDto
         {
-            Token = GenerateJwtToken(user)
+            Token = await GenerateJwtTokenAsync(user)
         };
     }
 
@@ -60,21 +72,28 @@ public class AuthManager : IAuthManager
 
         return new AuthResponseDto
         {
-            Token = GenerateJwtToken(user)
+            Token = await GenerateJwtTokenAsync(user)
         };
     }
 
-    private string GenerateJwtToken(ApiUser user)
+    private async Task<string> GenerateJwtTokenAsync(ApiUser user)
     {
-        var key = _config["Jwt:Key"]!;
-        var issuer = _config["Jwt:Issuer"]!;
-        var expiresMinutes = int.Parse(_config["Jwt:ExpiresMinutes"]!);
+        var roles = await _userManager.GetRolesAsync(user);
 
-        var claims = new[]
+        var claims = new List<Claim>
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id),
             new Claim(ClaimTypes.Email, user.Email!)
         };
+
+        foreach (var role in roles)
+        {
+            claims.Add(new Claim(ClaimTypes.Role, role));
+        }
+
+        var key = _config["Jwt:Key"]!;
+        var issuer = _config["Jwt:Issuer"]!;
+        var expiresMinutes = int.Parse(_config["Jwt:ExpiresMinutes"]!);
 
         var signingKey = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(key));

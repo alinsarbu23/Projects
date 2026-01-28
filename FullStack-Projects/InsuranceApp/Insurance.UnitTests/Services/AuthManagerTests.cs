@@ -17,28 +17,20 @@ public class AuthManagerTests
 
         return new Mock<UserManager<ApiUser>>(
             store.Object,
-            null!,
-            null!,
-            null!,
-            null!,
-            null!,
-            null!,
-            null!,
-            null!);
+            null!, null!, null!, null!,
+            null!, null!, null!, null!);
     }
 
-    private static Mock<RoleManager<IdentityRole>> MockRoleManager(bool roleExists)
+    private static Mock<RoleManager<IdentityRole>> MockRoleManager(bool roleExists = true)
     {
         var store = new Mock<IRoleStore<IdentityRole>>();
+
         var manager = new Mock<RoleManager<IdentityRole>>(
             store.Object,
-            null!,
-            null!,
-            null!,
-            null!);
+            null!, null!, null!, null!);
 
         manager.Setup(x => x.RoleExistsAsync(It.IsAny<string>()))
-            .ReturnsAsync(roleExists);
+               .ReturnsAsync(roleExists);
 
         return manager;
     }
@@ -48,13 +40,13 @@ public class AuthManagerTests
         var config = new Mock<IConfiguration>();
 
         config.Setup(x => x["Jwt:Key"])
-            .Returns("THIS_IS_A_VERY_LONG_SECRET_KEY_AT_LEAST_32_CHARS");
+              .Returns("THIS_IS_A_VERY_LONG_SECRET_KEY_AT_LEAST_32_CHARS");
 
         config.Setup(x => x["Jwt:Issuer"])
-            .Returns("Insurance.Api");
+              .Returns("Insurance.Api");
 
         config.Setup(x => x["Jwt:ExpiresMinutes"])
-            .Returns("60");
+              .Returns("60");
 
         return config;
     }
@@ -63,78 +55,72 @@ public class AuthManagerTests
     public async Task RegisterAsync_ShouldThrow_WhenEmailAlreadyExists()
     {
         var users = MockUserManager();
-        var roles = MockRoleManager(true);
+        var roles = MockRoleManager();
         var config = MockJwtConfig();
 
         users.Setup(x => x.FindByEmailAsync("a@a.ro"))
-            .ReturnsAsync(new ApiUser());
+             .ReturnsAsync(new ApiUser());
 
-        var manager = new AuthManager(users.Object, config.Object);
+        var manager = new AuthManager(users.Object, roles.Object, config.Object);
 
-        await Assert.ThrowsAsync<ArgumentException>(async () =>
-        {
-            await manager.RegisterAsync(new RegisterDto
+        await Assert.ThrowsAsync<ArgumentException>(() =>
+            manager.RegisterAsync(new RegisterDto
             {
                 Email = "a@a.ro",
-                Password = "Password1!",
-            });
-        });
+                Password = "Password1!"
+            }));
     }
 
     [Fact]
     public async Task LoginAsync_ShouldThrow_WhenUserNotFound()
     {
         var users = MockUserManager();
-        var roles = MockRoleManager(true);
+        var roles = MockRoleManager();
         var config = MockJwtConfig();
 
         users.Setup(x => x.FindByEmailAsync("x@a.ro"))
-            .ReturnsAsync((ApiUser?)null);
+             .ReturnsAsync((ApiUser?)null);
 
-        var manager = new AuthManager(users.Object, config.Object);
+        var manager = new AuthManager(users.Object, roles.Object, config.Object);
 
-        await Assert.ThrowsAsync<ArgumentException>(async () =>
-        {
-            await manager.LoginAsync(new LoginDto
+        await Assert.ThrowsAsync<ArgumentException>(() =>
+            manager.LoginAsync(new LoginDto
             {
                 Email = "x@a.ro",
                 Password = "Password1!"
-            });
-        });
+            }));
     }
 
     [Fact]
     public async Task LoginAsync_ShouldThrow_WhenPasswordInvalid()
     {
         var users = MockUserManager();
-        var roles = MockRoleManager(true);
+        var roles = MockRoleManager();
         var config = MockJwtConfig();
 
         var user = new ApiUser { Email = "a@a.ro" };
 
         users.Setup(x => x.FindByEmailAsync("a@a.ro"))
-            .ReturnsAsync(user);
+             .ReturnsAsync(user);
 
         users.Setup(x => x.CheckPasswordAsync(user, "wrong"))
-            .ReturnsAsync(false);
+             .ReturnsAsync(false);
 
-        var manager = new AuthManager(users.Object, config.Object);
+        var manager = new AuthManager(users.Object, roles.Object, config.Object);
 
-        await Assert.ThrowsAsync<ArgumentException>(async () =>
-        {
-            await manager.LoginAsync(new LoginDto
+        await Assert.ThrowsAsync<ArgumentException>(() =>
+            manager.LoginAsync(new LoginDto
             {
                 Email = "a@a.ro",
                 Password = "wrong"
-            });
-        });
+            }));
     }
 
     [Fact]
     public async Task LoginAsync_ShouldReturnToken_WhenCredentialsValid()
     {
         var users = MockUserManager();
-        var roles = MockRoleManager(true);
+        var roles = MockRoleManager();
         var config = MockJwtConfig();
 
         var user = new ApiUser
@@ -145,15 +131,15 @@ public class AuthManagerTests
         };
 
         users.Setup(x => x.FindByEmailAsync("a@a.ro"))
-            .ReturnsAsync(user);
+             .ReturnsAsync(user);
 
         users.Setup(x => x.CheckPasswordAsync(user, "Password1!"))
-            .ReturnsAsync(true);
+             .ReturnsAsync(true);
 
         users.Setup(x => x.GetRolesAsync(user))
-            .ReturnsAsync(new List<string> { "Broker" });
+             .ReturnsAsync(new List<string> { Roles.Broker });
 
-        var manager = new AuthManager(users.Object, config.Object);
+        var manager = new AuthManager(users.Object, roles.Object, config.Object);
 
         var result = await manager.LoginAsync(new LoginDto
         {
