@@ -5,10 +5,18 @@ public class UpdateClientDtoValidator : AbstractValidator<UpdateClientDto>
 {
     public UpdateClientDtoValidator()
     {
-        RuleFor(x => x.Email).NotEmpty().EmailAddress();
+        RuleFor(x => x.Name)
+            .NotEmpty().WithMessage("Name is required.")
+            .MaximumLength(200).WithMessage("Name is too long.");
 
-        RuleFor(x => x.Phone).NotEmpty();
+        RuleFor(x => x.Email)
+            .NotEmpty().WithMessage("Email is required.")
+            .EmailAddress().WithMessage("Invalid email format.");
 
-        RuleFor(x => x.Address).NotEmpty();
+        RuleFor(x => x.Phone)
+            .NotEmpty().WithMessage("Phone is required.");
+
+        RuleFor(x => x.Address)
+            .NotEmpty().WithMessage("Address is required.");
     }
 }

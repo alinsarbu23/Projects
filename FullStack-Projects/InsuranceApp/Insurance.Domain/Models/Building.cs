@@ -1,11 +1,18 @@
-﻿namespace Insurance.Domain.Models;
+﻿using Insurance.Domain.Models.Geography;
+
+namespace Insurance.Domain.Models;
 
 public class Building
 {
     public Guid Id { get; set; }
     public Guid ClientId { get; set; }
+
     public Guid CityId { get; set; }
+    public City City { get; set; } = null!;
+
     public Guid BuildingTypeId { get; set; }
+    public BuildingType BuildingType { get; set; } = null!;
+
     public string Street { get; set; } = null!;
     public string StreetNumber { get; set; } = null!;
     public int? ConstructionYear { get; set; }
