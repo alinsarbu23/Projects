@@ -69,7 +69,7 @@ public class AuthManagerTests
         users.Setup(x => x.FindByEmailAsync("a@a.ro"))
             .ReturnsAsync(new ApiUser());
 
-        var manager = new AuthManager(users.Object, roles.Object, config.Object);
+        var manager = new AuthManager(users.Object, config.Object);
 
         await Assert.ThrowsAsync<ArgumentException>(async () =>
         {
@@ -77,30 +77,6 @@ public class AuthManagerTests
             {
                 Email = "a@a.ro",
                 Password = "Password1!",
-                Role = "Broker"
-            });
-        });
-    }
-
-    [Fact]
-    public async Task RegisterAsync_ShouldThrow_WhenRoleDoesNotExist()
-    {
-        var users = MockUserManager();
-        var roles = MockRoleManager(false);
-        var config = MockJwtConfig();
-
-        users.Setup(x => x.FindByEmailAsync(It.IsAny<string>()))
-            .ReturnsAsync((ApiUser?)null);
-
-        var manager = new AuthManager(users.Object, roles.Object, config.Object);
-
-        await Assert.ThrowsAsync<ArgumentException>(async () =>
-        {
-            await manager.RegisterAsync(new RegisterDto
-            {
-                Email = "new@a.ro",
-                Password = "Password1!",
-                Role = "InvalidRole"
             });
         });
     }
@@ -115,7 +91,7 @@ public class AuthManagerTests
         users.Setup(x => x.FindByEmailAsync("x@a.ro"))
             .ReturnsAsync((ApiUser?)null);
 
-        var manager = new AuthManager(users.Object, roles.Object, config.Object);
+        var manager = new AuthManager(users.Object, config.Object);
 
         await Assert.ThrowsAsync<ArgumentException>(async () =>
         {
@@ -142,7 +118,7 @@ public class AuthManagerTests
         users.Setup(x => x.CheckPasswordAsync(user, "wrong"))
             .ReturnsAsync(false);
 
-        var manager = new AuthManager(users.Object, roles.Object, config.Object);
+        var manager = new AuthManager(users.Object, config.Object);
 
         await Assert.ThrowsAsync<ArgumentException>(async () =>
         {
@@ -177,7 +153,7 @@ public class AuthManagerTests
         users.Setup(x => x.GetRolesAsync(user))
             .ReturnsAsync(new List<string> { "Broker" });
 
-        var manager = new AuthManager(users.Object, roles.Object, config.Object);
+        var manager = new AuthManager(users.Object, config.Object);
 
         var result = await manager.LoginAsync(new LoginDto
         {

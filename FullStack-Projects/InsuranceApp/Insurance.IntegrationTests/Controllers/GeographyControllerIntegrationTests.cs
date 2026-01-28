@@ -16,7 +16,7 @@ public class GeographyIntegrationTests : BaseIntegrationTest
     [Fact]
     public async Task GetCountries_ShouldReturnRomania()
     {
-        Authenticate(await AuthHelper.LoginAsBroker(Client));
+        Authenticate(await AuthHelper.Login(Client));
 
         var response = await Client.GetAsync("/api/brokers/countries");
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -30,7 +30,7 @@ public class GeographyIntegrationTests : BaseIntegrationTest
     [Fact]
     public async Task GetCitiesByCounty_ShouldReturnCities()
     {
-        Authenticate(await AuthHelper.LoginAsBroker(Client));
+        Authenticate(await AuthHelper.Login(Client));
 
         var countyId = Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
 

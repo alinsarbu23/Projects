@@ -17,7 +17,7 @@ public class ClientsIntegrationTests : BaseIntegrationTest
     [Fact]
     public async Task Create_And_Get_Client_ShouldWork()
     {
-        Authenticate(await AuthHelper.LoginAsBroker(Client));
+        Authenticate(await AuthHelper.Login(Client));
 
         var create = await Client.PostAsJsonAsync(
             "/api/brokers/clients",
@@ -40,7 +40,7 @@ public class ClientsIntegrationTests : BaseIntegrationTest
     [Fact]
     public async Task CreateClient_ShouldReturn400_WhenInvalid()
     {
-        Authenticate(await AuthHelper.LoginAsBroker(Client));
+        Authenticate(await AuthHelper.Login(Client));
 
         var response = await Client.PostAsJsonAsync(
             "/api/brokers/clients", new { });

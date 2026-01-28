@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using Insurance.Application.DTOs.Buildings;
-using Insurance.Application.DTOs.Clients;
 using Insurance.Application.DTOs.Geography;
 using Insurance.Domain.Enums;
 using Insurance.IntegrationTests.Helpers;
@@ -21,19 +20,18 @@ public class BuildingsIntegrationTests : BaseIntegrationTest
     [Fact]
     public async Task CreateBuilding_ShouldPersist()
     {
-        var token = await AuthHelper.LoginAsBroker(Client);
-        Authenticate(token);
+        Authenticate(await AuthHelper.Login(Client));
 
         var createClientResponse = await Client.PostAsJsonAsync(
             "/api/brokers/clients",
-            new CreateClientDto
+            new
             {
-                ClientType = ClientType.Individual,
-                Name = "Building Owner",
-                Cnp = "2990101223344", 
-                Email = "owner@test.ro",
-                Phone = "0700000000",
-                Address = "Test Address"
+                clientType = ClientType.Individual,
+                name = "Building Owner",
+                cnp = "2990101223344",
+                email = "owner@test.ro",
+                phone = "0700000000",
+                address = "Test Address"
             });
 
         createClientResponse.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -49,13 +47,11 @@ public class BuildingsIntegrationTests : BaseIntegrationTest
         cities.Should().NotBeNull();
         cities!.Should().NotBeEmpty();
 
-        var cityId = cities[0].Id;
-
         var createBuildingResponse = await Client.PostAsJsonAsync(
             $"{clientLocation}/buildings",
             new CreateBuildingDto
             {
-                CityId = cityId,
+                CityId = cities[0].Id,
                 BuildingTypeId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
                 Street = "Main Street",
                 StreetNumber = "10",

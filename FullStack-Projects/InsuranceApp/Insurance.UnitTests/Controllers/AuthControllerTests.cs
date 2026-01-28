@@ -24,7 +24,6 @@ public class AuthControllerTests
         {
             Email = "a@a.ro",
             Password = "Password1!",
-            Role = "Broker"
         });
 
         var ok = result.Result as OkObjectResult;

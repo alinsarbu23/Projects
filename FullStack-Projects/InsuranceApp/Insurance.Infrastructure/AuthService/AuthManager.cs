@@ -15,15 +15,12 @@ public class AuthManager : IAuthManager
 {
     private readonly UserManager<ApiUser> _userManager;
     private readonly IConfiguration _config;
-    private readonly RoleManager<IdentityRole> _roleManager;
 
     public AuthManager(
         UserManager<ApiUser> userManager,
-        RoleManager<IdentityRole> roleManager,
         IConfiguration config)
     {
         _userManager = userManager;
-        _roleManager = roleManager;
         _config = config;
     }
 
@@ -33,12 +30,7 @@ public class AuthManager : IAuthManager
         {
             throw new ArgumentException("User with this email already exists.");
         }
-            
-        if (!await _roleManager.RoleExistsAsync(dto.Role))
-        {
-            throw new ArgumentException($"Role '{dto.Role}' does not exist.");
-        }
-            
+
         var user = new ApiUser
         {
             UserName = dto.Email,
@@ -50,12 +42,10 @@ public class AuthManager : IAuthManager
         {
             throw new ArgumentException(string.Join("; ", result.Errors.Select(e => e.Description)));
         }
-            
-        await _userManager.AddToRoleAsync(user, dto.Role);
 
         return new AuthResponseDto
         {
-            Token = GenerateJwtToken(user, dto.Role)
+            Token = GenerateJwtToken(user)
         };
     }
 
@@ -68,16 +58,13 @@ public class AuthManager : IAuthManager
             throw new ArgumentException("Invalid credentials.");
         }
 
-
-        var role = (await _userManager.GetRolesAsync(user)).First();
-
         return new AuthResponseDto
         {
-            Token = GenerateJwtToken(user, role)
+            Token = GenerateJwtToken(user)
         };
     }
 
-    private string GenerateJwtToken(ApiUser user, string role)
+    private string GenerateJwtToken(ApiUser user)
     {
         var key = _config["Jwt:Key"]!;
         var issuer = _config["Jwt:Issuer"]!;
@@ -86,8 +73,7 @@ public class AuthManager : IAuthManager
         var claims = new[]
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id),
-            new Claim(ClaimTypes.Email, user.Email!),
-            new Claim(ClaimTypes.Role, role)
+            new Claim(ClaimTypes.Email, user.Email!)
         };
 
         var signingKey = new SymmetricSecurityKey(
