@@ -13,4 +13,5 @@ public interface IClientRepository
     Task<int> CountAsync(string? name, string? identifier);
     Task<bool> ExistsByCnpAsync(string cnp);
     Task<bool> ExistsByCuiAsync(string cui);
+    Task<bool> ExistsAsync(Guid clientId);
 }

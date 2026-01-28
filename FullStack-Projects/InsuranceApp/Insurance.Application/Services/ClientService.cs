@@ -40,18 +40,20 @@ public class ClientService : IClientService
         {
             throw new ArgumentException("A client with the current CUI already exists.");
         }
-
         var client = new Client
         {
             Id = Guid.NewGuid(),
             ClientType = clientDto.ClientType,
             Name = clientDto.Name,
-            Cnp = clientDto.Cnp,
-            Cui = clientDto.Cui,
+
+            Cnp = clientDto.ClientType == ClientType.Individual ? clientDto.Cnp: null,
+            Cui = clientDto.ClientType == ClientType.Company ? clientDto.Cui: null,
+
             Email = clientDto.Email,
             Phone = clientDto.Phone,
             Address = clientDto.Address
         };
+
 
         await _unitOfWork.Clients.AddAsync(client);
         var rowsAffected = await _unitOfWork.SaveChangesAsync();
@@ -124,11 +126,12 @@ public class ClientService : IClientService
     public async Task UpdateClientAsync(Guid clientId, UpdateClientDto dto)
     {
         var client = await _unitOfWork.Clients.GetByIdAsync(clientId);
-        if(client == null)
+        if (client == null)
         {
             throw new KeyNotFoundException("Client not found.");
         }
 
+        client.Name = dto.Name;
         client.Email = dto.Email;
         client.Phone = dto.Phone;
         client.Address = dto.Address;
@@ -138,36 +141,31 @@ public class ClientService : IClientService
         if (await _unitOfWork.SaveChangesAsync() == 0)
         {
             throw new InvalidOperationException("Failed to update client.");
-        } 
+        }
     }
 
     public async Task UpdateClientIdentifierAsync(Guid clientId, UpdateClientIdentifierDto updateClientDto)
     {
         var client = await _unitOfWork.Clients.GetByIdAsync(clientId);
 
-        if(client == null)
+        if (client == null)
         {
             throw new KeyNotFoundException("Client not found.");
         }
 
-        var lastChangeDate = await _unitOfWork.ClientIdentifiers.GetLastChangeDateAsync(clientId);
-
-        if (lastChangeDate.HasValue && DateTime.UtcNow < lastChangeDate.Value.AddMonths(1))
-        {
-            throw new InvalidOperationException("Client identifier can only be changed once per month.");
-        }
-            
-        var oldIdentifier = client.ClientType == ClientType.Individual ? client.Cnp : client.Cui;
+        var oldIdentifier =
+            client.ClientType == ClientType.Individual
+                ? client.Cnp
+                : client.Cui;
 
         if (client.ClientType == ClientType.Individual)
         {
             client.Cnp = updateClientDto.NewIdentifier;
-        }   
+        }
         else
         {
             client.Cui = updateClientDto.NewIdentifier;
         }
-            
 
         var audit = new ClientIdentifier
         {

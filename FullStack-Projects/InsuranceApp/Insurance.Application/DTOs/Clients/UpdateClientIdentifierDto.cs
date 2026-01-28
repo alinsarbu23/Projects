@@ -2,5 +2,6 @@
 
 public class UpdateClientIdentifierDto
 {
-    public string NewIdentifier { get; init; } = null!;
+    public required string NewIdentifier { get; init; }
 }
+
