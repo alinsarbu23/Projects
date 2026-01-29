@@ -24,34 +24,34 @@ public class ClientService : IClientService
         _logger = logger;
     }
 
-    public async Task<Guid> CreateClientAsync(CreateClientDto clientDto)
+    public async Task<Guid> CreateClientAsync(CreateClientDto dto)
     {
         _logger.LogInformation(
             "Creating client {Name} ({Type})",
-            clientDto.Name,
-            clientDto.ClientType);
+            dto.Name,
+            dto.ClientType);
 
-        if (!string.IsNullOrWhiteSpace(clientDto.Cnp) && await _unitOfWork.Clients.ExistsByCnpAsync(clientDto.Cnp))
+        if (!string.IsNullOrWhiteSpace(dto.Cnp) && await _unitOfWork.Clients.ExistsByCnpAsync(dto.Cnp))
         {
             throw new ArgumentException("A client with the current CNP already exists.");
         }
 
-        if (!string.IsNullOrWhiteSpace(clientDto.Cui) && await _unitOfWork.Clients.ExistsByCuiAsync(clientDto.Cui))
+        if (!string.IsNullOrWhiteSpace(dto.Cui) && await _unitOfWork.Clients.ExistsByCuiAsync(dto.Cui))
         {
             throw new ArgumentException("A client with the current CUI already exists.");
         }
         var client = new Client
         {
             Id = Guid.NewGuid(),
-            ClientType = clientDto.ClientType,
-            Name = clientDto.Name,
+            ClientType = dto.ClientType,
+            Name = dto.Name,
 
-            Cnp = clientDto.ClientType == ClientType.Individual ? clientDto.Cnp: null,
-            Cui = clientDto.ClientType == ClientType.Company ? clientDto.Cui: null,
+            Cnp = dto.ClientType == ClientType.Individual ? dto.Cnp: null,
+            Cui = dto.ClientType == ClientType.Company ? dto.Cui: null,
 
-            Email = clientDto.Email,
-            Phone = clientDto.Phone,
-            Address = clientDto.Address
+            Email = dto.Email,
+            Phone = dto.Phone,
+            Address = dto.Address
         };
 
 
@@ -60,7 +60,7 @@ public class ClientService : IClientService
 
         if (rowsAffected == 0)
         {
-            _logger.LogWarning("Failed to create client {Name}", clientDto.Name);
+            _logger.LogWarning("Failed to create client {Name}", dto.Name);
             throw new InvalidOperationException("Failed to create client.");
         }
 

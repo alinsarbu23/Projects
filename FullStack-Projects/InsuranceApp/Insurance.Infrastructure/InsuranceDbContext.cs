@@ -21,17 +21,17 @@ public partial class InsuranceDbContext : IdentityDbContext<ApiUser>
     public DbSet<County> Counties => Set<County>();
     public DbSet<ClientIdentifier> ClientIdentifiers => Set<ClientIdentifier>();
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void OnModelCreating(ModelBuilder builder)
     {
-        base.OnModelCreating(modelBuilder);
+        base.OnModelCreating(builder);
 
-        modelBuilder.ApplyConfiguration(new CountryConfiguration());
-        modelBuilder.ApplyConfiguration(new CountyConfiguration());
-        modelBuilder.ApplyConfiguration(new CityConfiguration());
-        modelBuilder.ApplyConfiguration(new BuildingConfiguration());
-        modelBuilder.ApplyConfiguration(new BuildingTypeConfiguration());
-        modelBuilder.ApplyConfiguration(new ClientConfiguration());
-        modelBuilder.ApplyConfiguration(new ClientIdentifierConfiguration());
-        modelBuilder.ApplyConfiguration(new RoleConfiguration());
+        builder.ApplyConfiguration(new CountryConfiguration());
+        builder.ApplyConfiguration(new CountyConfiguration());
+        builder.ApplyConfiguration(new CityConfiguration());
+        builder.ApplyConfiguration(new BuildingConfiguration());
+        builder.ApplyConfiguration(new BuildingTypeConfiguration());
+        builder.ApplyConfiguration(new ClientConfiguration());
+        builder.ApplyConfiguration(new ClientIdentifierConfiguration());
+        builder.ApplyConfiguration(new RoleConfiguration());
     }
 }

@@ -9,7 +9,7 @@ namespace Insurance.Infrastructure.Repositories;
 public class ClientRepository : IClientRepository
 {
     private readonly InsuranceDbContext _context;
-    private IMapper _mapper;
+    private readonly IMapper _mapper;
 
     public ClientRepository(InsuranceDbContext context, IMapper mapper)
     {

@@ -74,7 +74,7 @@ public class BuildingService : IBuildingService
         return _mapper.Map<IReadOnlyList<ClientBuildingSummaryDto>>(buildings);
     }
 
-    public async Task UpdateBuildingAsync(Guid buildingId, UpdateBuildingDto updateBuildingDto)
+    public async Task UpdateBuildingAsync(Guid buildingId, UpdateBuildingDto dto)
     {
         var building  = await _unitOfWork.Buildings.GetByIdAsync(buildingId);
         if(building == null)
@@ -82,14 +82,14 @@ public class BuildingService : IBuildingService
             throw new KeyNotFoundException($"Building with id {buildingId} not found.");
         }
 
-        building.Street = updateBuildingDto.Street;
-        building.StreetNumber = updateBuildingDto.StreetNumber;
-        building.ConstructionYear = updateBuildingDto.ConstructionYear;
-        building.NumberOfFloors = updateBuildingDto.NumberOfFloors;
-        building.SurfaceArea = updateBuildingDto.SurfaceArea;
-        building.InsuredValue = updateBuildingDto.InsuredValue;
-        building.FloodRisk = updateBuildingDto.FloodRisk;
-        building.EarthquakeRisk = updateBuildingDto.EarthquakeRisk;
+        building.Street = dto.Street;
+        building.StreetNumber = dto.StreetNumber;
+        building.ConstructionYear = dto.ConstructionYear;
+        building.NumberOfFloors = dto.NumberOfFloors;
+        building.SurfaceArea = dto.SurfaceArea;
+        building.InsuredValue = dto.InsuredValue;
+        building.FloodRisk = dto.FloodRisk;
+        building.EarthquakeRisk = dto.EarthquakeRisk;
 
         await _unitOfWork.Buildings.UpdateAsync(building);
         var rowsAffected = await _unitOfWork.SaveChangesAsync();
