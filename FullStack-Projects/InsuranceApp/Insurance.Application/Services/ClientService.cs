@@ -83,8 +83,9 @@ public class ClientService : IClientService
 
         dto.ClientType = client.ClientType.ToString();
         dto.Identifier = client.ClientType == ClientType.Individual
-            ? client.Cnp
-            : client.Cui;
+            ? client.Cnp ?? string.Empty
+            : client.Cui ?? string.Empty;
+
 
         var buildings = await _unitOfWork.Buildings.GetBuildingsByClientIdAsync(clientId);
 
@@ -110,8 +111,8 @@ public class ClientService : IClientService
             var client = clients.First(c => c.Id == dto.Id);
             dto.ClientType = client.ClientType.ToString();
             dto.Identifier = client.ClientType == ClientType.Individual
-                ? client.Cnp
-                : client.Cui;
+                ? client.Cnp ?? string.Empty
+                : client.Cui ?? string.Empty;
         }
 
         return new PagedClientsDto
@@ -144,7 +145,7 @@ public class ClientService : IClientService
         }
     }
 
-    public async Task UpdateClientIdentifierAsync(Guid clientId, UpdateClientIdentifierDto updateClientDto)
+    public async Task UpdateClientIdentifierAsync(Guid clientId, UpdateClientIdentifierDto dto)
     {
         var client = await _unitOfWork.Clients.GetByIdAsync(clientId);
 
@@ -160,11 +161,11 @@ public class ClientService : IClientService
 
         if (client.ClientType == ClientType.Individual)
         {
-            client.Cnp = updateClientDto.NewIdentifier;
+            client.Cnp = dto.NewIdentifier;
         }
         else
         {
-            client.Cui = updateClientDto.NewIdentifier;
+            client.Cui = dto.NewIdentifier;
         }
 
         var audit = new ClientIdentifier
@@ -172,7 +173,7 @@ public class ClientService : IClientService
             Id = Guid.NewGuid(),
             ClientId = client.Id,
             OldIdentifier = oldIdentifier!,
-            NewIdentifier = updateClientDto.NewIdentifier,
+            NewIdentifier = dto.NewIdentifier,
             IdentifierType = client.ClientType.ToString(),
             ChangedAt = DateTime.UtcNow
         };

@@ -3,12 +3,12 @@
 public class GetBuildingByIdDto
 {
     public Guid Id { get; init; }
-    public string Street { get; init; }
-    public string StreetNumber { get; init; }
-    public string City { get; init; }
-    public string County { get; init; }
-    public string Country { get; init; }
-    public string BuildingType { get; init; }
+    public required string Street { get; init; }
+    public required string StreetNumber { get; init; }
+    public required string City { get; init; }
+    public required string County { get; init; }
+    public required string Country { get; init; }
+    public required string BuildingType { get; init; }
     public int? ConstructionYear { get; init; }
     public int? NumberOfFloors { get; init; }
     public decimal SurfaceArea { get; init; }

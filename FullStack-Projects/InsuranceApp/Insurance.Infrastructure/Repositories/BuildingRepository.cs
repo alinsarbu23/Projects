@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Insurance.Application.Interfaces.Repositories;
 using Insurance.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
