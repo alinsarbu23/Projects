@@ -1,6 +1,7 @@
 ﻿using Xunit;
 using FluentAssertions;
 using Insurance.Application.DTOs.Clients;
+using Insurance.Application.Validators.Clients;
 
 namespace Insurance.UnitTests.Validators;
 

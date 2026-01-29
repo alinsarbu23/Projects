@@ -80,6 +80,8 @@ public class DtoMapperTests
     {
         var dto = new GetBuildingByIdDto
         {
+            Street = "Street",
+            StreetNumber = "1",
             City = "Cluj",
             County = "Cluj",
             Country = "Romania",
