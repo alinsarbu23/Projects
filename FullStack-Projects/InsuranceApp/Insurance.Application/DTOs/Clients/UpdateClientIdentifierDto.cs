@@ -4,4 +4,3 @@ public class UpdateClientIdentifierDto
 {
     public required string NewIdentifier { get; init; }
 }
-
