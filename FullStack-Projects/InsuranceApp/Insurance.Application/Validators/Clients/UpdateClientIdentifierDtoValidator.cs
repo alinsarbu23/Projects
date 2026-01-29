@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Insurance.Application.DTOs.Clients;
 
+namespace Insurance.Application.Validators.Clients;
 public class UpdateClientIdentifierDtoValidator : AbstractValidator<UpdateClientIdentifierDto>
 {
     public UpdateClientIdentifierDtoValidator()

@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Insurance.Application.DTOs.Buildings;
 
+namespace Insurance.Application.Validators.Buildings;
 public class CreateBuildingDtoValidator : AbstractValidator<CreateBuildingDto>
 {
     public CreateBuildingDtoValidator()

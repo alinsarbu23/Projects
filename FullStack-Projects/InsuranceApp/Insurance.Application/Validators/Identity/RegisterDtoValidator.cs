@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Insurance.Application.DTOs.Identity;
 
+namespace Insurance.Application.Validators.Identity;
 public class RegisterDtoValidator : AbstractValidator<RegisterDto>
 {
     public RegisterDtoValidator()
