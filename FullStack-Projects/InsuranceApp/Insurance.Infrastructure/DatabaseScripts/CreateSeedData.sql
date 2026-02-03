@@ -1,12 +1,12 @@
 ﻿USE InsuranceDb;
 GO
 
-DELETE FROM Buildings;
-DELETE FROM BuildingTypes;
-DELETE FROM Clients;
-DELETE FROM Cities;
-DELETE FROM Counties;
-DELETE FROM Countries;
+
+
+INSERT INTO ClientTypes (Code, Name)
+VALUES
+ ('INDIVIDUAL', 'Individual'),
+ ('COMPANY', 'Company');
 GO
 
 DECLARE @CountryId UNIQUEIDENTIFIER = NEWID();
@@ -20,9 +20,11 @@ VALUES (@CountyId, @CountryId, 'Bucharest');
 DECLARE @CityId UNIQUEIDENTIFIER = NEWID();
 INSERT INTO Cities (Id, CountyId, Name, Code)
 VALUES (@CityId, @CountyId, 'Bucharest', 'RO-B');
+GO
 
 INSERT INTO BuildingTypes (Id, Name)
-VALUES 
+VALUES
  (NEWID(), 'Residential'),
  (NEWID(), 'Office'),
  (NEWID(), 'Industrial');
+GO

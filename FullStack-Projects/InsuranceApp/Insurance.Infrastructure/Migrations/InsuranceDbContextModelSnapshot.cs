@@ -108,23 +108,6 @@ namespace Insurance.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("BuildingTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("11111111-1111-1111-1111-111111111111"),
-                            Name = "Residential"
-                        },
-                        new
-                        {
-                            Id = new Guid("22222222-2222-2222-2222-222222222222"),
-                            Name = "Office"
-                        },
-                        new
-                        {
-                            Id = new Guid("33333333-3333-3333-3333-333333333333"),
-                            Name = "Industrial"
-                        });
                 });
 
             modelBuilder.Entity("Insurance.Infrastructure.DAOs.City", b =>
@@ -152,22 +135,6 @@ namespace Insurance.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Cities");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("cccccccc-cccc-cccc-cccc-cccccccccccc"),
-                            Code = "B",
-                            CountyId = new Guid("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
-                            Name = "Bucharest"
-                        },
-                        new
-                        {
-                            Id = new Guid("cccccccc-cccc-cccc-cccc-dddddddddddd"),
-                            Code = "CJ",
-                            CountyId = new Guid("bbbbbbbb-bbbb-bbbb-bbbb-cccccccccccc"),
-                            Name = "Cluj-Napoca"
-                        });
                 });
 
             modelBuilder.Entity("Insurance.Infrastructure.DAOs.Client", b =>
@@ -179,10 +146,8 @@ namespace Insurance.Infrastructure.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<string>("ClientType")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                    b.Property<int>("ClientTypeId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Cnp")
                         .HasMaxLength(13)
@@ -220,6 +185,8 @@ namespace Insurance.Infrastructure.Migrations
                     b.HasKey("Id")
                         .HasName("PK__Clients__3214EC07E0E04D9B");
 
+                    b.HasIndex("ClientTypeId");
+
                     b.HasIndex("Cnp")
                         .IsUnique()
                         .HasDatabaseName("UX_Clients_Cnp")
@@ -231,20 +198,6 @@ namespace Insurance.Infrastructure.Migrations
                         .HasFilter("[Cui] IS NOT NULL");
 
                     b.ToTable("Clients");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("dddddddd-dddd-dddd-dddd-dddddddddddd"),
-                            Address = "Test Address",
-                            ClientType = "Individual",
-                            Cnp = "1800101223344",
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "test@insurance.ro",
-                            Name = "Test Client",
-                            Phone = "0700000000",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        });
                 });
 
             modelBuilder.Entity("Insurance.Infrastructure.DAOs.ClientIdentifier", b =>
@@ -286,6 +239,32 @@ namespace Insurance.Infrastructure.Migrations
                     b.ToTable("ClientIdentifier", (string)null);
                 });
 
+            modelBuilder.Entity("Insurance.Infrastructure.DAOs.ClientType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.ToTable("ClientTypes");
+                });
+
             modelBuilder.Entity("Insurance.Infrastructure.DAOs.Country", b =>
                 {
                     b.Property<Guid>("Id")
@@ -303,13 +282,6 @@ namespace Insurance.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Countries");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
-                            Name = "Romania"
-                        });
                 });
 
             modelBuilder.Entity("Insurance.Infrastructure.DAOs.County", b =>
@@ -332,20 +304,6 @@ namespace Insurance.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Counties");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
-                            CountryId = new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
-                            Name = "Bucharest"
-                        },
-                        new
-                        {
-                            Id = new Guid("bbbbbbbb-bbbb-bbbb-bbbb-cccccccccccc"),
-                            CountryId = new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
-                            Name = "Cluj"
-                        });
                 });
 
             modelBuilder.Entity("Insurance.Infrastructure.Identity.ApiUser", b =>
@@ -438,20 +396,6 @@ namespace Insurance.Infrastructure.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "ROLE_ADMIN",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = "ROLE_BROKER",
-                            Name = "Broker",
-                            NormalizedName = "BROKER"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -599,6 +543,17 @@ namespace Insurance.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("County");
+                });
+
+            modelBuilder.Entity("Insurance.Infrastructure.DAOs.Client", b =>
+                {
+                    b.HasOne("Insurance.Infrastructure.DAOs.ClientType", "ClientType")
+                        .WithMany()
+                        .HasForeignKey("ClientTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ClientType");
                 });
 
             modelBuilder.Entity("Insurance.Infrastructure.DAOs.ClientIdentifier", b =>

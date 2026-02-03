@@ -12,8 +12,14 @@ public class DtoMapperConfig : Profile
     public DtoMapperConfig()
     {
 
-        CreateMap<Client, GetClientsDto>();
-        CreateMap<Client, GetClientByIdDto>();
+        CreateMap<Client, GetClientByIdDto>()
+            .ForMember(d => d.ClientType,
+                o => o.Ignore());
+
+        CreateMap<Client, GetClientsDto>()
+            .ForMember(d => d.ClientType,
+                o => o.Ignore());
+
 
         CreateMap<Building, ClientBuildingSummaryDto>()
             .ForMember(d => d.City,
@@ -30,6 +36,12 @@ public class DtoMapperConfig : Profile
                 o => o.MapFrom(s => s.City.County.Country.Name))
             .ForMember(d => d.BuildingType,
                 o => o.MapFrom(s => s.BuildingType.Name));
+
+        CreateMap<UpdateBuildingDto, Building>()
+            .ForMember(d => d.Id, o => o.Ignore())
+            .ForMember(d => d.ClientId, o => o.Ignore())
+            .ForMember(d => d.CityId, o => o.Ignore())
+            .ForMember(d => d.BuildingTypeId, o => o.Ignore());
 
         CreateMap<Country, GetCountriesDto>();
         CreateMap<County, GetCountiesByCountryDto>();

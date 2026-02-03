@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Insurance.Application.DTOs.Buildings;
 using Insurance.Application.DTOs.Clients;
+using Insurance.Application.Exceptions;
 using Insurance.Application.Interfaces.Repositories;
 using Insurance.Application.Interfaces.Services;
 using Insurance.Domain.Models;
@@ -22,7 +23,7 @@ public class BuildingService : IBuildingService
         var clientExists = await _unitOfWork.Clients.ExistsAsync(clientId);
         if (!clientExists)
         {
-            throw new KeyNotFoundException("Client not found.");
+            throw new NotFoundException("Client not found.");
         }
 
         if (!await _unitOfWork.Cities.ExistsAsync(dto.CityId))
@@ -62,7 +63,7 @@ public class BuildingService : IBuildingService
         var building = await _unitOfWork.Buildings.GetByIdAsync(buildingId);
         if(building == null)
         {
-            throw new KeyNotFoundException($"Building with id {buildingId} not found.");
+            throw new NotFoundException($"Building with id {buildingId} not found.");
         }
 
         return _mapper.Map<GetBuildingByIdDto>(building);
@@ -79,17 +80,10 @@ public class BuildingService : IBuildingService
         var building  = await _unitOfWork.Buildings.GetByIdAsync(buildingId);
         if(building == null)
         {
-            throw new KeyNotFoundException($"Building with id {buildingId} not found.");
+            throw new NotFoundException($"Building with id {buildingId} not found.");
         }
 
-        building.Street = dto.Street;
-        building.StreetNumber = dto.StreetNumber;
-        building.ConstructionYear = dto.ConstructionYear;
-        building.NumberOfFloors = dto.NumberOfFloors;
-        building.SurfaceArea = dto.SurfaceArea;
-        building.InsuredValue = dto.InsuredValue;
-        building.FloodRisk = dto.FloodRisk;
-        building.EarthquakeRisk = dto.EarthquakeRisk;
+        _mapper.Map(dto, building);
 
         await _unitOfWork.Buildings.UpdateAsync(building);
         var rowsAffected = await _unitOfWork.SaveChangesAsync();
