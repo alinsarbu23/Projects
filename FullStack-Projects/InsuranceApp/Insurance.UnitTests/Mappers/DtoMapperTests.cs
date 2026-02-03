@@ -7,7 +7,6 @@ using Insurance.Application.DTOs.Buildings;
 using Insurance.Application.DTOs.Geography;
 using Insurance.Domain.Models;
 using Insurance.Domain.Models.Geography;
-using Insurance.Domain.Enums;
 
 namespace Insurance.UnitTests.Mappers;
 
@@ -21,9 +20,10 @@ public class DtoMapperTests
         var client = new Client
         {
             Id = Guid.NewGuid(),
-            ClientType = ClientType.Individual,
+            ClientTypeId = 1,
             Name = "Client"
         };
+
 
         var dto = _mapper.Map<GetClientsDto>(client);
 

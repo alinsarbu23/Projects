@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Insurance.Domain.Enums;
 using Insurance.Domain.Models;
 using Insurance.Infrastructure;
 using Insurance.Infrastructure.Repositories;
@@ -119,9 +118,10 @@ public class BuildingRepositoryTests
         var dao = new Infrastructure.DAOs.Client
         {
             Id = Guid.NewGuid(),
-            ClientType = ClientType.Individual.ToString(),
+            ClientTypeId = 1, 
             Name = "Old"
         };
+
 
         context.Clients.Add(dao);
         await context.SaveChangesAsync();

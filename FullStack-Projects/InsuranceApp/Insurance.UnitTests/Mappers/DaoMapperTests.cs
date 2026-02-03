@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using FluentAssertions;
-using Insurance.Domain.Enums;
+
 using Insurance.Infrastructure.DAOs;
 using Insurance.UnitTests.Helpers;
 using Xunit;
@@ -96,7 +96,7 @@ public class DaoMapperTests
         var domain = new DomainClient
         {
             Id = Guid.NewGuid(),
-            ClientType = ClientType.Individual,
+            ClientTypeId = 1,
             Name = "Client",
             Cnp = "123",
             Email = "a@a.ro"
@@ -117,7 +117,7 @@ public class DaoMapperTests
         var dao = new DaoClient
         {
             Id = Guid.NewGuid(),
-            ClientType = ClientType.Company.ToString(),
+            ClientTypeId = 2,
             Name = "Company",
             Cui = "RO123"
         };

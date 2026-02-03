@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Insurance.Infrastructure;
 using Insurance.Infrastructure.Repositories;
 using Insurance.Domain.Models;
-using Insurance.Domain.Enums;
 using Insurance.UnitTests.Helpers;
 
 namespace Insurance.UnitTests.Repositories;
@@ -29,9 +28,12 @@ public class ClientRepositoryTests
         var client = new Client
         {
             Id = Guid.NewGuid(),
-            ClientType = ClientType.Individual,
+            ClientTypeId = 1, 
             Name = "Test Client",
-            Cnp = "123"
+            Cnp = "123",
+            Email = "a@a.ro",
+            Phone = "0700",
+            Address = "Addr"
         };
 
         await repo.AddAsync(client);
@@ -53,7 +55,7 @@ public class ClientRepositoryTests
         context.Clients.Add(new Infrastructure.DAOs.Client
         {
             Id = Guid.NewGuid(),
-            ClientType = ClientType.Individual.ToString(),
+            ClientTypeId = 1,
             Name = "Client",
             Cnp = "999"
         });
@@ -75,13 +77,13 @@ public class ClientRepositoryTests
             new Infrastructure.DAOs.Client
             {
                 Id = Guid.NewGuid(),
-                ClientType = ClientType.Individual.ToString(),
+                ClientTypeId = 1,
                 Name = "Alice"
             },
             new Infrastructure.DAOs.Client
             {
                 Id = Guid.NewGuid(),
-                ClientType = ClientType.Individual.ToString(),
+                ClientTypeId = 1,
                 Name = "Bob"
             });
 
@@ -102,7 +104,7 @@ public class ClientRepositoryTests
         context.Clients.Add(new Infrastructure.DAOs.Client
         {
             Id = Guid.NewGuid(),
-            ClientType = ClientType.Company.ToString(),
+            ClientTypeId = 2, 
             Name = "Test",
             Cui = "RO1"
         });
@@ -136,7 +138,7 @@ public class ClientRepositoryTests
         context.Clients.Add(new Infrastructure.DAOs.Client
         {
             Id = id,
-            ClientType = ClientType.Individual.ToString(),
+            ClientTypeId = 1,
             Name = "Ion"
         });
 
@@ -158,13 +160,13 @@ public class ClientRepositoryTests
             new Infrastructure.DAOs.Client
             {
                 Id = Guid.NewGuid(),
-                ClientType = "Individual",
+                ClientTypeId = 1,
                 Name = "A"
             },
             new Infrastructure.DAOs.Client
             {
                 Id = Guid.NewGuid(),
-                ClientType = "Company",
+                ClientTypeId = 2,
                 Name = "B"
             });
 
@@ -186,7 +188,7 @@ public class ClientRepositoryTests
             context.Clients.Add(new Infrastructure.DAOs.Client
             {
                 Id = Guid.NewGuid(),
-                ClientType = "Individual",
+                ClientTypeId = 1,
                 Name = $"Client{i}"
             });
         }
@@ -197,7 +199,6 @@ public class ClientRepositoryTests
 
         result.Should().HaveCount(2);
     }
-
 
     [Fact]
     public async Task UpdateAsync_ShouldUpdateBuilding()

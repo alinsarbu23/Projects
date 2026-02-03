@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 using Insurance.Api.Middleware;
+using Insurance.Application.Exceptions;
 
 namespace Insurance.UnitTests.Middleware;
 
@@ -45,7 +46,7 @@ public class ExceptionMiddlewareTests
     [Theory]
     [InlineData(typeof(ArgumentException), 400)]
     [InlineData(typeof(InvalidOperationException), 400)]
-    [InlineData(typeof(KeyNotFoundException), 404)]
+    [InlineData(typeof(NotFoundException), 404)]
     [InlineData(typeof(UnauthorizedAccessException), 401)]
     public async Task InvokeAsync_ShouldMapKnownExceptionsToStatusCodes(Type exType, int expectedStatus)
     {

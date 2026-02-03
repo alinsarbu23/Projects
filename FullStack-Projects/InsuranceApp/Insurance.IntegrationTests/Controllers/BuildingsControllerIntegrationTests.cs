@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using Insurance.Application.DTOs.Buildings;
 using Insurance.Application.DTOs.Geography;
-using Insurance.Domain.Enums;
 using Insurance.IntegrationTests.Helpers;
 using Insurance.IntegrationTests.Infrastructure;
 using System.Net;
@@ -26,7 +25,7 @@ public class BuildingsIntegrationTests : BaseIntegrationTest
             "/api/brokers/clients",
             new
             {
-                clientType = ClientType.Individual,
+                clientTypeId = 1,
                 name = "Building Owner",
                 cnp = "2990101223344",
                 email = "owner@test.ro",
@@ -36,22 +35,17 @@ public class BuildingsIntegrationTests : BaseIntegrationTest
 
         createClientResponse.StatusCode.Should().Be(HttpStatusCode.Created);
 
-        var clientLocation = createClientResponse.Headers.Location;
-        clientLocation.Should().NotBeNull();
-
+        var clientLocation = createClientResponse.Headers.Location!;
         var countyId = Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
 
         var cities = await Client.GetFromJsonAsync<List<GetCitiesByCountyDto>>(
             $"/api/brokers/counties/{countyId}/cities");
 
-        cities.Should().NotBeNull();
-        cities!.Should().NotBeEmpty();
-
         var createBuildingResponse = await Client.PostAsJsonAsync(
             $"{clientLocation}/buildings",
             new CreateBuildingDto
             {
-                CityId = cities[0].Id,
+                CityId = cities![0].Id,
                 BuildingTypeId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
                 Street = "Main Street",
                 StreetNumber = "10",
