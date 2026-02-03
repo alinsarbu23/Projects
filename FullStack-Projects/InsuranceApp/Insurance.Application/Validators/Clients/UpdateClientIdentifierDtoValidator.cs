@@ -7,7 +7,10 @@ public class UpdateClientIdentifierDtoValidator : AbstractValidator<UpdateClient
     public UpdateClientIdentifierDtoValidator()
     {
         RuleFor(x => x.NewIdentifier)
-            .NotEmpty().WithMessage("New identifier is required.")
-            .MaximumLength(13).WithMessage("New identifier must be at most 13 characters.");
+            .NotEmpty()
+            .Must(x => !string.IsNullOrWhiteSpace(x))
+            .WithMessage("New identifier is required.")
+            .MaximumLength(13)
+            .WithMessage("New identifier must be at most 13 characters.");
     }
 }

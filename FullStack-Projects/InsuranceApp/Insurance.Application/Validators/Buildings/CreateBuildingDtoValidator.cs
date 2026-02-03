@@ -6,20 +6,29 @@ public class CreateBuildingDtoValidator : AbstractValidator<CreateBuildingDto>
 {
     public CreateBuildingDtoValidator()
     {
+        RuleFor(x => x.CityId)
+            .NotEmpty()
+            .WithMessage("City is required.");
 
-        RuleFor(x => x.CityId).NotEmpty().WithMessage("City is required.");
-
-        RuleFor(x => x.BuildingTypeId).NotEmpty().WithMessage("Building type is required.");
+        RuleFor(x => x.BuildingTypeId)
+            .NotEmpty()
+            .WithMessage("Building type is required.");
 
         RuleFor(x => x.Street)
-            .NotEmpty().WithMessage("Street is required.")
-            .MaximumLength(200).WithMessage("Street name is too long.")
+            .NotEmpty()
+            .Must(s => !string.IsNullOrWhiteSpace(s))
+            .WithMessage("Street is required.")
+            .MaximumLength(200)
+            .WithMessage("Street name is too long.")
             .Must(s => s.Any(char.IsLetter))
             .WithMessage("Street must contain at least one letter.");
 
         RuleFor(x => x.StreetNumber)
-            .NotEmpty().WithMessage("Street number is required.")
-            .MaximumLength(20).WithMessage("Street number is too long.")
+            .NotEmpty()
+            .Must(n => !string.IsNullOrWhiteSpace(n))
+            .WithMessage("Street number is required.")
+            .MaximumLength(20)
+            .WithMessage("Street number is too long.")
             .Must(n => n.Any(char.IsDigit))
             .WithMessage("Street number must contain at least one digit.");
 
@@ -52,7 +61,5 @@ public class CreateBuildingDtoValidator : AbstractValidator<CreateBuildingDto>
             .WithMessage("InsuredValue must be greater than 1,000.")
             .LessThanOrEqualTo(500_000_000)
             .WithMessage("InsuredValue exceeds realistic limits.");
-
-      
     }
 }
