@@ -1,22 +1,16 @@
 ﻿using Insurance.IntegrationTests.Infrastructure;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using Xunit;
 
-public abstract class BaseIntegrationTest: IClassFixture<CustomWebApplicationFactory>, IAsyncLifetime
+public abstract class BaseIntegrationTest : IClassFixture<CustomWebApplicationFactory>
 {
-    protected readonly HttpClient Client;
+    protected HttpClient Client { get; }
 
     protected BaseIntegrationTest(CustomWebApplicationFactory factory)
     {
         Client = factory.CreateClient();
     }
-
-    public async Task InitializeAsync()
-    {
-        await DatabaseReset.ResetAsync();
-    }
-
-    public Task DisposeAsync() => Task.CompletedTask;
 
     protected void Authenticate(string token)
     {

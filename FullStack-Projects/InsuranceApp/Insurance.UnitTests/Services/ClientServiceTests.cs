@@ -166,11 +166,12 @@ public class ClientServiceTests
         {
             Id = Guid.NewGuid(),
             ClientTypeId = clientTypeId,
-            Cnp = "OLD_CNP",
-            Cui = "OLD_CUI"
+            Cnp = clientTypeId == 1 ? "OLD_CNP" : null,
+            Cui = clientTypeId == 2 ? "OLD_CUI" : null
         };
 
         clients.Setup(x => x.GetByIdAsync(client.Id)).ReturnsAsync(client);
+
         uow.Setup(x => x.Clients).Returns(clients.Object);
         uow.Setup(x => x.ClientIdentifiers).Returns(identifiers.Object);
         uow.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
@@ -182,15 +183,13 @@ public class ClientServiceTests
             NewIdentifier = newValue
         });
 
-        if (clientTypeId == 1)
-        {
-            client.Cnp.Should().Be(newValue);
-        }
-        else
-        {
-            client.Cui.Should().Be(newValue);
-        }
+        clients.Verify(x => x.UpdateAsync(It.Is<Client>(c =>
+            clientTypeId == 1
+                ? c.Cnp == newValue && c.Cui == null
+                : c.Cui == newValue && c.Cnp == null
+        )), Times.Once);
     }
+
 
     [Fact]
     public async Task SearchClientsAsync_ShouldSetIdentifierCorrectly()

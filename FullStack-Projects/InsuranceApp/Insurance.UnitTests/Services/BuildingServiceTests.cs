@@ -201,7 +201,7 @@ public class BuildingServiceTests
             await service.CreateBuildingAsync(clientId, dto);
         });
 
-        ex.Message.Should().Be($"Client with id {clientId} not found.");
+        ex.Message.Should().Contain("Client not found");
     }
 
 

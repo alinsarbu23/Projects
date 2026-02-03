@@ -19,6 +19,27 @@ public class ClientRepositoryTests
         return new InsuranceDbContext(options);
     }
 
+    private static void SeedClientTypes(InsuranceDbContext context)
+    {
+        context.ClientTypes.AddRange(
+            new Infrastructure.DAOs.ClientType
+            {
+                Id = 1,
+                Code = "INDIVIDUAL",
+                Name = "Individual"
+            },
+            new Infrastructure.DAOs.ClientType
+            {
+                Id = 2,
+                Code = "COMPANY",
+                Name = "Company"
+            }
+        );
+
+        context.SaveChanges();
+    }
+
+
     [Fact]
     public async Task AddAsync_ShouldPersistClient()
     {
@@ -68,31 +89,28 @@ public class ClientRepositoryTests
     }
 
     [Fact]
-    public async Task SearchAsync_ShouldReturnFilteredClients()
+    public async Task SearchAsync_ShouldApplyPaging()
     {
         using var context = CreateDbContext();
+        SeedClientTypes(context);
+
         var repo = new ClientRepository(context, MapperFactory.Create());
 
-        context.Clients.AddRange(
-            new Infrastructure.DAOs.Client
+        for (int i = 0; i < 5; i++)
+        {
+            context.Clients.Add(new Infrastructure.DAOs.Client
             {
                 Id = Guid.NewGuid(),
                 ClientTypeId = 1,
-                Name = "Alice"
-            },
-            new Infrastructure.DAOs.Client
-            {
-                Id = Guid.NewGuid(),
-                ClientTypeId = 1,
-                Name = "Bob"
+                Name = $"Client{i}"
             });
+        }
 
         await context.SaveChangesAsync();
 
-        var result = await repo.SearchAsync("Alice", null, 1, 10);
+        var result = await repo.SearchAsync(null, null, page: 2, pageSize: 2);
 
-        result.Should().HaveCount(1);
-        result[0].Name.Should().Be("Alice");
+        result.Should().HaveCount(2);
     }
 
     [Fact]
@@ -131,6 +149,8 @@ public class ClientRepositoryTests
     public async Task GetByIdAsync_ShouldReturnMappedClient()
     {
         using var context = CreateDbContext();
+        SeedClientTypes(context);
+
         var repo = new ClientRepository(context, MapperFactory.Create());
 
         var id = Guid.NewGuid();
@@ -178,26 +198,33 @@ public class ClientRepositoryTests
     }
 
     [Fact]
-    public async Task SearchAsync_ShouldApplyPaging()
+    public async Task SearchAsync_ShouldReturnFilteredClients()
     {
         using var context = CreateDbContext();
+        SeedClientTypes(context);
+
         var repo = new ClientRepository(context, MapperFactory.Create());
 
-        for (int i = 0; i < 5; i++)
-        {
-            context.Clients.Add(new Infrastructure.DAOs.Client
+        context.Clients.AddRange(
+            new Infrastructure.DAOs.Client
             {
                 Id = Guid.NewGuid(),
                 ClientTypeId = 1,
-                Name = $"Client{i}"
+                Name = "Alice"
+            },
+            new Infrastructure.DAOs.Client
+            {
+                Id = Guid.NewGuid(),
+                ClientTypeId = 1,
+                Name = "Bob"
             });
-        }
 
         await context.SaveChangesAsync();
 
-        var result = await repo.SearchAsync(null, null, page: 2, pageSize: 2);
+        var result = await repo.SearchAsync("Alice", null, 1, 10);
 
-        result.Should().HaveCount(2);
+        result.Should().HaveCount(1);
+        result[0].Name.Should().Be("Alice");
     }
 
     [Fact]

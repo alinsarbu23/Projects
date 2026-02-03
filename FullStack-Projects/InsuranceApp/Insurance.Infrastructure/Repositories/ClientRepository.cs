@@ -91,10 +91,11 @@ public class ClientRepository : IClientRepository
         return _mapper.Map<IReadOnlyList<Client>>(daos);
     }
 
-    public Task UpdateAsync(Client client)
+    public async Task UpdateAsync(Client client)
     {
-        var clientDao = _mapper.Map<DAOs.Client>(client);
-        _context.Clients.Update(clientDao);
-        return Task.CompletedTask;
+        var existingDao = await _context.Clients
+            .FirstAsync(c => c.Id == client.Id);
+
+        _mapper.Map(client, existingDao);
     }
 }

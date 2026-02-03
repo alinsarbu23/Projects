@@ -1,49 +1,44 @@
 ﻿using Insurance.Infrastructure;
+using Insurance.Infrastructure.Seed;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Insurance.IntegrationTests.Infrastructure;
 
-public class CustomWebApplicationFactory : WebApplicationFactory<Program>
+public class CustomWebApplicationFactory
+    : WebApplicationFactory<Program>
 {
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.UseEnvironment("Testing");
-
-        builder.ConfigureAppConfiguration((context, config) =>
-        {
-            config.AddJsonFile(
-                Path.Combine(AppContext.BaseDirectory, "appsettings.Testing.json"),
-                optional: false);
-        });
-
         builder.ConfigureServices(services =>
         {
-            var descriptor = services.Single(
+            var descriptor = services.SingleOrDefault(
                 d => d.ServiceType == typeof(DbContextOptions<InsuranceDbContext>));
 
-            services.Remove(descriptor);
-
-            services.AddDbContext<InsuranceDbContext>((sp, options) =>
+            if (descriptor != null)
             {
-                var configuration = sp.GetRequiredService<IConfiguration>();
+                services.Remove(descriptor);
+            }
+
+            services.AddDbContext<InsuranceDbContext>(options =>
+            {
                 options.UseSqlServer(
-                    configuration.GetConnectionString("InsuranceDb"));
+                    "Server=(localdb)\\mssqllocaldb;Database=InsuranceTestDb;Trusted_Connection=True;");
             });
 
             var sp = services.BuildServiceProvider();
+
             using var scope = sp.CreateScope();
-
             var db = scope.ServiceProvider.GetRequiredService<InsuranceDbContext>();
-            db.Database.EnsureCreated();
 
-            var config = scope.ServiceProvider.GetRequiredService<IConfiguration>();
-            DatabaseReset.InitializeAsync(config).GetAwaiter().GetResult();
+            db.Database.EnsureDeleted();
+            db.Database.Migrate();
 
-            TestDataSeeder.SeedAsync(db).GetAwaiter().GetResult();
+            DatabaseSeeder.SeedAsync(db, roleManager: null)
+                .GetAwaiter()
+                .GetResult();
         });
     }
 }
