@@ -11,6 +11,12 @@ public class UnitOfWork : IUnitOfWork
     public IClientIdentifierRepository ClientIdentifiers { get; }
     public IBuildingTypeRepository BuildingTypes { get; }
     public ICityRepository Cities { get; }
+    public IAdministratorRepository Administrators { get; }
+    public IPolicyRepository Policies { get; }
+    public IBrokerRepository Brokers { get; }
+    public ICurrencyRepository Currencies { get; }
+    public IFeeConfigurationRepository FeeConfigurations { get; }
+    public IRiskFactorConfigurationRepository RiskFactorConfigurations { get; }
 
 
     public UnitOfWork(
@@ -20,7 +26,13 @@ public class UnitOfWork : IUnitOfWork
         IGeographyRepository geographyRepository,
         IClientIdentifierRepository clientIdentifierRepository,
         IBuildingTypeRepository buildingTypes,
-        ICityRepository cities)
+        ICityRepository cities,
+        IAdministratorRepository administrators,
+        IBrokerRepository brokers,
+        ICurrencyRepository currencies,
+        IFeeConfigurationRepository feeConfigurations,
+        IPolicyRepository policies,
+        IRiskFactorConfigurationRepository riskFactorConfigurations)
     {
         Clients = clientRepository;
         Buildings = buildingRepository;
@@ -28,6 +40,12 @@ public class UnitOfWork : IUnitOfWork
         ClientIdentifiers = clientIdentifierRepository;
         BuildingTypes = buildingTypes;
         Cities = cities;
+        Administrators = administrators;
+        Brokers = brokers;
+        Currencies = currencies;
+        FeeConfigurations = feeConfigurations;
+        RiskFactorConfigurations = riskFactorConfigurations;
+        Policies = policies;
         _context = context;
     }
 
