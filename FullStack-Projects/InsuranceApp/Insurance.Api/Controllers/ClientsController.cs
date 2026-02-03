@@ -45,10 +45,6 @@ public class ClientsController : ControllerBase
         return Ok(client);
     }
 
-    /// <summary>
-    /// Search clients by name (partial) or identifier (exact), with paging.
-    /// Validation is handled via FluentValidation (to be added).
-    /// </summary>
     [HttpGet]
     public async Task<ActionResult<PagedClientsDto>> SearchClients(
         [FromQuery] string? name,

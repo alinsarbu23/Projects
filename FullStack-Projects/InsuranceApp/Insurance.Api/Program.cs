@@ -11,6 +11,7 @@ using Insurance.Infrastructure;
 using Insurance.Infrastructure.Identity;
 using Insurance.Infrastructure.Mappers;
 using Insurance.Infrastructure.Repositories;
+using Insurance.Infrastructure.Seed;
 using Insurance.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -104,6 +105,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<InsuranceDbContext>();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+    await DatabaseSeeder.SeedAsync(db, roleManager);
+}
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
