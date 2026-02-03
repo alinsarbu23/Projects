@@ -22,6 +22,12 @@ public partial class InsuranceDbContext : IdentityDbContext<ApiUser>
     public DbSet<Country> Countries => Set<Country>();
     public DbSet<County> Counties => Set<County>();
     public DbSet<ClientIdentifier> ClientIdentifiers => Set<ClientIdentifier>();
+    public DbSet<Broker> Brokers => Set<Broker>();
+    public DbSet<Administrator> Administrators => Set<Administrator>();
+    public DbSet<Policy> Policies => Set<Policy>();
+    public DbSet<Currency> Currencies => Set<Currency>();
+    public DbSet<FeeConfiguration> FeeConfigurations => Set<FeeConfiguration>();
+    public DbSet<RiskFactorConfiguration> RiskFactorConfigurations=> Set<RiskFactorConfiguration>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -35,5 +41,11 @@ public partial class InsuranceDbContext : IdentityDbContext<ApiUser>
         builder.ApplyConfiguration(new ClientConfiguration());
         builder.ApplyConfiguration(new ClientIdentifierConfiguration());
         builder.ApplyConfiguration(new ClientTypeConfiguration());
+        builder.ApplyConfiguration(new BrokerConfiguration());
+        builder.ApplyConfiguration(new AdministratorConfiguration());
+        builder.ApplyConfiguration(new PolicyConfiguration());
+        builder.ApplyConfiguration(new CurrencyConfiguration());
+        builder.ApplyConfiguration(new FeeConfigurationConfig());
+        builder.ApplyConfiguration(new RiskFactorConfigurationConfig());
     }
 }
