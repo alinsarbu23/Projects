@@ -23,6 +23,19 @@ public static class DatabaseSeeder
             }
         }
 
+        if (!db.Administrators.Any())
+        {
+            db.Administrators.Add(new Administrator
+            {
+                Id = Guid.NewGuid(),
+                Name = "System Admin",
+                Email = "admin@insurance.local",
+                Role = "Admin"
+            });
+
+            await db.SaveChangesAsync();
+        }
+
         if (!db.ClientTypes.Any())
         {
             db.ClientTypes.AddRange(
