@@ -46,13 +46,22 @@ public class CurrencyService : ICurrencyService
             throw new InvalidOperationException("Currency not found");
         }
 
+        if (!dto.IsActive && currency.IsActive)
+        {
+            var isUsedInActivePolicies = await _unitOfWork.Policies.ExistsActivePolicyWithCurrencyAsync(currencyId);
+
+            if (isUsedInActivePolicies)
+            {
+                throw new InvalidOperationException("Cannot deactivate currency used by active policies");
+            }
+        }
+
         _mapper.Map(dto, currency);
 
         await _unitOfWork.Currencies.UpdateAsync(currency);
         await _unitOfWork.SaveChangesAsync();
-
-        _logger.LogInformation("Currency {CurrencyId} updated", currencyId);
     }
+
 
     public async Task<GetCurrencyByIdDto> GetByIdAsync(Guid currencyId)
     {

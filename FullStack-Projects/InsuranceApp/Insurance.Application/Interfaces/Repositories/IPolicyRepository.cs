@@ -10,6 +10,8 @@ public interface IPolicyRepository
 
     Task<Policy?> GetByIdAsync(Guid id);
 
+    Task<bool> ExistsActivePolicyWithCurrencyAsync(Guid currencyId);
+
     public Task<IReadOnlyList<Policy>> SearchAsync(
        Guid? clientId,
        Guid brokerId,

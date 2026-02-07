@@ -165,4 +165,13 @@ public class PolicyRepository : IPolicyRepository
             .OrderByDescending(x => x.TotalFinalPremium)
             .ToListAsync();
     }
+
+    public async Task<bool> ExistsActivePolicyWithCurrencyAsync(Guid currencyId)
+    {
+        return await _dbContext.Policies
+            .AsNoTracking()
+            .AnyAsync(p =>
+                p.CurrencyId == currencyId &&
+                p.Status == PolicyStatus.Active.ToString());
+    }
 }
