@@ -30,12 +30,12 @@ public class ClientRepository : IClientRepository
         {
             query = query.Where(c => c.Name.Contains(name));
         }
-            
+
         if (!string.IsNullOrWhiteSpace(identifier))
         {
             query = query.Where(c => c.Cnp == identifier || c.Cui == identifier);
         }
-            
+
 
         return await query.CountAsync();
     }

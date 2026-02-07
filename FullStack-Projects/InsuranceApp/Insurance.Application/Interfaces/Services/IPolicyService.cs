@@ -4,7 +4,7 @@ namespace Insurance.Application.Interfaces.Services;
 
 public interface IPolicyService
 {
-    Task<Guid> CreateDraftAsync(CreatePolicyDto dto, Guid brokerId);
+    Task<Guid> CreateDraftAsync(CreatePolicyDto dto, string brokerEmail);
 
     Task ActivateAsync(Guid policyId);
 
@@ -12,10 +12,14 @@ public interface IPolicyService
 
     Task<GetPolicyByIdDto> GetByIdAsync(Guid policyId);
 
-    Task<IReadOnlyList<GetPoliciesDto>> SearchAsync(
+    Task<PagedPoliciesDto> SearchAsync(
         Guid? clientId,
-        Guid? brokerId,
+        string brokerEmail,
         string? status,
         DateTime? startDate,
-        DateTime? endDate);
+        DateTime? endDate,
+        int page,
+        int pageSize);
+
+    Task<IReadOnlyList<PolicyReportDto>> GetPolicyReportByBrokerAsync(DateTime? from, DateTime? to);
 }

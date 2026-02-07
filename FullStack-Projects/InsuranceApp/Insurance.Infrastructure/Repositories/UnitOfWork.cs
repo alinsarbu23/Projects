@@ -20,8 +20,8 @@ public class UnitOfWork : IUnitOfWork
 
 
     public UnitOfWork(
-        InsuranceDbContext context, 
-        IClientRepository clientRepository, 
+        InsuranceDbContext context,
+        IClientRepository clientRepository,
         IBuildingRepository buildingRepository,
         IGeographyRepository geographyRepository,
         IClientIdentifierRepository clientIdentifierRepository,

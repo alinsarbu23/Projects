@@ -63,7 +63,7 @@ public class CreateBuildingDtoValidatorTests
             Street = "Street",
             StreetNumber = "1",
             SurfaceArea = 10,
-            InsuredValue = 1500   
+            InsuredValue = 1500
         };
 
         var result = validator.Validate(dto);

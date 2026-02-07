@@ -8,7 +8,7 @@ namespace Insurance.Api.Controllers;
 
 [ApiController]
 [Route("api/admin/currencies")]
-[Authorize(Roles = Roles.Admin)]
+[Authorize(Roles = $"{Roles.Admin}, {Roles.Broker}")]
 public class CurrenciesController : ControllerBase
 {
     private readonly ICurrencyService _currencyService;
@@ -19,9 +19,15 @@ public class CurrenciesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Guid>> Create([FromBody] CreateCurrencyDto dto)
+    public async Task<ActionResult> Create([FromBody] CreateCurrencyDto dto)
     {
-        return Ok(await _currencyService.CreateAsync(dto));
+        var currencyId = await _currencyService.CreateAsync(dto);
+
+        return CreatedAtAction(
+            nameof(GetById),
+            new { currencyId },
+            null
+        );
     }
 
     [HttpGet]

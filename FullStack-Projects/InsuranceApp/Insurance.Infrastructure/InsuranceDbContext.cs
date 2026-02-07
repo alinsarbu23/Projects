@@ -27,7 +27,7 @@ public partial class InsuranceDbContext : IdentityDbContext<ApiUser>
     public DbSet<Policy> Policies => Set<Policy>();
     public DbSet<Currency> Currencies => Set<Currency>();
     public DbSet<FeeConfiguration> FeeConfigurations => Set<FeeConfiguration>();
-    public DbSet<RiskFactorConfiguration> RiskFactorConfigurations=> Set<RiskFactorConfiguration>();
+    public DbSet<RiskFactorConfiguration> RiskFactorConfigurations => Set<RiskFactorConfiguration>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

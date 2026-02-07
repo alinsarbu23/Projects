@@ -20,13 +20,17 @@ public class PoliciesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Guid>> CreateDraft([FromBody] CreatePolicyDto dto)
+    public async Task<ActionResult> CreateDraft([FromBody] CreatePolicyDto dto)
     {
-        var brokerId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var brokerEmail = User.FindFirstValue(ClaimTypes.Email)!;
 
-        var policyId = await _policyService.CreateDraftAsync(dto, brokerId);
+        var policyId = await _policyService.CreateDraftAsync(dto, brokerEmail);
 
-        return CreatedAtAction(nameof(GetById), new { policyId }, policyId);
+        return CreatedAtAction(
+            nameof(GetById),
+            new { policyId },
+            null
+        );
     }
 
     [HttpGet("{policyId}")]
@@ -36,20 +40,26 @@ public class PoliciesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyList<GetPoliciesDto>>> Search(
+    public async Task<ActionResult<PagedPoliciesDto>> Search(
         [FromQuery] Guid? clientId,
         [FromQuery] string? status,
         [FromQuery] DateTime? startDate,
-        [FromQuery] DateTime? endDate)
+        [FromQuery] DateTime? endDate,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 20)
     {
-        var brokerId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var brokerEmail = User.FindFirstValue(ClaimTypes.Email)!;
 
-        return Ok(await _policyService.SearchAsync(
+        var result = await _policyService.SearchAsync(
             clientId,
-            brokerId,
+            brokerEmail,
             status,
             startDate,
-            endDate));
+            endDate,
+            page,
+            pageSize);
+
+        return Ok(result);
     }
 
     [HttpPost("{policyId}/activate")]

@@ -69,7 +69,7 @@ public class UpdateBuildingDtoValidatorTests
             ConstructionYear = 2000,
             NumberOfFloors = 2,
             SurfaceArea = 10,
-            InsuredValue = 2000,  
+            InsuredValue = 2000,
             FloodRisk = false,
             EarthquakeRisk = false
         };

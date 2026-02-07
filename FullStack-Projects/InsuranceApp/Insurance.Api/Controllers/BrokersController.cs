@@ -19,16 +19,24 @@ public class BrokersController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Guid>> Create([FromBody] CreateBrokerDto dto)
+    public async Task<ActionResult> Create([FromBody] CreateBrokerDto dto)
     {
-        return Ok(await _brokerService.CreateAsync(dto));
+        var brokerId = await _brokerService.CreateAsync(dto);
+
+        return CreatedAtAction(
+            nameof(GetById),
+            new { brokerId },
+            null
+        );
     }
+
 
     [HttpGet]
     public async Task<ActionResult<IReadOnlyList<GetBrokersDto>>> GetAll()
     {
         return Ok(await _brokerService.GetAllAsync());
     }
+
 
     [HttpGet("{brokerId}")]
     public async Task<ActionResult<GetBrokerByIdDto>> GetById(Guid brokerId)

@@ -20,31 +20,50 @@ public class PolicyCalculationService : IPolicyCalculationService
     public async Task<decimal> CalculateFinalPremiumAsync(
         decimal basePremium,
         Guid brokerId,
+        Guid currencyId,
         Building building)
     {
         decimal totalPercentage = 0m;
 
-        var broker = await _unitOfWork.Brokers.GetByIdAsync(brokerId);
-        if (broker == null)
-        {
-            _logger.LogError("Broker {BrokerId} not found", brokerId);
-            throw new InvalidOperationException("Broker not found");
-        }
+        var broker = await _unitOfWork.Brokers.GetByIdAsync(brokerId)
+            ?? throw new InvalidOperationException("Broker not found");
 
         if (broker.CommissionPercentage > 0)
         {
             totalPercentage += broker.CommissionPercentage;
         }
 
-        var fees = await _unitOfWork.FeeConfigurations.GetActiveAsync(null, DateTime.UtcNow);
+        var currency = await _unitOfWork.Currencies.GetByIdAsync(currencyId);
+        if (currency == null || !currency.IsActive)
+        {
+            throw new InvalidOperationException("Invalid or inactive currency");
+        }
+
+        // convert to base currency
+        var premiumInBaseCurrency = basePremium * currency.ExchangeRateToBase;
+
+        var fees = await _unitOfWork.FeeConfigurations
+            .GetActiveAsync(null, DateTime.UtcNow);
 
         foreach (var fee in fees)
         {
             if (fee.Type == FeeType.RiskAdjustment)
             {
-                var applies =
-                    fee.AppliesToRisk == "Earthquake" && building.EarthquakeRisk ||
-                    fee.AppliesToRisk == "Flood" && building.FloodRisk;
+                if (string.IsNullOrWhiteSpace(fee.AppliesToRisk))
+                    continue;
+
+                if (!Enum.TryParse<BuildingRiskType>(
+                        fee.AppliesToRisk,
+                        ignoreCase: true,
+                        out var riskType))
+                    continue;
+
+                var applies = riskType switch
+                {
+                    BuildingRiskType.Earthquake => building.EarthquakeRisk,
+                    BuildingRiskType.Flood => building.FloodRisk,
+                    _ => false
+                };
 
                 if (applies)
                 {
@@ -57,19 +76,25 @@ public class PolicyCalculationService : IPolicyCalculationService
             }
         }
 
-
-        var risks = await _unitOfWork.RiskFactorConfigurations.GetActiveForBuildingAsync(
-            building.City.County.CountryId,
-            building.City.CountyId,
-            building.CityId,
-            building.BuildingTypeId);
+        var risks = await _unitOfWork.RiskFactorConfigurations
+            .GetActiveForBuildingAsync(
+                building.City.County.CountryId,
+                building.City.CountyId,
+                building.CityId,
+                building.BuildingTypeId);
 
         foreach (var risk in risks)
         {
             totalPercentage += risk.AdjustmentPercentage;
         }
 
-        var finalPremium = basePremium * (1 + totalPercentage / 100m);
+        var finalPremiumInBase =
+            premiumInBaseCurrency * (1 + totalPercentage / 100m);
+
+        var finalPremium =
+            finalPremiumInBase / currency.ExchangeRateToBase;
+
         return Math.Round(finalPremium, 2);
     }
+
 }

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Insurance.Infrastructure.Repositories;
 
-public class RiskFactorConfigurationRepository: IRiskFactorConfigurationRepository
+public class RiskFactorConfigurationRepository : IRiskFactorConfigurationRepository
 {
     private readonly InsuranceDbContext _context;
     private readonly IMapper _mapper;

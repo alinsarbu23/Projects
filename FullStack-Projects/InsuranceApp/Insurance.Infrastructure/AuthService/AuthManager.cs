@@ -63,7 +63,7 @@ public class AuthManager : IAuthManager
 
     public async Task<AuthResponseDto> LoginAsync(LoginDto dto)
     {
-        var user = await _userManager.FindByEmailAsync(dto.Email)?? throw new ArgumentException("Invalid credentials.");
+        var user = await _userManager.FindByEmailAsync(dto.Email) ?? throw new ArgumentException("Invalid credentials.");
 
         if (!await _userManager.CheckPasswordAsync(user, dto.Password))
         {

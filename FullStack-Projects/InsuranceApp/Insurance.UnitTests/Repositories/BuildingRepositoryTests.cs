@@ -18,7 +18,7 @@ public class BuildingRepositoryTests
 
         var context = new InsuranceDbContext(options);
 
-        context.Database.EnsureCreated(); 
+        context.Database.EnsureCreated();
 
         return context;
     }
@@ -118,7 +118,7 @@ public class BuildingRepositoryTests
         var dao = new Infrastructure.DAOs.Client
         {
             Id = Guid.NewGuid(),
-            ClientTypeId = 1, 
+            ClientTypeId = 1,
             Name = "Old"
         };
 

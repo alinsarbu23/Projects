@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
+using Insurance.Application.DTOs.Brokers;
 using Insurance.Application.DTOs.Buildings;
 using Insurance.Application.DTOs.Clients;
-using Insurance.Application.DTOs.Geography;
-using Insurance.Application.DTOs.Policies;
-using Insurance.Application.DTOs.Brokers;
 using Insurance.Application.DTOs.Currencies;
 using Insurance.Application.DTOs.Fees;
+using Insurance.Application.DTOs.Geography;
+using Insurance.Application.DTOs.Policies;
 using Insurance.Application.DTOs.RiskFactors;
+using Insurance.Domain.Enums;
 using Insurance.Domain.Models;
 using Insurance.Domain.Models.Geography;
 
@@ -48,13 +49,23 @@ public class DtoMapperConfig : Profile
 
 
         CreateMap<Policy, GetPolicyByIdDto>()
-            .ForMember(d => d.Status, o => o.MapFrom(s => s.Status.ToString()))
+            .ForMember(d => d.Status, o => o.MapFrom(s =>
+                s.EndDate < DateTime.UtcNow
+                    ? PolicyStatus.Expired.ToString()
+                    : s.Status.ToString()
+            ))
             .ForMember(d => d.CurrencyCode, o => o.Ignore())
             .ForMember(d => d.BuildingAddress,
                 o => o.MapFrom(s => $"{s.Building.Street} {s.Building.StreetNumber}"));
 
+
         CreateMap<Policy, GetPoliciesDto>()
-            .ForMember(d => d.Status, o => o.MapFrom(s => s.Status.ToString()));
+            .ForMember(d => d.Status, o => o.MapFrom(s =>
+                s.EndDate < DateTime.UtcNow
+                    ? PolicyStatus.Expired.ToString()
+                    : s.Status.ToString()
+            ));
+
 
 
         CreateMap<Broker, GetBrokerByIdDto>()

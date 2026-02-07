@@ -19,9 +19,15 @@ public class RiskFactorConfigurationsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Guid>> Create([FromBody] CreateRiskFactorConfigurationDto dto)
+    public async Task<ActionResult> Create([FromBody] CreateRiskFactorConfigurationDto dto)
     {
-        return Ok(await _riskService.CreateAsync(dto));
+        var riskId = await _riskService.CreateAsync(dto);
+
+        return CreatedAtAction(
+            nameof(GetById),
+            new { riskId },
+            null
+        );
     }
 
     [HttpGet]

@@ -19,9 +19,15 @@ public class FeeConfigurationsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Guid>> Create([FromBody] CreateFeeConfigurationDto dto)
+    public async Task<ActionResult> Create([FromBody] CreateFeeConfigurationDto dto)
     {
-        return Ok(await _feeService.CreateAsync(dto));
+        var feeId = await _feeService.CreateAsync(dto);
+
+        return CreatedAtAction(
+            nameof(GetById),
+            new { feeId },
+            null
+        );
     }
 
     [HttpGet]

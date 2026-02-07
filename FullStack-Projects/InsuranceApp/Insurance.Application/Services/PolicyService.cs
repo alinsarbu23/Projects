@@ -27,79 +27,20 @@ public class PolicyService : IPolicyService
         _logger = logger;
     }
 
-    public async Task<Guid> CreateDraftAsync(CreatePolicyDto dto, Guid brokerId)
-    {
-        if (!await _unitOfWork.Brokers.IsActiveAsync(brokerId))
-        {
-            _logger.LogWarning("Inactive broker {BrokerId} tried to create policy", brokerId);
-            throw new InvalidOperationException("Broker is not active");
-        }
-
-        var broker = await _unitOfWork.Brokers.GetByIdAsync(brokerId);
-        if(broker == null)
-        {
-            _logger.LogWarning("Broker {BrokerId} not found", brokerId);
-            throw new InvalidOperationException("Broker not found");
-        }
-
-        var building = await _unitOfWork.Buildings.GetByIdAsync(dto.BuildingId);
-        if(building == null)
-        {
-            _logger.LogWarning("Building {BuildingId} not found for policy creation", dto.BuildingId);
-            throw new InvalidOperationException("Building not found");
-        }
-
-        var finalPremium = await _calculationService.CalculateFinalPremiumAsync(dto.BasePremium, brokerId, building);
-
-        var policy = new Policy
-        {
-            Id = Guid.NewGuid(),
-            PolicyNumber = GeneratePolicyNumber(),
-
-            BuildingId = building.Id,
-            Building = building,
-
-            BrokerId = broker.Id,
-            Broker = broker,
-
-            CurrencyId = dto.CurrencyId,
-
-            StartDate = dto.StartDate,
-            EndDate = dto.EndDate,
-
-            BasePremium = dto.BasePremium,
-            FinalPremium = finalPremium,
-
-            Status = PolicyStatus.Draft
-        };
-
-        await _unitOfWork.Policies.AddAsync(policy);
-        await _unitOfWork.SaveChangesAsync();
-
-        _logger.LogInformation("Policy {PolicyNumber} created", policy.PolicyNumber);
-
-        return policy.Id;
-    }
-
     public async Task ActivateAsync(Guid policyId)
     {
-        var policy = await _unitOfWork.Policies.GetByIdAsync(policyId);
-        if(policy == null)
-        {
-            _logger.LogWarning("Policy {PolicyId} not found for activation", policyId);
-            throw new InvalidOperationException("Policy not found");
-        }
+        var policy = await _unitOfWork.Policies.GetByIdAsync(policyId)
+            ?? throw new InvalidOperationException("Policy not found");
 
         if (policy.Status != PolicyStatus.Draft)
         {
-            _logger.LogWarning("Attempt to activate non-draft policy {PolicyId}", policyId);
             throw new InvalidOperationException("Only draft policies can be activated");
         }
 
-        if (policy.StartDate < DateTime.UtcNow.Date)
+        if (policy.EndDate < DateTime.UtcNow.Date)
         {
-            _logger.LogWarning("Attempt to activate policy {PolicyId} with past start date", policyId);
-            throw new InvalidOperationException("Policy start date cannot be in the past");
+            throw new InvalidOperationException(
+                "Cannot activate a policy that already ended");
         }
 
         policy.Status = PolicyStatus.Active;
@@ -107,14 +48,13 @@ public class PolicyService : IPolicyService
 
         await _unitOfWork.Policies.UpdateAsync(policy);
         await _unitOfWork.SaveChangesAsync();
-
-        _logger.LogInformation("Policy {PolicyId} activated", policyId);
     }
+
 
     public async Task CancelAsync(Guid policyId, DeletePolicyDto dto)
     {
         var policy = await _unitOfWork.Policies.GetByIdAsync(policyId);
-        if(policy == null)
+        if (policy == null)
         {
             _logger.LogWarning("Policy {PolicyId} not found", policyId);
             throw new InvalidOperationException("Policy not found");
@@ -139,7 +79,7 @@ public class PolicyService : IPolicyService
     public async Task<GetPolicyByIdDto> GetByIdAsync(Guid policyId)
     {
         var policy = await _unitOfWork.Policies.GetByIdAsync(policyId);
-        if(policy == null)
+        if (policy == null)
         {
             _logger.LogWarning("Policy {PolicyId} not found", policyId);
             throw new InvalidOperationException("Policy not found");
@@ -148,13 +88,88 @@ public class PolicyService : IPolicyService
         return _mapper.Map<GetPolicyByIdDto>(policy);
     }
 
-    public async Task<IReadOnlyList<GetPoliciesDto>> SearchAsync(
-        Guid? clientId,
-        Guid? brokerId,
-        string? status,
-        DateTime? startDate,
-        DateTime? endDate)
+
+    private static string GeneratePolicyNumber()
     {
+        var randomPart = Guid.NewGuid()
+            .ToString("N")
+            .Substring(0, 6)
+            .ToUpper();
+
+        return $"POL-{DateTime.UtcNow:yyyyMMddHHmmss}-{randomPart}";
+    }
+
+    public async Task<IReadOnlyList<PolicyReportDto>> GetPolicyReportByBrokerAsync(DateTime? from, DateTime? to)
+    {
+        var result = await _unitOfWork.Policies.GetPolicyReportByBrokerAsync(from, to);
+
+        _logger.LogInformation(
+            "Policy report generated (grouped by broker). From={From}, To={To}",
+            from,
+            to);
+
+        return result;
+    }
+    public async Task<Guid> CreateDraftAsync(
+        CreatePolicyDto dto,
+        string brokerEmail)
+    {
+        var broker = await _unitOfWork.Brokers.GetByEmailAsync(brokerEmail)
+            ?? throw new InvalidOperationException("Broker not found");
+
+        if (broker.Status != BrokerStatus.Active)
+        {
+            throw new InvalidOperationException("Broker is not active");
+        }
+
+        var building = await _unitOfWork.Buildings.GetByIdAsync(dto.BuildingId)
+            ?? throw new InvalidOperationException("Building not found");
+
+        var finalPremium =
+            await _calculationService.CalculateFinalPremiumAsync(
+                dto.BasePremium,
+                broker.Id,
+                dto.CurrencyId,
+                building);
+
+        var policy = new Policy
+        {
+            Id = Guid.NewGuid(),
+            PolicyNumber = GeneratePolicyNumber(),
+
+            BrokerId = broker.Id,
+            BuildingId = building.Id,
+            CurrencyId = dto.CurrencyId,
+
+            StartDate = dto.StartDate,
+            EndDate = dto.EndDate,
+
+            BasePremium = dto.BasePremium,
+            FinalPremium = finalPremium,
+
+            Status = PolicyStatus.Draft
+        };
+
+
+
+        await _unitOfWork.Policies.AddAsync(policy);
+        await _unitOfWork.SaveChangesAsync();
+
+        return policy.Id;
+    }
+
+    public async Task<PagedPoliciesDto> SearchAsync(
+    Guid? clientId,
+    string brokerEmail,
+    string? status,
+    DateTime? startDate,
+    DateTime? endDate,
+    int page,
+    int pageSize)
+    {
+        var broker = await _unitOfWork.Brokers.GetByEmailAsync(brokerEmail)
+            ?? throw new InvalidOperationException("Broker not found");
+
         PolicyStatus? parsedStatus = null;
 
         if (!string.IsNullOrWhiteSpace(status))
@@ -162,18 +177,29 @@ public class PolicyService : IPolicyService
             parsedStatus = Enum.Parse<PolicyStatus>(status, true);
         }
 
-        var policies = await _unitOfWork.Policies.SearchAsync(
+        var totalCount = await _unitOfWork.Policies.CountAsync(
             clientId,
-            brokerId,
+            broker.Id,
             parsedStatus,
             startDate,
             endDate);
 
-        return _mapper.Map<IReadOnlyList<GetPoliciesDto>>(policies);
+        var policies = await _unitOfWork.Policies.SearchAsync(
+            clientId,
+            broker.Id,
+            parsedStatus,
+            startDate,
+            endDate,
+            page,
+            pageSize);
+
+        return new PagedPoliciesDto
+        {
+            Items = _mapper.Map<IReadOnlyList<GetPoliciesDto>>(policies),
+            Page = page,
+            PageSize = pageSize,
+            TotalCount = totalCount
+        };
     }
 
-    private static string GeneratePolicyNumber()
-    {
-        return $"POL-{DateTime.UtcNow:yyyyMMddHHmmss}-{Guid.NewGuid():N[..4]}";
-    }
 }

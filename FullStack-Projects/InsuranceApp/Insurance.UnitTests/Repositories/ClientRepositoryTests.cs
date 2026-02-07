@@ -49,7 +49,7 @@ public class ClientRepositoryTests
         var client = new Client
         {
             Id = Guid.NewGuid(),
-            ClientTypeId = 1, 
+            ClientTypeId = 1,
             Name = "Test Client",
             Cnp = "123",
             Email = "a@a.ro",
@@ -122,7 +122,7 @@ public class ClientRepositoryTests
         context.Clients.Add(new Infrastructure.DAOs.Client
         {
             Id = Guid.NewGuid(),
-            ClientTypeId = 2, 
+            ClientTypeId = 2,
             Name = "Test",
             Cui = "RO1"
         });

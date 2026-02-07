@@ -25,7 +25,7 @@ public class BuildingRepository : IBuildingRepository
     public async Task DeleteAsync(Guid id)
     {
         var buildingDao = await _context.Buildings.FirstOrDefaultAsync(building => building.Id == id);
-        if(buildingDao != null)
+        if (buildingDao != null)
         {
             _context.Buildings.Remove(buildingDao);
         }

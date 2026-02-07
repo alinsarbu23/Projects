@@ -61,7 +61,7 @@ public class BuildingService : IBuildingService
     public async Task<GetBuildingByIdDto> GetBuildingByIdAsync(Guid buildingId)
     {
         var building = await _unitOfWork.Buildings.GetByIdAsync(buildingId);
-        if(building == null)
+        if (building == null)
         {
             throw new NotFoundException($"Building with id {buildingId} not found.");
         }
@@ -77,8 +77,8 @@ public class BuildingService : IBuildingService
 
     public async Task UpdateBuildingAsync(Guid buildingId, UpdateBuildingDto dto)
     {
-        var building  = await _unitOfWork.Buildings.GetByIdAsync(buildingId);
-        if(building == null)
+        var building = await _unitOfWork.Buildings.GetByIdAsync(buildingId);
+        if (building == null)
         {
             throw new NotFoundException($"Building with id {buildingId} not found.");
         }
@@ -88,7 +88,7 @@ public class BuildingService : IBuildingService
         await _unitOfWork.Buildings.UpdateAsync(building);
         var rowsAffected = await _unitOfWork.SaveChangesAsync();
 
-        if(rowsAffected == 0)
+        if (rowsAffected == 0)
         {
             throw new InvalidOperationException("Failed to update building.");
         }

@@ -23,18 +23,28 @@ public class BrokerService : IBrokerService
 
     public async Task<Guid> CreateAsync(CreateBrokerDto dto)
     {
-        var broker = _mapper.Map<Broker>(dto);
+        if (await _unitOfWork.Brokers.GetByCodeAsync(dto.BrokerCode) != null)
+        {
+            throw new ArgumentException("Broker code must be unique");
+        }
 
+        if (await _unitOfWork.Brokers.GetByEmailAsync(dto.Email) != null)
+        {
+            throw new ArgumentException("Broker email must be unique");
+        }
+
+        var broker = _mapper.Map<Broker>(dto);
         broker.Id = Guid.NewGuid();
         broker.Status = BrokerStatus.Inactive;
 
         await _unitOfWork.Brokers.AddAsync(broker);
         await _unitOfWork.SaveChangesAsync();
 
-        _logger.LogInformation("Broker {BrokerCode} created", broker.BrokerCode);
-
         return broker.Id;
     }
+
+
+
 
     public async Task UpdateAsync(Guid brokerId, UpdateBrokerDto dto)
     {
