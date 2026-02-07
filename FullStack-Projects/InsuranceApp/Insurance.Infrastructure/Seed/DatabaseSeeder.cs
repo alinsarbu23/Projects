@@ -1,26 +1,45 @@
 ﻿using Insurance.Infrastructure;
 using Insurance.Infrastructure.DAOs;
+using Insurance.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Insurance.Infrastructure.Seed;
+
 public static class DatabaseSeeder
 {
-    public static async Task SeedAsync(
-        InsuranceDbContext db,
-        RoleManager<IdentityRole>? roleManager)
+    private const string AdminEmail = "admin@insurance.local";
+    private const string AdminPassword = "Admin123!";
+
+    public static async Task SeedAsync(IServiceProvider services)
     {
+        using var scope = services.CreateScope();
 
-        if (roleManager != null)
+        var db = scope.ServiceProvider.GetRequiredService<InsuranceDbContext>();
+        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApiUser>>();
+
+        if (!await roleManager.RoleExistsAsync(Roles.Admin))
         {
-            if (!await roleManager.RoleExistsAsync("Admin"))
-            {
-                await roleManager.CreateAsync(new IdentityRole("Admin"));
-            }
+            await roleManager.CreateAsync(new IdentityRole(Roles.Admin));
+        }
 
-            if (!await roleManager.RoleExistsAsync("Broker"))
+        if (!await roleManager.RoleExistsAsync(Roles.Broker))
+        {
+            await roleManager.CreateAsync(new IdentityRole(Roles.Broker));
+        }
+
+        var adminUser = await userManager.FindByEmailAsync(AdminEmail);
+        if (adminUser == null)
+        {
+            adminUser = new ApiUser
             {
-                await roleManager.CreateAsync(new IdentityRole("Broker"));
-            }
+                UserName = AdminEmail,
+                Email = AdminEmail
+            };
+
+            await userManager.CreateAsync(adminUser, AdminPassword);
+            await userManager.AddToRoleAsync(adminUser, Roles.Admin);
         }
 
         if (!db.Administrators.Any())
@@ -29,8 +48,8 @@ public static class DatabaseSeeder
             {
                 Id = Guid.NewGuid(),
                 Name = "System Admin",
-                Email = "admin@insurance.local",
-                Role = "Admin"
+                Email = AdminEmail,
+                Role = Roles.Admin
             });
 
             await db.SaveChangesAsync();

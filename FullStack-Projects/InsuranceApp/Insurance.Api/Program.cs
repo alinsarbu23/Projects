@@ -74,6 +74,13 @@ builder.Services.AddAutoMapper(
 builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<IGeographyService, GeographyService>();
 builder.Services.AddScoped<IBuildingService, BuildingService>();
+builder.Services.AddScoped<IPolicyService, PolicyService>();
+builder.Services.AddScoped<IPolicyCalculationService, PolicyCalculationService>();
+builder.Services.AddScoped<IBrokerService, BrokerService>();
+builder.Services.AddScoped<ICurrencyService, CurrencyService>();
+builder.Services.AddScoped<IFeeConfigurationService, FeeConfigurationService>();
+builder.Services.AddScoped<IRiskFactorConfigurationService, RiskFactorConfigurationService>();
+
 
 builder.Services
     .AddIdentityCore<ApiUser>()
@@ -112,13 +119,8 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<InsuranceDbContext>();
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+await DatabaseSeeder.SeedAsync(app.Services);
 
-    await DatabaseSeeder.SeedAsync(db, roleManager);
-}
 
 
 // Configure the HTTP request pipeline.
