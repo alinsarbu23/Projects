@@ -3,8 +3,7 @@ using Insurance.Application.DTOs.Fees;
 
 namespace Insurance.Application.Validators.Fees;
 
-public class UpdateFeeConfigurationDtoValidator
-    : AbstractValidator<UpdateFeeConfigurationDto>
+public class UpdateFeeConfigurationDtoValidator : AbstractValidator<UpdateFeeConfigurationDto>
 {
     public UpdateFeeConfigurationDtoValidator()
     {

@@ -1,5 +1,4 @@
-﻿
-using Insurance.Application.Exceptions;
+﻿using Insurance.Application.Exceptions;
 
 namespace Insurance.Api.Middleware;
 
@@ -57,7 +56,6 @@ public class ExceptionMiddleware
                 ? "An unexpected error occurred."
                 : exception.Message
         };
-
         await context.Response.WriteAsJsonAsync(response);
     }
 }

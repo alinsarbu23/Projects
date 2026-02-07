@@ -39,7 +39,6 @@ public class PolicyCalculationService : IPolicyCalculationService
             throw new InvalidOperationException("Invalid or inactive currency");
         }
 
-        // convert to base currency
         var premiumInBaseCurrency = basePremium * currency.ExchangeRateToBase;
 
         var fees = await _unitOfWork.FeeConfigurations
@@ -88,13 +87,10 @@ public class PolicyCalculationService : IPolicyCalculationService
             totalPercentage += risk.AdjustmentPercentage;
         }
 
-        var finalPremiumInBase =
-            premiumInBaseCurrency * (1 + totalPercentage / 100m);
+        var finalPremiumInBase = premiumInBaseCurrency * (1 + totalPercentage / 100m);
 
-        var finalPremium =
-            finalPremiumInBase / currency.ExchangeRateToBase;
+        var finalPremium = finalPremiumInBase / currency.ExchangeRateToBase;
 
         return Math.Round(finalPremium, 2);
     }
-
 }

@@ -42,8 +42,6 @@ public class UpdateClientDtoValidatorTests
         result.IsValid.Should().BeFalse();
     }
 
-
-
     [Fact]
     public void ShouldPass_WhenDataIsValid()
     {

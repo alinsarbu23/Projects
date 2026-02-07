@@ -9,5 +9,6 @@ public class Currency
     public required string Name { get; set; }
 
     public decimal ExchangeRateToBase { get; set; }
+
     public bool IsActive { get; set; }
 }

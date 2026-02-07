@@ -204,7 +204,6 @@ public class BuildingServiceTests
         ex.Message.Should().Contain("Client not found");
     }
 
-
     [Fact]
     public async Task UpdateBuildingAsync_ShouldThrow_WhenSaveChangesReturnsZero()
     {

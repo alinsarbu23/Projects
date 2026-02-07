@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Insurance.Application.DTOs.Policies;
-using Insurance.Application.Interfaces.Repositories;
 using Insurance.Domain.Enums;
 using Insurance.Domain.Models;
 using Microsoft.EntityFrameworkCore;

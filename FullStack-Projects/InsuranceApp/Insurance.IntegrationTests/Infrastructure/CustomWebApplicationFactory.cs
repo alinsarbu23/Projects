@@ -7,8 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Insurance.IntegrationTests.Infrastructure;
 
-public class CustomWebApplicationFactory
-    : WebApplicationFactory<Program>
+public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 {
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -36,7 +35,7 @@ public class CustomWebApplicationFactory
             db.Database.EnsureDeleted();
             db.Database.Migrate();
 
-            DatabaseSeeder.SeedAsync(db, roleManager: null)
+            DatabaseSeeder.SeedAsync(sp)
                 .GetAwaiter()
                 .GetResult();
         });

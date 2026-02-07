@@ -19,14 +19,15 @@ public class DtoMapperConfig : Profile
     {
 
         CreateMap<Client, GetClientByIdDto>()
-            .ForMember(d => d.ClientType, o => o.Ignore());
+            .ForMember(d => d.ClientType, o => o.Ignore())
+            .ForMember(d => d.Identifier,
+                o => o.MapFrom(s => s.Cnp ?? s.Cui ?? string.Empty));
 
         CreateMap<Client, GetClientsDto>()
             .ForMember(d => d.ClientType, o => o.Ignore());
 
         CreateMap<CreateClientDto, Client>()
             .ForMember(d => d.Id, o => o.Ignore());
-
 
         CreateMap<Building, ClientBuildingSummaryDto>()
             .ForMember(d => d.City, o => o.MapFrom(s => s.City.Name))
@@ -47,7 +48,6 @@ public class DtoMapperConfig : Profile
             .ForMember(d => d.CityId, o => o.Ignore())
             .ForMember(d => d.BuildingTypeId, o => o.Ignore());
 
-
         CreateMap<Policy, GetPolicyByIdDto>()
             .ForMember(d => d.Status, o => o.MapFrom(s =>
                 s.EndDate < DateTime.UtcNow
@@ -58,15 +58,12 @@ public class DtoMapperConfig : Profile
             .ForMember(d => d.BuildingAddress,
                 o => o.MapFrom(s => $"{s.Building.Street} {s.Building.StreetNumber}"));
 
-
         CreateMap<Policy, GetPoliciesDto>()
             .ForMember(d => d.Status, o => o.MapFrom(s =>
                 s.EndDate < DateTime.UtcNow
                     ? PolicyStatus.Expired.ToString()
                     : s.Status.ToString()
             ));
-
-
 
         CreateMap<Broker, GetBrokerByIdDto>()
             .ForMember(d => d.Status, o => o.MapFrom(s => s.Status.ToString()));
@@ -82,8 +79,8 @@ public class DtoMapperConfig : Profile
             .ForMember(d => d.Id, o => o.Ignore())
             .ForMember(d => d.Status, o => o.Ignore());
 
-
         CreateMap<Currency, GetCurrencyByIdDto>();
+
         CreateMap<Currency, GetCurrenciesDto>();
 
         CreateMap<CreateCurrencyDto, Currency>()
@@ -93,6 +90,7 @@ public class DtoMapperConfig : Profile
             .ForMember(d => d.Id, o => o.Ignore());
 
         CreateMap<FeeConfiguration, GetFeeConfigurationByIdDto>();
+
         CreateMap<FeeConfiguration, GetFeeConfigurationsDto>();
 
         CreateMap<CreateFeeConfigurationDto, FeeConfiguration>()
@@ -101,8 +99,8 @@ public class DtoMapperConfig : Profile
         CreateMap<UpdateFeeConfigurationDto, FeeConfiguration>()
             .ForMember(d => d.Id, o => o.Ignore());
 
-
         CreateMap<RiskFactorConfiguration, GetRiskFactorConfigurationByIdDto>();
+
         CreateMap<RiskFactorConfiguration, GetRiskFactorConfigurationsDto>();
 
         CreateMap<CreateRiskFactorConfigurationDto, RiskFactorConfiguration>()
@@ -112,7 +110,9 @@ public class DtoMapperConfig : Profile
             .ForMember(d => d.Id, o => o.Ignore());
 
         CreateMap<Country, GetCountriesDto>();
+
         CreateMap<County, GetCountiesByCountryDto>();
+
         CreateMap<City, GetCitiesByCountyDto>();
     }
 }

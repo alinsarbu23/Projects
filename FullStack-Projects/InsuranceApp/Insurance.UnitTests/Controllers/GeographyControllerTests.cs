@@ -59,7 +59,6 @@ public class GeographyControllerTests
         payload![0].Name.Should().Be("Romania");
     }
 
-
     [Fact]
     public async Task GetCitiesByCounty_ShouldReturnOkWithResult()
     {

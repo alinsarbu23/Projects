@@ -31,7 +31,6 @@ public class UpdateBuildingDtoValidatorTests
         result.IsValid.Should().BeFalse();
     }
 
-
     [Theory]
     [InlineData(0)]
     [InlineData(-10)]
@@ -56,7 +55,6 @@ public class UpdateBuildingDtoValidatorTests
         result.IsValid.Should().BeFalse();
     }
 
-
     [Fact]
     public void ShouldPass_WhenDataIsValid()
     {
@@ -78,6 +76,4 @@ public class UpdateBuildingDtoValidatorTests
 
         result.IsValid.Should().BeTrue();
     }
-
-
 }

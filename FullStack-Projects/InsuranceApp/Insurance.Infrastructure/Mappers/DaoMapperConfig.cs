@@ -37,21 +37,31 @@ public class DaoMapperConfig : Profile
     public DaoMapperConfig()
     {
         CreateMap<DaoCountry, DomainCountry>().ReverseMap();
+
         CreateMap<DaoCounty, DomainCounty>().ReverseMap();
+
         CreateMap<DaoCity, DomainCity>().ReverseMap();
 
         CreateMap<DaoClient, DomainClient>().ReverseMap();
+
         CreateMap<DaoClientIdentifier, DomainClientIdentifier>().ReverseMap();
 
         CreateMap<DaoBuilding, DomainBuilding>().ReverseMap();
+
         CreateMap<DaoBuildingType, DomainBuildingType>().ReverseMap();
+        
         CreateMap<DaoClientType, DomainClientType>().ReverseMap();
 
         CreateMap<DaoAdmin, DomainAdmin>().ReverseMap();
+
         CreateMap<DaoBroker, DomainBroker>().ReverseMap();
+
         CreateMap<DaoPolicy, DomainPolicy>().ReverseMap();
+
         CreateMap<DaoRiskFactorConfiguration, DomainRiskFactorConfiguration>().ReverseMap();
+        
         CreateMap<DaoFeeConfiguration, DomainFeeConfiguration>().ReverseMap();
+        
         CreateMap<DaoCurrency, DomainCurrency>().ReverseMap();
     }
 }

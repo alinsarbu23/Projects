@@ -3,8 +3,7 @@ using Insurance.Application.DTOs.RiskFactors;
 
 namespace Insurance.Application.Validators.RiskFactors;
 
-public class CreateRiskFactorConfigurationDtoValidator
-    : AbstractValidator<CreateRiskFactorConfigurationDto>
+public class CreateRiskFactorConfigurationDtoValidator : AbstractValidator<CreateRiskFactorConfigurationDto>
 {
     public CreateRiskFactorConfigurationDtoValidator()
     {

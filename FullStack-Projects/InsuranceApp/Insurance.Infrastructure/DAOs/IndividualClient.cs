@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Insurance.Infrastructure.DAOs;
+﻿namespace Insurance.Infrastructure.DAOs;
 
 public partial class IndividualClient
 {

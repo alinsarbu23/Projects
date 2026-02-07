@@ -90,6 +90,5 @@ public class GeographyRepositoryTests
         result.Select(x => x.Name)
               .Should()
               .Contain(new[] { "A", "B" });
-
     }
 }

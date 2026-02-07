@@ -1,5 +1,4 @@
 ﻿using Insurance.IntegrationTests.Infrastructure;
-using System.Net.Http;
 using System.Net.Http.Headers;
 using Xunit;
 

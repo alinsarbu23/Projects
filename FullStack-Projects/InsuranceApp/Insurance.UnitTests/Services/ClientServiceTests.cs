@@ -47,7 +47,7 @@ public class ClientServiceTests
         await Assert.ThrowsAsync<ArgumentException>(() =>
             service.CreateClientAsync(new CreateClientDto
             {
-                ClientTypeId = 2, // Company
+                ClientTypeId = 2,
                 Name = "Company",
                 Cui = "RO1",
                 Email = "a@a.ro",
@@ -95,7 +95,7 @@ public class ClientServiceTests
         clients.Setup(x => x.GetByIdAsync(clientId)).ReturnsAsync(new Client
         {
             Id = clientId,
-            ClientTypeId = 1, // Individual
+            ClientTypeId = 1, 
             Name = "Ion",
             Cnp = "123",
             Email = "a@a.ro",
@@ -189,7 +189,6 @@ public class ClientServiceTests
                 : c.Cui == newValue && c.Cnp == null
         )), Times.Once);
     }
-
 
     [Fact]
     public async Task SearchClientsAsync_ShouldSetIdentifierCorrectly()

@@ -5,6 +5,7 @@ using Insurance.Application.Interfaces.Repositories;
 using Insurance.Application.Interfaces.Services;
 using Insurance.Domain.Models;
 using Microsoft.Extensions.Logging;
+using ClientType = Insurance.Domain.Enums.ClientType;
 
 namespace Insurance.Application.Services;
 
@@ -75,9 +76,13 @@ public class ClientService : IClientService
 
         var dto = _mapper.Map<GetClientByIdDto>(client);
 
+        dto.ClientType = ((ClientType)client.ClientTypeId).ToString();
+
         dto.Identifier = client.Cnp ?? client.Cui ?? string.Empty;
 
-        var buildings = await _unitOfWork.Buildings.GetBuildingsByClientIdAsync(clientId);
+        var buildings = await _unitOfWork.Buildings
+            .GetBuildingsByClientIdAsync(clientId);
+
         dto.Buildings = _mapper.Map<IReadOnlyList<ClientBuildingSummaryDto>>(buildings);
 
         return dto;
@@ -97,6 +102,9 @@ public class ClientService : IClientService
         foreach (var dto in dtos)
         {
             var client = clients.First(c => c.Id == dto.Id);
+
+            dto.ClientType = ((ClientType)client.ClientTypeId).ToString();
+
             dto.Identifier = client.Cnp ?? client.Cui ?? string.Empty;
         }
 

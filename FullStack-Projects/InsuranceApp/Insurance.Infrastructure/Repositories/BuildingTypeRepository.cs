@@ -1,5 +1,4 @@
 ﻿using Insurance.Application.Interfaces.Repositories;
-using Insurance.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
 namespace Insurance.Infrastructure.Repositories;

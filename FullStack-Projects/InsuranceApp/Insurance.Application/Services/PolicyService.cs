@@ -50,7 +50,6 @@ public class PolicyService : IPolicyService
         await _unitOfWork.SaveChangesAsync();
     }
 
-
     public async Task CancelAsync(Guid policyId, DeletePolicyDto dto)
     {
         var policy = await _unitOfWork.Policies.GetByIdAsync(policyId);
@@ -87,7 +86,6 @@ public class PolicyService : IPolicyService
 
         return _mapper.Map<GetPolicyByIdDto>(policy);
     }
-
 
     private static string GeneratePolicyNumber()
     {
@@ -150,8 +148,6 @@ public class PolicyService : IPolicyService
             Status = PolicyStatus.Draft
         };
 
-
-
         await _unitOfWork.Policies.AddAsync(policy);
         await _unitOfWork.SaveChangesAsync();
 
@@ -159,13 +155,13 @@ public class PolicyService : IPolicyService
     }
 
     public async Task<PagedPoliciesDto> SearchAsync(
-    Guid? clientId,
-    string brokerEmail,
-    string? status,
-    DateTime? startDate,
-    DateTime? endDate,
-    int page,
-    int pageSize)
+        Guid? clientId,
+        string brokerEmail,
+        string? status,
+        DateTime? startDate,
+        DateTime? endDate,
+        int page,
+        int pageSize)
     {
         var broker = await _unitOfWork.Brokers.GetByEmailAsync(brokerEmail)
             ?? throw new InvalidOperationException("Broker not found");
@@ -201,5 +197,4 @@ public class PolicyService : IPolicyService
             TotalCount = totalCount
         };
     }
-
 }

@@ -39,7 +39,6 @@ public class ClientRepositoryTests
         context.SaveChanges();
     }
 
-
     [Fact]
     public async Task AddAsync_ShouldPersistClient()
     {

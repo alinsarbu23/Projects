@@ -5,7 +5,9 @@ using Insurance.Domain.Models;
 public interface IPolicyRepository
 {
     Task AddAsync(Policy policy);
+
     Task UpdateAsync(Policy policy);
+
     Task<Policy?> GetByIdAsync(Guid id);
 
     public Task<IReadOnlyList<Policy>> SearchAsync(
@@ -24,8 +26,7 @@ public interface IPolicyRepository
      DateTime? startDate,
      DateTime? endDate);
 
-    Task<IReadOnlyList<PolicyReportDto>>
-       GetPolicyReportByBrokerAsync(
-           DateTime? from,
-           DateTime? to);
+    Task<IReadOnlyList<PolicyReportDto>> GetPolicyReportByBrokerAsync(
+        DateTime? from,
+        DateTime? to);
 }

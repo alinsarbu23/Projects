@@ -1,7 +1,5 @@
 ﻿using Insurance.Application.DTOs.Clients;
 using Insurance.Application.Interfaces.Services;
-using Insurance.Infrastructure.Identity;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Insurance.Api.Controllers;

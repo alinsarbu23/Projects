@@ -1,6 +1,4 @@
-﻿using Insurance.Domain.Models;
-using Insurance.Infrastructure.DAOs;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Client = Insurance.Infrastructure.DAOs.Client;
 using ClientIdentifier = Insurance.Infrastructure.DAOs.ClientIdentifier;

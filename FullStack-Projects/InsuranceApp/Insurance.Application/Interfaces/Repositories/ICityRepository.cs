@@ -4,4 +4,3 @@ public interface ICityRepository
 {
     Task<bool> ExistsAsync(Guid id);
 }
-

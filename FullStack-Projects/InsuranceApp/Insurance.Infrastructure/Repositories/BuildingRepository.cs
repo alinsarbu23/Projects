@@ -64,8 +64,6 @@ public class BuildingRepository : IBuildingRepository
         return _mapper.Map<Building?>(buildingDao);
     }
 
-
-
     public Task UpdateAsync(Building entity)
     {
         var buildingDao = _mapper.Map<DAOs.Building>(entity);

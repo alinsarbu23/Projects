@@ -1,16 +1,15 @@
 ﻿using AutoMapper;
 using FluentAssertions;
-
 using Insurance.Infrastructure.DAOs;
 using Insurance.UnitTests.Helpers;
 using Xunit;
+
 using DaoBuilding = Insurance.Infrastructure.DAOs.Building;
-// DAO
 using DaoClient = Insurance.Infrastructure.DAOs.Client;
 using DaoClientIdentifier = Insurance.Infrastructure.DAOs.ClientIdentifier;
 using DaoCountry = Insurance.Infrastructure.DAOs.Country;
 using DomainBuilding = Insurance.Domain.Models.Building;
-// Domain
+
 using DomainClient = Insurance.Domain.Models.Client;
 using DomainClientIdentifier = Insurance.Domain.Models.ClientIdentifier;
 using DomainCountry = Insurance.Domain.Models.Geography.Country;
@@ -88,7 +87,6 @@ public class DaoMapperTests
         dao.LastName.Should().Be("Popescu");
         dao.Cnp.Should().Be("1234567890123");
     }
-
 
     [Fact]
     public void DomainClient_To_DaoClient_ShouldMapCorrectly()

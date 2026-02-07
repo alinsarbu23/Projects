@@ -43,9 +43,6 @@ public class BrokerService : IBrokerService
         return broker.Id;
     }
 
-
-
-
     public async Task UpdateAsync(Guid brokerId, UpdateBrokerDto dto)
     {
         var broker = await _unitOfWork.Brokers.GetByIdAsync(brokerId);

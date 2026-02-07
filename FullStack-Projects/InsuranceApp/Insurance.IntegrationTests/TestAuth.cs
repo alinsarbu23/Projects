@@ -1,5 +1,4 @@
 ﻿using Insurance.Application.Dtos.Identity;
-using Insurance.Application.DTOs.Identity;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 

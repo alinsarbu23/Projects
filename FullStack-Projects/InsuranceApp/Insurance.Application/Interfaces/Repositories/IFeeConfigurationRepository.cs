@@ -10,8 +10,10 @@ public interface IFeeConfigurationRepository
         DateTime atDate);
 
     Task<IReadOnlyList<FeeConfiguration>> GetAllAsync();
+
     Task<FeeConfiguration?> GetByIdAsync(Guid id);
 
     Task AddAsync(FeeConfiguration fee);
+
     Task UpdateAsync(FeeConfiguration fee);
 }

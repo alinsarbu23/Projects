@@ -30,13 +30,11 @@ public class BrokersController : ControllerBase
         );
     }
 
-
     [HttpGet]
     public async Task<ActionResult<IReadOnlyList<GetBrokersDto>>> GetAll()
     {
         return Ok(await _brokerService.GetAllAsync());
     }
-
 
     [HttpGet("{brokerId}")]
     public async Task<ActionResult<GetBrokerByIdDto>> GetById(Guid brokerId)

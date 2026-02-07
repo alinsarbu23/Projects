@@ -1,5 +1,4 @@
-﻿using Insurance.Infrastructure;
-using Insurance.Infrastructure.DAOs;
+﻿using Insurance.Infrastructure.DAOs;
 using Insurance.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;

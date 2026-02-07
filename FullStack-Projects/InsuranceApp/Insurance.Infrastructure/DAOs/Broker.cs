@@ -1,6 +1,4 @@
-﻿using Insurance.Domain.Models;
-
-namespace Insurance.Infrastructure.DAOs;
+﻿namespace Insurance.Infrastructure.DAOs;
 
 public class Broker
 {

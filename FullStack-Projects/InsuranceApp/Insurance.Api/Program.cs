@@ -5,8 +5,6 @@ using Insurance.Application.Interfaces.Repositories;
 using Insurance.Application.Interfaces.Services;
 using Insurance.Application.Mappers;
 using Insurance.Application.Services;
-using Insurance.Application.Validators.Buildings;
-using Insurance.Application.Validators.Clients;
 using Insurance.Infrastructure;
 using Insurance.Infrastructure.Identity;
 using Insurance.Infrastructure.Mappers;
@@ -22,7 +20,6 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<DtoMapperConfig>();
@@ -80,8 +77,6 @@ builder.Services.AddScoped<IBrokerService, BrokerService>();
 builder.Services.AddScoped<ICurrencyService, CurrencyService>();
 builder.Services.AddScoped<IFeeConfigurationService, FeeConfigurationService>();
 builder.Services.AddScoped<IRiskFactorConfigurationService, RiskFactorConfigurationService>();
-
-
 builder.Services
     .AddIdentityCore<ApiUser>()
     .AddRoles<IdentityRole>()
@@ -121,8 +116,6 @@ var app = builder.Build();
 
 await DatabaseSeeder.SeedAsync(app.Services);
 
-
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -139,7 +132,6 @@ app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
 
 app.MapControllers();
 

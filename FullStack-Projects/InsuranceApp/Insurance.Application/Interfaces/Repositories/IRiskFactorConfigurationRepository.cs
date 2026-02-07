@@ -4,7 +4,6 @@ namespace Insurance.Application.Interfaces.Repositories;
 
 public interface IRiskFactorConfigurationRepository
 {
-
     Task<IReadOnlyList<RiskFactorConfiguration>> GetActiveForBuildingAsync(
         Guid countryId,
         Guid countyId,

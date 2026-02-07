@@ -2,7 +2,6 @@
 using Insurance.Application.Interfaces.Repositories;
 using Insurance.Domain.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
 
 namespace Insurance.Infrastructure.Repositories;
 
@@ -16,6 +15,7 @@ public class ClientRepository : IClientRepository
         _context = context;
         _mapper = mapper;
     }
+
     public async Task AddAsync(Client client)
     {
         var clientDao = _mapper.Map<DAOs.Client>(client);
@@ -35,7 +35,6 @@ public class ClientRepository : IClientRepository
         {
             query = query.Where(c => c.Cnp == identifier || c.Cui == identifier);
         }
-
 
         return await query.CountAsync();
     }

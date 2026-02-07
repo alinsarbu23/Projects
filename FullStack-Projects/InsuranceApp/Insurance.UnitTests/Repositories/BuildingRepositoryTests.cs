@@ -23,7 +23,6 @@ public class BuildingRepositoryTests
         return context;
     }
 
-
     [Fact]
     public async Task AddAsync_ShouldPersistBuilding()
     {
@@ -121,7 +120,6 @@ public class BuildingRepositoryTests
             ClientTypeId = 1,
             Name = "Old"
         };
-
 
         context.Clients.Add(dao);
         await context.SaveChangesAsync();
