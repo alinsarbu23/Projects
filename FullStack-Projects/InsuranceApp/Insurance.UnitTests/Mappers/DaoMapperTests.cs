@@ -172,4 +172,113 @@ public class DaoMapperTests
         dao.NewIdentifier.Should().Be(domain.NewIdentifier);
         dao.IdentifierType.Should().Be(domain.IdentifierType);
     }
+
+    [Fact]
+    public void DomainFeeConfiguration_To_DaoFeeConfiguration_ShouldMapCorrectly()
+    {
+        var domain = new Insurance.Domain.Models.FeeConfiguration
+        {
+            Id = Guid.NewGuid(),
+            Name = "Admin Fee",
+            Type = Insurance.Domain.Enums.FeeType.AdminFee,
+            Percentage = 5,
+            IsActive = true
+        };
+
+        var dao = _mapper.Map<Insurance.Infrastructure.DAOs.FeeConfiguration>(domain);
+
+        dao.Should().NotBeNull();
+        dao.Id.Should().Be(domain.Id);
+        dao.Name.Should().Be(domain.Name);
+        dao.Type.Should().Be(domain.Type.ToString());
+        dao.Percentage.Should().Be(domain.Percentage);
+        dao.IsActive.Should().BeTrue();
+    }
+
+    [Fact]
+    public void DomainRiskFactorConfiguration_To_DaoRiskFactorConfiguration_ShouldMapCorrectly()
+    {
+        var domain = new Insurance.Domain.Models.RiskFactorConfiguration
+        {
+            Id = Guid.NewGuid(),
+            Level = Insurance.Domain.Enums.RiskLevel.City,
+            AdjustmentPercentage = 7.5m,
+            IsActive = true
+        };
+
+        var dao = _mapper.Map<Insurance.Infrastructure.DAOs.RiskFactorConfiguration>(domain);
+
+        dao.Should().NotBeNull();
+        dao.Id.Should().Be(domain.Id);
+        dao.Level.Should().Be("City");
+        dao.AdjustmentPercentage.Should().Be(7.5m);
+        dao.IsActive.Should().BeTrue();
+    }
+
+    [Fact]
+    public void DomainCurrency_To_DaoCurrency_ShouldMapCorrectly()
+    {
+        var domain = new Insurance.Domain.Models.Currency
+        {
+            Id = Guid.NewGuid(),
+            Code = "EUR",
+            Name = "Euro",
+            ExchangeRateToBase = 4.9m,
+            IsActive = true
+        };
+
+        var dao = _mapper.Map<Insurance.Infrastructure.DAOs.Currency>(domain);
+
+        dao.Should().NotBeNull();
+        dao.Id.Should().Be(domain.Id);
+        dao.Code.Should().Be("EUR");
+        dao.Name.Should().Be("Euro");
+        dao.ExchangeRateToBase.Should().Be(4.9m);
+        dao.IsActive.Should().BeTrue();
+    }
+
+    [Fact]
+    public void DomainBroker_To_DaoBroker_ShouldMapCorrectly()
+    {
+        var domain = new Insurance.Domain.Models.Broker
+        {
+            Id = Guid.NewGuid(),
+            BrokerCode = "BR-01",
+            Name = "Test Broker",
+            Email = "broker@test.ro",
+            Status = Insurance.Domain.Enums.BrokerStatus.Active
+        };
+
+        var dao = _mapper.Map<Insurance.Infrastructure.DAOs.Broker>(domain);
+
+        dao.Should().NotBeNull();
+        dao.Id.Should().Be(domain.Id);
+        dao.BrokerCode.Should().Be("BR-01");
+        dao.Name.Should().Be("Test Broker");
+        dao.Email.Should().Be("broker@test.ro");
+        dao.Status.Should().Be("Active");
+    }
+
+    [Fact]
+    public void DomainPolicy_To_DaoPolicy_ShouldMapCorrectly()
+    {
+        var domain = new Insurance.Domain.Models.Policy
+        {
+            Id = Guid.NewGuid(),
+            PolicyNumber = "POL-001",
+            Status = Insurance.Domain.Enums.PolicyStatus.Active,
+            BasePremium = 1000,
+            FinalPremium = 1200
+        };
+
+        var dao = _mapper.Map<Insurance.Infrastructure.DAOs.Policy>(domain);
+
+        dao.Should().NotBeNull();
+        dao.Id.Should().Be(domain.Id);
+        dao.PolicyNumber.Should().Be("POL-001");
+        dao.Status.Should().Be("Active");
+        dao.BasePremium.Should().Be(1000);
+        dao.FinalPremium.Should().Be(1200);
+    }
+
 }
