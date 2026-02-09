@@ -14,5 +14,9 @@ public class UpdateCurrencyDtoValidator : AbstractValidator<UpdateCurrencyDto>
 
         RuleFor(x => x.ExchangeRateToBase)
             .GreaterThan(0);
+
+        RuleFor(x => x.IsActive)
+            .Must(v => v == 0 || v == 1)
+            .WithMessage("IsActive must be 0 or 1.");
     }
 }
