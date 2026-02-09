@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace Insurance.Api.Controllers;
 
 [ApiController]
-[Authorize(Roles = Roles.Broker)]
 [Route("api/brokers/clients")]
+[Authorize(Roles = Roles.Broker)]
 public class ClientsController : ControllerBase
 {
     private readonly IClientService _clientService;
@@ -46,10 +46,6 @@ public class ClientsController : ControllerBase
         return Ok(client);
     }
 
-    /// <summary>
-    /// Search clients by name (partial) or identifier (exact), with paging.
-    /// Validation is handled via FluentValidation (to be added).
-    /// </summary>
     [HttpGet]
     public async Task<ActionResult<PagedClientsDto>> SearchClients(
         [FromQuery] string? name,

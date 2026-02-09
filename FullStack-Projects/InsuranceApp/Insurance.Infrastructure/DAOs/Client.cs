@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace Insurance.Infrastructure.DAOs;
 
-namespace Insurance.Infrastructure.DAOs;
-
-public partial class Client
+public class Client
 {
     public Guid Id { get; set; }
 
-    public string ClientType { get; set; } = null!;
+    public int ClientTypeId { get; set; }
+
+    public ClientType ClientType { get; set; } = null!;
 
     public string Name { get; set; } = null!;
 
@@ -25,5 +24,5 @@ public partial class Client
 
     public DateTime UpdatedAt { get; set; }
 
-    public virtual ICollection<Building> Buildings { get; set; } = new List<Building>();
+    public ICollection<Building> Buildings { get; set; } = new List<Building>();
 }

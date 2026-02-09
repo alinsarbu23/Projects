@@ -10,7 +10,7 @@ namespace Insurance.UnitTests.Repositories;
 
 public class ClientIdentifierRepositoryTests
 {
-    private InsuranceDbContext CreateDbContext()
+    private static InsuranceDbContext CreateDbContext()
     {
         var options = new DbContextOptionsBuilder<InsuranceDbContext>()
             .UseInMemoryDatabase(Guid.NewGuid().ToString())

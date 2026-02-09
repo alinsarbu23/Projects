@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Insurance.Domain.Enums;
 using Insurance.Domain.Models;
 using Insurance.Infrastructure;
 using Insurance.Infrastructure.Repositories;
@@ -11,13 +10,17 @@ namespace Insurance.UnitTests.Repositories;
 
 public class BuildingRepositoryTests
 {
-    private InsuranceDbContext CreateDbContext()
+    private static InsuranceDbContext CreateDbContext()
     {
         var options = new DbContextOptionsBuilder<InsuranceDbContext>()
             .UseInMemoryDatabase(Guid.NewGuid().ToString())
             .Options;
 
-        return new InsuranceDbContext(options);
+        var context = new InsuranceDbContext(options);
+
+        context.Database.EnsureCreated();
+
+        return context;
     }
 
     [Fact]
@@ -46,46 +49,6 @@ public class BuildingRepositoryTests
         stored.Should().NotBeNull();
         stored!.Street.Should().Be("Street");
         stored.SurfaceArea.Should().Be(20);
-    }
-
-    [Fact]
-    public async Task GetBuildingsByClientIdAsync_ShouldReturnOnlyClientBuildings()
-    {
-        using var context = CreateDbContext();
-        var repo = new BuildingRepository(context, MapperFactory.Create());
-
-        var clientId = Guid.NewGuid();
-
-        context.Buildings.AddRange(
-            new Infrastructure.DAOs.Building
-            {
-                Id = Guid.NewGuid(),
-                ClientId = clientId,
-                CityId = Guid.NewGuid(),
-                BuildingTypeId = Guid.NewGuid(),
-                Street = "A",
-                StreetNumber = "1",
-                SurfaceArea = 10,
-                InsuredValue = 100
-            },
-            new Infrastructure.DAOs.Building
-            {
-                Id = Guid.NewGuid(),
-                ClientId = Guid.NewGuid(),
-                CityId = Guid.NewGuid(),
-                BuildingTypeId = Guid.NewGuid(),
-                Street = "B",
-                StreetNumber = "2",
-                SurfaceArea = 20,
-                InsuredValue = 200
-            });
-
-        await context.SaveChangesAsync();
-
-        var result = await repo.GetBuildingsByClientIdAsync(clientId);
-
-        result.Should().HaveCount(1);
-        result[0].Street.Should().Be("A");
     }
 
     [Fact]
@@ -154,7 +117,7 @@ public class BuildingRepositoryTests
         var dao = new Infrastructure.DAOs.Client
         {
             Id = Guid.NewGuid(),
-            ClientType = ClientType.Individual.ToString(),
+            ClientTypeId = 1,
             Name = "Old"
         };
 

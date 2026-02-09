@@ -25,22 +25,5 @@ public class CityConfiguration : IEntityTypeConfiguration<City>
               .WithMany(c => c.Cities)
               .HasForeignKey(x => x.CountyId)
               .OnDelete(DeleteBehavior.Cascade);
-
-        entity.HasData(
-            new City
-            {
-                Id = Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc"),
-                Name = "Bucharest",
-                Code = "B",
-                CountyId = Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb")
-            },
-            new City
-            {
-                Id = Guid.Parse("cccccccc-cccc-cccc-cccc-dddddddddddd"),
-                Name = "Cluj-Napoca",
-                Code = "CJ",
-                CountyId = Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-cccccccccccc")
-            }
-        );
     }
 }

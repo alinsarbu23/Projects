@@ -5,11 +5,11 @@ using Insurance.Application.Interfaces.Repositories;
 using Insurance.Application.Interfaces.Services;
 using Insurance.Application.Mappers;
 using Insurance.Application.Services;
-using Insurance.Application.Validators.Clients;
 using Insurance.Infrastructure;
 using Insurance.Infrastructure.Identity;
 using Insurance.Infrastructure.Mappers;
 using Insurance.Infrastructure.Repositories;
+using Insurance.Infrastructure.Seed;
 using Insurance.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -20,10 +20,9 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
 builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddValidatorsFromAssemblyContaining<CreateClientDtoValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<DtoMapperConfig>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -72,7 +71,12 @@ builder.Services.AddAutoMapper(
 builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<IGeographyService, GeographyService>();
 builder.Services.AddScoped<IBuildingService, BuildingService>();
-
+builder.Services.AddScoped<IPolicyService, PolicyService>();
+builder.Services.AddScoped<IPolicyCalculationService, PolicyCalculationService>();
+builder.Services.AddScoped<IBrokerService, BrokerService>();
+builder.Services.AddScoped<ICurrencyService, CurrencyService>();
+builder.Services.AddScoped<IFeeConfigurationService, FeeConfigurationService>();
+builder.Services.AddScoped<IRiskFactorConfigurationService, RiskFactorConfigurationService>();
 builder.Services
     .AddIdentityCore<ApiUser>()
     .AddRoles<IdentityRole>()
@@ -82,6 +86,14 @@ builder.Services.AddScoped<IGeographyRepository, GeographyRepository>();
 builder.Services.AddScoped<IClientRepository, ClientRepository>();
 builder.Services.AddScoped<IBuildingRepository, BuildingRepository>();
 builder.Services.AddScoped<IClientIdentifierRepository, ClientIdentifierRepository>();
+builder.Services.AddScoped<ICityRepository, CityRepository>();
+builder.Services.AddScoped<IBuildingTypeRepository, BuildingTypeRepository>();
+builder.Services.AddScoped<ICurrencyRepository, CurrencyRepository>();
+builder.Services.AddScoped<IPolicyRepository, PolicyRepository>();
+builder.Services.AddScoped<IAdministratorRepository, AdministratorRepository>();
+builder.Services.AddScoped<IBrokerRepository, BrokerRepository>();
+builder.Services.AddScoped<IFeeConfigurationRepository, FeeConfigurationRepository>();
+builder.Services.AddScoped<IRiskFactorConfigurationRepository, RiskFactorConfigurationRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAuthManager, AuthManager>();
 
@@ -102,6 +114,8 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
+await DatabaseSeeder.SeedAsync(app.Services);
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -119,9 +133,14 @@ app.UseMiddleware<ExceptionMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 
-
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();
 
-public partial class Program { }
+public partial class Program
+{
+    protected Program()
+    {
+
+    }
+}

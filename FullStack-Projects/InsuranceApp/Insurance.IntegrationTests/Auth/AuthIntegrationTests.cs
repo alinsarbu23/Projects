@@ -23,8 +23,7 @@ public class AuthIntegrationTests : BaseIntegrationTest
             new RegisterDto
             {
                 Email = "auth_user@test.ro",
-                Password = "Password1!",
-                Role = "Broker"
+                Password = "Password1!"
             });
 
         registerResponse.StatusCode.Should().Be(HttpStatusCode.OK);

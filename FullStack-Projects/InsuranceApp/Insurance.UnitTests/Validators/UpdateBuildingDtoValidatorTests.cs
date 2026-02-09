@@ -1,6 +1,7 @@
 ﻿using Xunit;
 using FluentAssertions;
 using Insurance.Application.DTOs.Buildings;
+using Insurance.Application.Validators.Buildings;
 
 namespace Insurance.UnitTests.Validators;
 
@@ -17,8 +18,12 @@ public class UpdateBuildingDtoValidatorTests
         {
             Street = "Street",
             StreetNumber = "1",
+            ConstructionYear = 2000,
+            NumberOfFloors = 2,
             SurfaceArea = surface,
-            InsuredValue = 100
+            InsuredValue = 100,
+            FloodRisk = false,
+            EarthquakeRisk = false
         };
 
         var result = validator.Validate(dto);
@@ -37,8 +42,12 @@ public class UpdateBuildingDtoValidatorTests
         {
             Street = "Street",
             StreetNumber = "1",
+            ConstructionYear = 2000,
+            NumberOfFloors = 2,
             SurfaceArea = 10,
-            InsuredValue = value
+            InsuredValue = value,
+            FloodRisk = false,
+            EarthquakeRisk = false
         };
 
         var result = validator.Validate(dto);
@@ -55,8 +64,12 @@ public class UpdateBuildingDtoValidatorTests
         {
             Street = "Street",
             StreetNumber = "1",
+            ConstructionYear = 2000,
+            NumberOfFloors = 2,
             SurfaceArea = 10,
-            InsuredValue = 100
+            InsuredValue = 2000,
+            FloodRisk = false,
+            EarthquakeRisk = false
         };
 
         var result = validator.Validate(dto);

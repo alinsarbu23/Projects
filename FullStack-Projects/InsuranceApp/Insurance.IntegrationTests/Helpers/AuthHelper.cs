@@ -6,24 +6,21 @@ namespace Insurance.IntegrationTests.Helpers;
 
 public static class AuthHelper
 {
-    public static async Task<string> LoginAsBroker(HttpClient client)
+    public static async Task<string> Login(HttpClient client)
     {
         await client.PostAsJsonAsync("/api/auth/register", new RegisterDto
         {
-            Email = "broker@test.ro",
-            Password = "Password1!",
-            Role = "Broker"
+            Email = "user@test.ro",
+            Password = "Password1!"
         });
 
         var response = await client.PostAsJsonAsync("/api/auth/login", new LoginDto
         {
-            Email = "broker@test.ro",
+            Email = "user@test.ro",
             Password = "Password1!"
         });
 
-        var auth = await response.Content
-            .ReadFromJsonAsync<AuthResponseDto>();
-
+        var auth = await response.Content.ReadFromJsonAsync<AuthResponseDto>();
         return auth!.Token;
     }
 }

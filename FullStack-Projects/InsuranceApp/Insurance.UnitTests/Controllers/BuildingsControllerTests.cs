@@ -54,11 +54,16 @@ public class BuildingsControllerTests
             Id = buildingId,
             Street = "Street",
             StreetNumber = "1",
+            City = "Cluj-Napoca",
+            County = "Cluj",
+            Country = "Romania",
+            BuildingType = "Residential",
             SurfaceArea = 10,
             InsuredValue = 100,
             FloodRisk = true,
             EarthquakeRisk = false
         };
+
 
         service.Setup(x => x.GetBuildingByIdAsync(buildingId))
             .ReturnsAsync(expected);

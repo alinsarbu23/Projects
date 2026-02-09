@@ -21,20 +21,5 @@ public class CountyConfiguration : IEntityTypeConfiguration<County>
               .WithMany(c => c.Counties)
               .HasForeignKey(x => x.CountryId)
               .OnDelete(DeleteBehavior.Cascade);
-
-        entity.HasData(
-            new County
-            {
-                Id = Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
-                Name = "Bucharest",
-                CountryId = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")
-            },
-            new County
-            {
-                Id = Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-cccccccccccc"),
-                Name = "Cluj",
-                CountryId = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")
-            }
-        );
     }
 }

@@ -22,6 +22,73 @@ namespace Insurance.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Insurance.Infrastructure.DAOs.Administrator", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.ToTable("Administrators");
+                });
+
+            modelBuilder.Entity("Insurance.Infrastructure.DAOs.Broker", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("BrokerCode")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<decimal>("CommissionPercentage")
+                        .HasColumnType("decimal(5,2)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BrokerCode")
+                        .IsUnique();
+
+                    b.ToTable("Brokers");
+                });
+
             modelBuilder.Entity("Insurance.Infrastructure.DAOs.Building", b =>
                 {
                     b.Property<Guid>("Id")
@@ -108,23 +175,6 @@ namespace Insurance.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("BuildingTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("11111111-1111-1111-1111-111111111111"),
-                            Name = "Residential"
-                        },
-                        new
-                        {
-                            Id = new Guid("22222222-2222-2222-2222-222222222222"),
-                            Name = "Office"
-                        },
-                        new
-                        {
-                            Id = new Guid("33333333-3333-3333-3333-333333333333"),
-                            Name = "Industrial"
-                        });
                 });
 
             modelBuilder.Entity("Insurance.Infrastructure.DAOs.City", b =>
@@ -152,22 +202,6 @@ namespace Insurance.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Cities");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("cccccccc-cccc-cccc-cccc-cccccccccccc"),
-                            Code = "B",
-                            CountyId = new Guid("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
-                            Name = "Bucharest"
-                        },
-                        new
-                        {
-                            Id = new Guid("cccccccc-cccc-cccc-cccc-dddddddddddd"),
-                            Code = "CJ",
-                            CountyId = new Guid("bbbbbbbb-bbbb-bbbb-bbbb-cccccccccccc"),
-                            Name = "Cluj-Napoca"
-                        });
                 });
 
             modelBuilder.Entity("Insurance.Infrastructure.DAOs.Client", b =>
@@ -179,10 +213,8 @@ namespace Insurance.Infrastructure.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<string>("ClientType")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                    b.Property<int>("ClientTypeId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Cnp")
                         .HasMaxLength(13)
@@ -220,6 +252,8 @@ namespace Insurance.Infrastructure.Migrations
                     b.HasKey("Id")
                         .HasName("PK__Clients__3214EC07E0E04D9B");
 
+                    b.HasIndex("ClientTypeId");
+
                     b.HasIndex("Cnp")
                         .IsUnique()
                         .HasDatabaseName("UX_Clients_Cnp")
@@ -231,20 +265,6 @@ namespace Insurance.Infrastructure.Migrations
                         .HasFilter("[Cui] IS NOT NULL");
 
                     b.ToTable("Clients");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("dddddddd-dddd-dddd-dddd-dddddddddddd"),
-                            Address = "Test Address",
-                            ClientType = "Individual",
-                            Cnp = "1800101223344",
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "test@insurance.ro",
-                            Name = "Test Client",
-                            Phone = "0700000000",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        });
                 });
 
             modelBuilder.Entity("Insurance.Infrastructure.DAOs.ClientIdentifier", b =>
@@ -286,6 +306,32 @@ namespace Insurance.Infrastructure.Migrations
                     b.ToTable("ClientIdentifier", (string)null);
                 });
 
+            modelBuilder.Entity("Insurance.Infrastructure.DAOs.ClientType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.ToTable("ClientTypes");
+                });
+
             modelBuilder.Entity("Insurance.Infrastructure.DAOs.Country", b =>
                 {
                     b.Property<Guid>("Id")
@@ -303,13 +349,6 @@ namespace Insurance.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Countries");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
-                            Name = "Romania"
-                        });
                 });
 
             modelBuilder.Entity("Insurance.Infrastructure.DAOs.County", b =>
@@ -332,20 +371,160 @@ namespace Insurance.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Counties");
+                });
 
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
-                            CountryId = new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
-                            Name = "Bucharest"
-                        },
-                        new
-                        {
-                            Id = new Guid("bbbbbbbb-bbbb-bbbb-bbbb-cccccccccccc"),
-                            CountryId = new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
-                            Name = "Cluj"
-                        });
+            modelBuilder.Entity("Insurance.Infrastructure.DAOs.Currency", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<decimal>("ExchangeRateToBase")
+                        .HasColumnType("decimal(10,4)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.ToTable("Currencies");
+                });
+
+            modelBuilder.Entity("Insurance.Infrastructure.DAOs.FeeConfiguration", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AppliesToRisk")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<DateTime>("EffectiveFrom")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("EffectiveTo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<decimal>("Percentage")
+                        .HasColumnType("decimal(5,2)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FeeConfigurations", (string)null);
+                });
+
+            modelBuilder.Entity("Insurance.Infrastructure.DAOs.Policy", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("ActivatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("BasePremium")
+                        .HasColumnType("decimal(15,2)");
+
+                    b.Property<Guid>("BrokerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BuildingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CancellationReason")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime?>("CancelledAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("CurrencyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("FinalPremium")
+                        .HasColumnType("decimal(15,2)");
+
+                    b.Property<string>("PolicyNumber")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BrokerId");
+
+                    b.HasIndex("BuildingId");
+
+                    b.HasIndex("CurrencyId");
+
+                    b.HasIndex("PolicyNumber")
+                        .IsUnique();
+
+                    b.ToTable("Policies", (string)null);
+                });
+
+            modelBuilder.Entity("Insurance.Infrastructure.DAOs.RiskFactorConfiguration", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("AdjustmentPercentage")
+                        .HasColumnType("decimal(5,2)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Level")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<Guid>("ReferenceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Level", "ReferenceId");
+
+                    b.ToTable("RiskFactorConfigurations", (string)null);
                 });
 
             modelBuilder.Entity("Insurance.Infrastructure.Identity.ApiUser", b =>
@@ -438,20 +617,6 @@ namespace Insurance.Infrastructure.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "ROLE_ADMIN",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = "ROLE_BROKER",
-                            Name = "Broker",
-                            NormalizedName = "BROKER"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -601,6 +766,17 @@ namespace Insurance.Infrastructure.Migrations
                     b.Navigation("County");
                 });
 
+            modelBuilder.Entity("Insurance.Infrastructure.DAOs.Client", b =>
+                {
+                    b.HasOne("Insurance.Infrastructure.DAOs.ClientType", "ClientType")
+                        .WithMany()
+                        .HasForeignKey("ClientTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ClientType");
+                });
+
             modelBuilder.Entity("Insurance.Infrastructure.DAOs.ClientIdentifier", b =>
                 {
                     b.HasOne("Insurance.Infrastructure.DAOs.Client", null)
@@ -619,6 +795,33 @@ namespace Insurance.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Country");
+                });
+
+            modelBuilder.Entity("Insurance.Infrastructure.DAOs.Policy", b =>
+                {
+                    b.HasOne("Insurance.Infrastructure.DAOs.Broker", "Broker")
+                        .WithMany("Policies")
+                        .HasForeignKey("BrokerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Insurance.Infrastructure.DAOs.Building", "Building")
+                        .WithMany()
+                        .HasForeignKey("BuildingId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Insurance.Infrastructure.DAOs.Currency", "Currency")
+                        .WithMany()
+                        .HasForeignKey("CurrencyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Broker");
+
+                    b.Navigation("Building");
+
+                    b.Navigation("Currency");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -670,6 +873,11 @@ namespace Insurance.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Insurance.Infrastructure.DAOs.Broker", b =>
+                {
+                    b.Navigation("Policies");
                 });
 
             modelBuilder.Entity("Insurance.Infrastructure.DAOs.BuildingType", b =>

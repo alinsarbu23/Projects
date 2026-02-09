@@ -16,13 +16,5 @@ public class CountryConfiguration : IEntityTypeConfiguration<Country>
 
         entity.HasIndex(x => x.Name)
               .IsUnique();
-
-        entity.HasData(
-            new Country
-            {
-                Id = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
-                Name = "Romania"
-            }
-        );
     }
 }

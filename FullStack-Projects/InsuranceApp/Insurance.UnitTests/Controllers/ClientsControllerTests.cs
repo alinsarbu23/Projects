@@ -4,7 +4,6 @@ using FluentAssertions;
 using Insurance.Api.Controllers;
 using Insurance.Application.Interfaces.Services;
 using Insurance.Application.DTOs.Clients;
-using Insurance.Domain.Enums;
 
 namespace Insurance.UnitTests.Controllers;
 
@@ -28,9 +27,9 @@ public class ClientsControllerTests
 
         var result = await _controller.CreateClient(new CreateClientDto
         {
-            ClientType = ClientType.Individual,
+            ClientTypeId = 1,
             Name = "Test",
-            Cnp = "123",
+            Cnp = "1234567890123",
             Email = "test@test.ro",
             Phone = "0700",
             Address = "Addr"
@@ -38,7 +37,9 @@ public class ClientsControllerTests
 
         result.Should().NotBeNull();
 
-        _clientServiceMock.Verify(x => x.CreateClientAsync(It.IsAny<CreateClientDto>()), Times.Once);
+        _clientServiceMock.Verify(
+            x => x.CreateClientAsync(It.IsAny<CreateClientDto>()),
+            Times.Once);
     }
 
     [Fact]
@@ -50,6 +51,7 @@ public class ClientsControllerTests
             clientId,
             new UpdateClientDto
             {
+                Name = "Test",
                 Email = "a@a.ro",
                 Phone = "0700",
                 Address = "Addr"
@@ -57,7 +59,9 @@ public class ClientsControllerTests
 
         result.Should().NotBeNull();
 
-        _clientServiceMock.Verify(x => x.UpdateClientAsync(clientId, It.IsAny<UpdateClientDto>()), Times.Once);
+        _clientServiceMock.Verify(
+            x => x.UpdateClientAsync(clientId, It.IsAny<UpdateClientDto>()),
+            Times.Once);
     }
 
     [Fact]
@@ -102,7 +106,9 @@ public class ClientsControllerTests
 
         result.Should().NotBeNull();
 
-        _clientServiceMock.Verify(x => x.GetClientByIdAsync(It.IsAny<Guid>()), Times.Once);
+        _clientServiceMock.Verify(
+            x => x.GetClientByIdAsync(It.IsAny<Guid>()),
+            Times.Once);
     }
 
     [Fact]
@@ -122,6 +128,8 @@ public class ClientsControllerTests
 
         result.Should().NotBeNull();
 
-        _clientServiceMock.Verify(x => x.SearchClientsAsync(null, null, 1, 10), Times.Once);
+        _clientServiceMock.Verify(
+            x => x.SearchClientsAsync(null, null, 1, 10),
+            Times.Once);
     }
 }

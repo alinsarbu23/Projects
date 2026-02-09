@@ -1,7 +1,7 @@
-﻿namespace Insurance.Application.Interfaces.Services;
-
-using Insurance.Application.DTOs.Buildings;
+﻿using Insurance.Application.DTOs.Buildings;
 using Insurance.Application.DTOs.Clients;
+
+namespace Insurance.Application.Interfaces.Services;
 
 public interface IBuildingService
 {

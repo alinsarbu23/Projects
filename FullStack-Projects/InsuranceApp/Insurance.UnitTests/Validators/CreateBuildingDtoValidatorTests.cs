@@ -1,6 +1,7 @@
 ﻿using Xunit;
 using FluentAssertions;
 using Insurance.Application.DTOs.Buildings;
+using Insurance.Application.Validators.Buildings;
 
 namespace Insurance.UnitTests.Validators;
 
@@ -62,7 +63,7 @@ public class CreateBuildingDtoValidatorTests
             Street = "Street",
             StreetNumber = "1",
             SurfaceArea = 10,
-            InsuredValue = 100
+            InsuredValue = 1500
         };
 
         var result = validator.Validate(dto);

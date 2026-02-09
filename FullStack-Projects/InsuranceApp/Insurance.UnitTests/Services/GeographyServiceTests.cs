@@ -10,7 +10,7 @@ namespace Insurance.UnitTests.Services;
 
 public class GeographyServiceTests
 {
-    private GeographyService CreateService(
+    private static GeographyService CreateService(
         Mock<IUnitOfWork> uowMock,
         Mock<IGeographyRepository> geographyRepoMock)
     {

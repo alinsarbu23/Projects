@@ -3,16 +3,22 @@
 public class GetClientByIdDto
 {
     public Guid Id { get; init; }
-    public string ClientType { get; set; }
-    public string Name { get; init; }
+
+    public required string ClientType { get; set; }
+
+    public required string Name { get; init; }
+
 
     /// <summary>
     /// CNP for INDIVIDUAL, CUI for COMPANY
     /// </summary>
-    public string Identifier { get; set; }
-    public string Email { get; set; }
-    public string Phone { get; set; }
-    public string Address { get; set; }
+    public required string Identifier { get; set; }
 
-    public IReadOnlyList<ClientBuildingSummaryDto> Buildings { get; set; }
+    public required string Email { get; set; }
+
+    public required string Phone { get; set; }
+
+    public required string Address { get; set; }
+
+    public required IReadOnlyList<ClientBuildingSummaryDto> Buildings { get; set; }
 }

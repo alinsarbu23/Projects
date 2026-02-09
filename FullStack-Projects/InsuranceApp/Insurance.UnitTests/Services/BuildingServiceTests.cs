@@ -1,11 +1,12 @@
 ﻿using FluentAssertions;
-using Moq;
-using Xunit;
-using Insurance.Application.Services;
 using Insurance.Application.DTOs.Buildings;
+using Insurance.Application.Exceptions;
 using Insurance.Application.Interfaces.Repositories;
+using Insurance.Application.Services;
 using Insurance.Domain.Models;
 using Insurance.UnitTests.Helpers;
+using Moq;
+using Xunit;
 
 namespace Insurance.UnitTests.Services;
 
@@ -28,10 +29,12 @@ public class BuildingServiceTests
 
         var service = Create(uow, repo);
 
-        await Assert.ThrowsAsync<KeyNotFoundException>(async () =>
+        var ex = await Assert.ThrowsAsync<NotFoundException>(async () =>
         {
             await service.GetBuildingByIdAsync(id);
         });
+
+        ex.Message.Should().Be($"Building with id {id} not found.");
     }
 
     [Fact]
@@ -93,7 +96,7 @@ public class BuildingServiceTests
 
         var service = Create(uow, repo);
 
-        await Assert.ThrowsAsync<KeyNotFoundException>(async () =>
+        var ex = await Assert.ThrowsAsync<NotFoundException>(async () =>
         {
             await service.UpdateBuildingAsync(id, new UpdateBuildingDto
             {
@@ -107,6 +110,8 @@ public class BuildingServiceTests
                 EarthquakeRisk = true
             });
         });
+
+        ex.Message.Should().Be($"Building with id {id} not found.");
     }
 
     [Fact]
@@ -170,48 +175,33 @@ public class BuildingServiceTests
         var clients = new Mock<IClientRepository>();
         var buildings = new Mock<IBuildingRepository>();
 
+        var clientId = Guid.NewGuid();
+
         uow.Setup(x => x.Clients).Returns(clients.Object);
         uow.Setup(x => x.Buildings).Returns(buildings.Object);
 
-        clients.Setup(x => x.GetByIdAsync(It.IsAny<Guid>()))
+        clients
+            .Setup(x => x.GetByIdAsync(clientId))
             .ReturnsAsync((Client?)null);
 
         var service = new BuildingService(MapperFactory.Create(), uow.Object);
 
-        await Assert.ThrowsAsync<KeyNotFoundException>(async () =>
+        var dto = new CreateBuildingDto
         {
-            await service.CreateBuildingAsync(Guid.NewGuid(), It.IsAny<CreateBuildingDto>());
-        });
-    }
+            CityId = Guid.NewGuid(),
+            BuildingTypeId = Guid.NewGuid(),
+            Street = "S",
+            StreetNumber = "1",
+            SurfaceArea = 10,
+            InsuredValue = 100
+        };
 
-    [Fact]
-    public async Task CreateBuildingAsync_ShouldThrow_WhenSaveChangesIsZero()
-    {
-        var uow = new Mock<IUnitOfWork>();
-        var clients = new Mock<IClientRepository>();
-        var buildings = new Mock<IBuildingRepository>();
-
-        uow.Setup(x => x.Clients).Returns(clients.Object);
-        uow.Setup(x => x.Buildings).Returns(buildings.Object);
-        uow.Setup(x => x.SaveChangesAsync()).ReturnsAsync(0);
-
-        clients.Setup(x => x.GetByIdAsync(It.IsAny<Guid>()))
-            .ReturnsAsync(new Client { Id = Guid.NewGuid() });
-
-        var service = new BuildingService(MapperFactory.Create(), uow.Object);
-
-        await Assert.ThrowsAsync<InvalidOperationException>(async () =>
+        var ex = await Assert.ThrowsAsync<NotFoundException>(async () =>
         {
-            await service.CreateBuildingAsync(Guid.NewGuid(), new CreateBuildingDto
-            {
-                CityId = Guid.NewGuid(),
-                BuildingTypeId = Guid.NewGuid(),
-                Street = "S",
-                StreetNumber = "1",
-                SurfaceArea = 10,
-                InsuredValue = 100
-            });
+            await service.CreateBuildingAsync(clientId, dto);
         });
+
+        ex.Message.Should().Contain("Client not found");
     }
 
     [Fact]

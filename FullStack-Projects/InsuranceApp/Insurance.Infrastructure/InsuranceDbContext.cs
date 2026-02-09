@@ -14,24 +14,50 @@ public partial class InsuranceDbContext : IdentityDbContext<ApiUser>
     }
 
     public DbSet<Building> Buildings => Set<Building>();
+
     public DbSet<BuildingType> BuildingTypes => Set<BuildingType>();
+
     public DbSet<City> Cities => Set<City>();
+
     public DbSet<Client> Clients => Set<Client>();
+
+    public DbSet<ClientType> ClientTypes => Set<ClientType>();
+
     public DbSet<Country> Countries => Set<Country>();
+
     public DbSet<County> Counties => Set<County>();
+
     public DbSet<ClientIdentifier> ClientIdentifiers => Set<ClientIdentifier>();
+   
+    public DbSet<Broker> Brokers => Set<Broker>();
+    
+    public DbSet<Administrator> Administrators => Set<Administrator>();
+   
+    public DbSet<Policy> Policies => Set<Policy>();
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    public DbSet<Currency> Currencies => Set<Currency>();
+
+    public DbSet<FeeConfiguration> FeeConfigurations => Set<FeeConfiguration>();
+    
+    public DbSet<RiskFactorConfiguration> RiskFactorConfigurations => Set<RiskFactorConfiguration>();
+
+    protected override void OnModelCreating(ModelBuilder builder)
     {
-        base.OnModelCreating(modelBuilder);
+        base.OnModelCreating(builder);
 
-        modelBuilder.ApplyConfiguration(new CountryConfiguration());
-        modelBuilder.ApplyConfiguration(new CountyConfiguration());
-        modelBuilder.ApplyConfiguration(new CityConfiguration());
-        modelBuilder.ApplyConfiguration(new BuildingConfiguration());
-        modelBuilder.ApplyConfiguration(new BuildingTypeConfiguration());
-        modelBuilder.ApplyConfiguration(new ClientConfiguration());
-        modelBuilder.ApplyConfiguration(new ClientIdentifierConfiguration());
-        modelBuilder.ApplyConfiguration(new RoleConfiguration());
+        builder.ApplyConfiguration(new CountryConfiguration());
+        builder.ApplyConfiguration(new CountyConfiguration());
+        builder.ApplyConfiguration(new CityConfiguration());
+        builder.ApplyConfiguration(new BuildingConfiguration());
+        builder.ApplyConfiguration(new BuildingTypeConfiguration());
+        builder.ApplyConfiguration(new ClientConfiguration());
+        builder.ApplyConfiguration(new ClientIdentifierConfiguration());
+        builder.ApplyConfiguration(new ClientTypeConfiguration());
+        builder.ApplyConfiguration(new BrokerConfiguration());
+        builder.ApplyConfiguration(new AdministratorConfiguration());
+        builder.ApplyConfiguration(new PolicyConfiguration());
+        builder.ApplyConfiguration(new CurrencyConfiguration());
+        builder.ApplyConfiguration(new FeeConfigurationConfig());
+        builder.ApplyConfiguration(new RiskFactorConfigurationConfig());
     }
 }

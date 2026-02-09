@@ -14,8 +14,8 @@ namespace Insurance.Infrastructure.Services;
 public class AuthManager : IAuthManager
 {
     private readonly UserManager<ApiUser> _userManager;
-    private readonly IConfiguration _config;
     private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly IConfiguration _config;
 
     public AuthManager(
         UserManager<ApiUser> userManager,
@@ -33,12 +33,13 @@ public class AuthManager : IAuthManager
         {
             throw new ArgumentException("User with this email already exists.");
         }
-            
-        if (!await _roleManager.RoleExistsAsync(dto.Role))
+
+        if (!await _roleManager.RoleExistsAsync(Roles.Broker))
         {
-            throw new ArgumentException($"Role '{dto.Role}' does not exist.");
+            throw new InvalidOperationException(
+                $"Role '{Roles.Broker}' is not configured.");
         }
-            
+
         var user = new ApiUser
         {
             UserName = dto.Email,
@@ -48,47 +49,51 @@ public class AuthManager : IAuthManager
         var result = await _userManager.CreateAsync(user, dto.Password);
         if (!result.Succeeded)
         {
-            throw new ArgumentException(string.Join("; ", result.Errors.Select(e => e.Description)));
+            throw new ArgumentException(
+                string.Join("; ", result.Errors.Select(e => e.Description)));
         }
-            
-        await _userManager.AddToRoleAsync(user, dto.Role);
+
+        await _userManager.AddToRoleAsync(user, Roles.Broker);
 
         return new AuthResponseDto
         {
-            Token = GenerateJwtToken(user, dto.Role)
+            Token = await GenerateJwtTokenAsync(user)
         };
     }
 
     public async Task<AuthResponseDto> LoginAsync(LoginDto dto)
     {
-        var user = await _userManager.FindByEmailAsync(dto.Email)?? throw new ArgumentException("Invalid credentials.");
+        var user = await _userManager.FindByEmailAsync(dto.Email) ?? throw new ArgumentException("Invalid credentials.");
 
         if (!await _userManager.CheckPasswordAsync(user, dto.Password))
         {
             throw new ArgumentException("Invalid credentials.");
         }
 
-
-        var role = (await _userManager.GetRolesAsync(user)).First();
-
         return new AuthResponseDto
         {
-            Token = GenerateJwtToken(user, role)
+            Token = await GenerateJwtTokenAsync(user)
         };
     }
 
-    private string GenerateJwtToken(ApiUser user, string role)
+    private async Task<string> GenerateJwtTokenAsync(ApiUser user)
     {
+        var roles = await _userManager.GetRolesAsync(user);
+
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.NameIdentifier, user.Id),
+            new Claim(ClaimTypes.Email, user.Email!)
+        };
+
+        foreach (var role in roles)
+        {
+            claims.Add(new Claim(ClaimTypes.Role, role));
+        }
+
         var key = _config["Jwt:Key"]!;
         var issuer = _config["Jwt:Issuer"]!;
         var expiresMinutes = int.Parse(_config["Jwt:ExpiresMinutes"]!);
-
-        var claims = new[]
-        {
-            new Claim(ClaimTypes.NameIdentifier, user.Id),
-            new Claim(ClaimTypes.Email, user.Email!),
-            new Claim(ClaimTypes.Role, role)
-        };
 
         var signingKey = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(key));

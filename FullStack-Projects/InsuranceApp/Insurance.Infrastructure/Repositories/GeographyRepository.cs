@@ -29,7 +29,7 @@ public class GeographyRepository : IGeographyRepository
 
     public async Task<IReadOnlyList<County>> GetCountiesByCountryIdAsync(Guid countryId)
     {
-        var countiesDAO = await _context.Counties.AsNoTracking().Where(county => county.CountryId == countryId).OrderBy(county => county.Name).ToListAsync();
+        var countiesDAO = await _context.Counties.AsNoTracking().Where(county => county.CountryId == countryId).ToListAsync();
         return _mapper.Map<IReadOnlyList<County>>(countiesDAO);
     }
 }

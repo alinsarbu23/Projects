@@ -1,36 +1,47 @@
 ﻿using Insurance.Infrastructure;
+using Insurance.Infrastructure.Seed;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Insurance.IntegrationTests.Infrastructure;
 
-public class CustomWebApplicationFactory: WebApplicationFactory<Program>
+public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 {
-    private static readonly string DbName = $"InsuranceDb_IntegrationTests_{Guid.NewGuid()}";
-
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseEnvironment("Testing");
 
-        builder.ConfigureServices(services =>
+        builder.ConfigureServices((context, services) =>
         {
-            var descriptor = services.Single(d => d.ServiceType == typeof(DbContextOptions<InsuranceDbContext>));
+            var descriptor = services.SingleOrDefault(
+                d => d.ServiceType == typeof(DbContextOptions<InsuranceDbContext>));
 
-            services.Remove(descriptor);
+            if (descriptor != null)
+            {
+                services.Remove(descriptor);
+            }
+
+            var connectionString = context.Configuration.GetConnectionString("InsuranceDb");
 
             services.AddDbContext<InsuranceDbContext>(options =>
             {
-                options.UseSqlServer(
-                    $"Server=(localdb)\\mssqllocaldb;Database={DbName};Trusted_Connection=True;MultipleActiveResultSets=true");
+                options.UseSqlServer(connectionString);
             });
 
             var sp = services.BuildServiceProvider();
+
             using var scope = sp.CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<InsuranceDbContext>();
 
-            db.Database.EnsureCreated();
+            db.Database.EnsureDeleted();
+            db.Database.Migrate();
+
+            DatabaseSeeder.SeedAsync(sp)
+                .GetAwaiter()
+                .GetResult();
         });
     }
 }
