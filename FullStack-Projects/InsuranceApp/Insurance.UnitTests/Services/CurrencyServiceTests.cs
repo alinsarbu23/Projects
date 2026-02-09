@@ -104,7 +104,7 @@ public class CurrencyServiceTests
             {
                 Name = "Euro",
                 ExchangeRateToBase = 4.9m,
-                IsActive = false
+                IsActive = 0
             }));
     }
 

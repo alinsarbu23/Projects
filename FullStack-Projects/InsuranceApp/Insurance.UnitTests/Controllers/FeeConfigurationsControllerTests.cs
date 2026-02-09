@@ -79,7 +79,7 @@ public class FeeConfigurationsControllerTests
         var result = await controller.Update(Guid.NewGuid(), new UpdateFeeConfigurationDto
         {
             Percentage = 5,
-            IsActive = true
+            IsActive = 1
         });
 
         result.Should().BeOfType<NoContentResult>();

@@ -4,5 +4,5 @@ public class UpdateFeeConfigurationDto
 {
     public decimal Percentage { get; set; }
 
-    public bool IsActive { get; set; }
+    public int IsActive { get; set; }
 }

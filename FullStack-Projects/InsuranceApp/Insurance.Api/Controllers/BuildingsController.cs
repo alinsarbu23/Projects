@@ -1,12 +1,15 @@
 ﻿using Insurance.Application.DTOs.Buildings;
 using Insurance.Application.DTOs.Clients;
 using Insurance.Application.Interfaces.Services;
+using Insurance.Infrastructure.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Insurance.Api.Controllers;
 
 [ApiController]
 [Route("api/brokers")]
+[Authorize(Roles = Roles.Broker)]
 public class BuildingsController : ControllerBase
 {
     private readonly IBuildingService _buildingService;

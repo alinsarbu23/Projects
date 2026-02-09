@@ -74,7 +74,7 @@ namespace Insurance.UnitTests.Controllers;
         var result = await controller.Update(Guid.NewGuid(), new UpdateRiskFactorConfigurationDto
         {
             AdjustmentPercentage = 5,
-            IsActive = true
+            IsActive = 1
         });
 
         result.Should().BeOfType<NoContentResult>();

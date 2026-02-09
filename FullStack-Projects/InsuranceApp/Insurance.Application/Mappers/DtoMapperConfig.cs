@@ -87,7 +87,9 @@ public class DtoMapperConfig : Profile
             .ForMember(d => d.Id, o => o.Ignore());
 
         CreateMap<UpdateCurrencyDto, Currency>()
-            .ForMember(d => d.Id, o => o.Ignore());
+            .ForMember(d => d.Id, o => o.Ignore())
+            .ForMember(d => d.IsActive,
+                o => o.MapFrom(s => s.IsActive == 1));
 
         CreateMap<FeeConfiguration, GetFeeConfigurationByIdDto>();
 
@@ -97,7 +99,9 @@ public class DtoMapperConfig : Profile
             .ForMember(d => d.Id, o => o.Ignore());
 
         CreateMap<UpdateFeeConfigurationDto, FeeConfiguration>()
-            .ForMember(d => d.Id, o => o.Ignore());
+            .ForMember(d => d.Id, o => o.Ignore())
+            .ForMember(d => d.IsActive,
+                o => o.MapFrom(s => s.IsActive == 1));
 
         CreateMap<RiskFactorConfiguration, GetRiskFactorConfigurationByIdDto>();
 
@@ -107,7 +111,9 @@ public class DtoMapperConfig : Profile
             .ForMember(d => d.Id, o => o.Ignore());
 
         CreateMap<UpdateRiskFactorConfigurationDto, RiskFactorConfiguration>()
-            .ForMember(d => d.Id, o => o.Ignore());
+            .ForMember(d => d.Id, o => o.Ignore())
+            .ForMember(d => d.IsActive,
+                o => o.MapFrom(s => s.IsActive == 1));
 
         CreateMap<Country, GetCountriesDto>();
 

@@ -74,7 +74,7 @@ public class CurrenciesControllerTests
         {
             Name = "EUR",
             ExchangeRateToBase = 4.9m,
-            IsActive = true
+            IsActive = 1
         });
 
         result.Should().BeOfType<NoContentResult>();

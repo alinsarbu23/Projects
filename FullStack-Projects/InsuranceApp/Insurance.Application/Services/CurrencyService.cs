@@ -46,7 +46,7 @@ public class CurrencyService : ICurrencyService
             throw new InvalidOperationException("Currency not found");
         }
 
-        if (!dto.IsActive && currency.IsActive)
+        if (dto.IsActive == 0 && currency.IsActive)
         {
             var isUsedInActivePolicies = await _unitOfWork.Policies.ExistsActivePolicyWithCurrencyAsync(currencyId);
 

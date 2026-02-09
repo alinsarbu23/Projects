@@ -16,7 +16,7 @@ public class UpdateCurrencyDtoValidatorTests
         {
             Name = "RON",
             ExchangeRateToBase = 0,
-            IsActive = true
+            IsActive = 1
         };
 
         _validator.Validate(dto).IsValid.Should().BeFalse();

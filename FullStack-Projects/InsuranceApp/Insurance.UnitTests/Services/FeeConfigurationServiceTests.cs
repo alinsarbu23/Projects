@@ -98,7 +98,7 @@ public class FeeConfigurationServiceTests
         await service.UpdateAsync(fee.Id, new UpdateFeeConfigurationDto
         {
             Percentage = 10,
-            IsActive = false
+            IsActive = 0
         });
 
         fee.Percentage.Should().Be(10);

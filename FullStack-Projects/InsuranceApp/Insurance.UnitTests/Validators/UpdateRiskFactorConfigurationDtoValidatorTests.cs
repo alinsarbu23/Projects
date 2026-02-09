@@ -15,7 +15,7 @@ public class UpdateRiskFactorConfigurationDtoValidatorTests
         var dto = new UpdateRiskFactorConfigurationDto
         {
             AdjustmentPercentage = 0,
-            IsActive = true
+            IsActive = 1
         };
 
         _validator.Validate(dto).IsValid.Should().BeFalse();
@@ -27,7 +27,7 @@ public class UpdateRiskFactorConfigurationDtoValidatorTests
         var dto = new UpdateRiskFactorConfigurationDto
         {
             AdjustmentPercentage = -5,
-            IsActive = true
+            IsActive = 1
         };
 
         _validator.Validate(dto).IsValid.Should().BeTrue();
