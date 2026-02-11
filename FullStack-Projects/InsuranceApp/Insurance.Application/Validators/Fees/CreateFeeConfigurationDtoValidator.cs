@@ -10,7 +10,9 @@ public class CreateFeeConfigurationDtoValidator : AbstractValidator<CreateFeeCon
         RuleFor(x => x.Name)
             .NotEmpty()
             .Must(x => !string.IsNullOrWhiteSpace(x))
-            .MaximumLength(200);
+            .MaximumLength(200)
+            .Must(name => !name.Any(char.IsDigit))
+            .WithMessage("Name must not contain digits.");
 
         RuleFor(x => x.Type)
             .NotEmpty()
@@ -18,7 +20,9 @@ public class CreateFeeConfigurationDtoValidator : AbstractValidator<CreateFeeCon
             .MaximumLength(50);
 
         RuleFor(x => x.Percentage)
-            .GreaterThan(0);
+            .GreaterThan(0)
+            .LessThanOrEqualTo(100)
+            .WithMessage("Percentage must be between 0 and 100.");
 
         RuleFor(x => x.EffectiveFrom)
             .NotEmpty();

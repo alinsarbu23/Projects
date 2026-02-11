@@ -14,7 +14,9 @@ public class CreatePolicyDtoValidator : AbstractValidator<CreatePolicyDto>
             .NotEmpty();
 
         RuleFor(x => x.BasePremium)
-            .GreaterThan(0);
+            .GreaterThan(0)
+            .LessThanOrEqualTo(100_000_000)
+            .WithMessage("BasePremium must be realistic.");
 
         RuleFor(x => x.StartDate)
             .LessThan(x => x.EndDate)

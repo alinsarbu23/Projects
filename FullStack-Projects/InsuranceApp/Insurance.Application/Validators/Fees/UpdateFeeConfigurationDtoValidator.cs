@@ -8,7 +8,9 @@ public class UpdateFeeConfigurationDtoValidator : AbstractValidator<UpdateFeeCon
     public UpdateFeeConfigurationDtoValidator()
     {
         RuleFor(x => x.Percentage)
-            .GreaterThan(0);
+            .GreaterThan(0)
+            .LessThanOrEqualTo(100)
+            .WithMessage("Percentage must be between 0 and 100.");
 
         RuleFor(x => x.IsActive)
             .Must(v => v == 0 || v == 1)

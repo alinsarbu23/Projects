@@ -9,6 +9,9 @@ public class DeletePolicyDtoValidator : AbstractValidator<DeletePolicyDto>
     {
         RuleFor(x => x.Reason)
             .NotEmpty()
-            .MaximumLength(255);
+            .Must(x => !string.IsNullOrWhiteSpace(x))
+            .WithMessage("Cancellation reason is required.")
+            .MaximumLength(255)
+            .WithMessage("Cancellation reason is too long.");
     }
 }

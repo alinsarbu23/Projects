@@ -8,7 +8,10 @@ public class UpdateRiskFactorConfigurationDtoValidator : AbstractValidator<Updat
     public UpdateRiskFactorConfigurationDtoValidator()
     {
         RuleFor(x => x.AdjustmentPercentage)
-            .NotEqual(0);
+            .NotEqual(0)
+            .GreaterThanOrEqualTo(-100)
+            .LessThanOrEqualTo(100)
+            .WithMessage("AdjustmentPercentage must be between -100 and 100 and cannot be 0.");
 
         RuleFor(x => x.IsActive)
             .Must(v => v == 0 || v == 1)
