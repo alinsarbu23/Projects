@@ -62,7 +62,6 @@ public class CurrencyService : ICurrencyService
         await _unitOfWork.SaveChangesAsync();
     }
 
-
     public async Task<GetCurrencyByIdDto> GetByIdAsync(Guid currencyId)
     {
         var currency = await _unitOfWork.Currencies.GetByIdAsync(currencyId);

@@ -108,20 +108,26 @@ public class PolicyService : IPolicyService
 
         return result;
     }
-    public async Task<Guid> CreateDraftAsync(
-        CreatePolicyDto dto,
-        string brokerEmail)
+
+    public async Task<Guid> CreateDraftAsync(CreatePolicyDto dto, string brokerEmail)
     {
-        var broker = await _unitOfWork.Brokers.GetByEmailAsync(brokerEmail)
-            ?? throw new InvalidOperationException("Broker not found");
+        var broker = await _unitOfWork.Brokers.GetByEmailAsync(brokerEmail);
+
+        if (broker == null)
+        {
+            throw new InvalidOperationException("Broker not found");
+        }
 
         if (broker.Status != BrokerStatus.Active)
         {
             throw new InvalidOperationException("Broker is not active");
         }
 
-        var building = await _unitOfWork.Buildings.GetByIdAsync(dto.BuildingId)
-            ?? throw new InvalidOperationException("Building not found");
+        var building = await _unitOfWork.Buildings.GetByIdAsync(dto.BuildingId);
+        if (building == null)
+        {
+            throw new InvalidOperationException("Building not found");
+        }
 
         var finalPremium =
             await _calculationService.CalculateFinalPremiumAsync(

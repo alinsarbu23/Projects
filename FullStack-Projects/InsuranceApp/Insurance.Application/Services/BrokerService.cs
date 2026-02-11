@@ -28,6 +28,7 @@ public class BrokerService : IBrokerService
             throw new ArgumentException("Broker code must be unique");
         }
 
+
         if (await _unitOfWork.Brokers.GetByEmailAsync(dto.Email) != null)
         {
             throw new ArgumentException("Broker email must be unique");
@@ -39,6 +40,8 @@ public class BrokerService : IBrokerService
 
         await _unitOfWork.Brokers.AddAsync(broker);
         await _unitOfWork.SaveChangesAsync();
+
+        _logger.LogInformation("Broker {BrokerId} created", broker.Id);
 
         return broker.Id;
     }

@@ -27,30 +27,14 @@ public class BuildingService : IBuildingService
         }
 
         if (!await _unitOfWork.Cities.ExistsAsync(dto.CityId))
-        {
             throw new ArgumentException("Invalid city.");
-        }
 
         if (!await _unitOfWork.BuildingTypes.ExistsAsync(dto.BuildingTypeId))
-        {
             throw new ArgumentException("Invalid building type.");
-        }
 
-        var building = new Building
-        {
-            Id = Guid.NewGuid(),
-            ClientId = clientId,
-            CityId = dto.CityId,
-            BuildingTypeId = dto.BuildingTypeId,
-            Street = dto.Street,
-            StreetNumber = dto.StreetNumber,
-            ConstructionYear = dto.ConstructionYear,
-            NumberOfFloors = dto.NumberOfFloors,
-            SurfaceArea = dto.SurfaceArea,
-            InsuredValue = dto.InsuredValue,
-            FloodRisk = dto.FloodRisk,
-            EarthquakeRisk = dto.EarthquakeRisk
-        };
+        var building = _mapper.Map<Building>(dto);
+        building.Id = Guid.NewGuid();
+        building.ClientId = clientId;
 
         await _unitOfWork.Buildings.AddAsync(building);
         await _unitOfWork.SaveChangesAsync();

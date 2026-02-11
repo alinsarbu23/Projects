@@ -44,17 +44,8 @@ public class ClientService : IClientService
             throw new ArgumentException("A client with the current CUI already exists.");
         }
 
-        var client = new Client
-        {
-            Id = Guid.NewGuid(),
-            ClientTypeId = dto.ClientTypeId,
-            Name = dto.Name,
-            Cnp = dto.Cnp,
-            Cui = dto.Cui,
-            Email = dto.Email,
-            Phone = dto.Phone,
-            Address = dto.Address
-        };
+        var client = _mapper.Map<Client>(dto);
+        client.Id = Guid.NewGuid();
 
         await _unitOfWork.Clients.AddAsync(client);
 
@@ -62,6 +53,8 @@ public class ClientService : IClientService
         {
             throw new InvalidOperationException("Failed to create client.");
         }
+
+        _logger.LogInformation("Client {ClientId} created", client.Id);
 
         return client.Id;
     }
@@ -125,10 +118,7 @@ public class ClientService : IClientService
             throw new NotFoundException("Client not found.");
         }
 
-        client.Name = dto.Name;
-        client.Email = dto.Email;
-        client.Phone = dto.Phone;
-        client.Address = dto.Address;
+        _mapper.Map(dto, client);
 
         await _unitOfWork.Clients.UpdateAsync(client);
 
@@ -136,6 +126,8 @@ public class ClientService : IClientService
         {
             throw new InvalidOperationException("Failed to update client.");
         }
+
+        _logger.LogInformation("Client {ClientId} updated", clientId);
     }
 
     public async Task UpdateClientIdentifierAsync(Guid clientId, UpdateClientIdentifierDto dto)
