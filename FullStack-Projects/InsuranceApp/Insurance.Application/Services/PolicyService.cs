@@ -29,18 +29,26 @@ public class PolicyService : IPolicyService
 
     public async Task ActivateAsync(Guid policyId)
     {
-        var policy = await _unitOfWork.Policies.GetByIdAsync(policyId)
-            ?? throw new InvalidOperationException("Policy not found");
+        var policy = await _unitOfWork.Policies.GetByIdAsync(policyId);
+
+        if (policy == null)
+        {
+            throw new InvalidOperationException("Policy not found");
+        }
+
+        if (policy.Status == PolicyStatus.Active)
+        {
+            throw new InvalidOperationException("Policy is already active.");
+        }
 
         if (policy.Status != PolicyStatus.Draft)
         {
-            throw new InvalidOperationException("Only draft policies can be activated");
+            throw new InvalidOperationException("Only draft policies can be activated.");
         }
 
         if (policy.EndDate < DateTime.UtcNow.Date)
         {
-            throw new InvalidOperationException(
-                "Cannot activate a policy that already ended");
+            throw new InvalidOperationException("Cannot activate a policy that already ended.");
         }
 
         policy.Status = PolicyStatus.Active;
@@ -48,21 +56,27 @@ public class PolicyService : IPolicyService
 
         await _unitOfWork.Policies.UpdateAsync(policy);
         await _unitOfWork.SaveChangesAsync();
+
+        _logger.LogInformation("Policy {PolicyId} activated", policyId);
     }
 
     public async Task CancelAsync(Guid policyId, DeletePolicyDto dto)
     {
         var policy = await _unitOfWork.Policies.GetByIdAsync(policyId);
+
         if (policy == null)
         {
-            _logger.LogWarning("Policy {PolicyId} not found", policyId);
             throw new InvalidOperationException("Policy not found");
+        }
+
+        if (policy.Status == PolicyStatus.Cancelled)
+        {
+            throw new InvalidOperationException("Policy is already cancelled.");
         }
 
         if (policy.Status != PolicyStatus.Active)
         {
-            _logger.LogWarning("Attempt to cancel non-active policy {PolicyId}", policyId);
-            throw new InvalidOperationException("Only active policies can be cancelled");
+            throw new InvalidOperationException("Only active policies can be cancelled.");
         }
 
         policy.Status = PolicyStatus.Cancelled;
