@@ -12,7 +12,7 @@ public class FeeConfiguration
 
     public decimal Percentage { get; set; }
 
-    public string? AppliesToRisk { get; set; }
+    public BuildingRiskType? AppliesToRisk { get; set; }
 
     public bool IsActive { get; set; }
 

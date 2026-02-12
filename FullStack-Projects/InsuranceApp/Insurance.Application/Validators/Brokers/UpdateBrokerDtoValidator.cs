@@ -14,11 +14,10 @@ public class UpdateBrokerDtoValidator : AbstractValidator<UpdateBrokerDto>
             .WithMessage("Name must not contain digits.");
 
         RuleFor(x => x.Phone)
+            .NotEmpty()
             .Must(phone => phone != null && phone.All(char.IsDigit))
-            .When(x => !string.IsNullOrWhiteSpace(x.Phone))
             .WithMessage("Phone must contain digits only.")
             .Length(10, 15)
-            .When(x => !string.IsNullOrWhiteSpace(x.Phone))
             .WithMessage("Phone must be between 10 and 15 digits.");
 
         RuleFor(x => x.CommissionPercentage)

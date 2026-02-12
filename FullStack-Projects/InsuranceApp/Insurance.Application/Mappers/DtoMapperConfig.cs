@@ -103,7 +103,9 @@ public class DtoMapperConfig : Profile
         CreateMap<FeeConfiguration, GetFeeConfigurationsDto>();
 
         CreateMap<CreateFeeConfigurationDto, FeeConfiguration>()
-            .ForMember(d => d.Id, o => o.Ignore());
+            .ForMember(d => d.Id, o => o.Ignore())
+            .ForMember(d => d.Type, o => o.Ignore())
+            .ForMember(d => d.AppliesToRisk, o => o.Ignore());
 
         CreateMap<UpdateFeeConfigurationDto, FeeConfiguration>()
             .ForMember(d => d.Id, o => o.Ignore())
@@ -115,7 +117,9 @@ public class DtoMapperConfig : Profile
         CreateMap<RiskFactorConfiguration, GetRiskFactorConfigurationsDto>();
 
         CreateMap<CreateRiskFactorConfigurationDto, RiskFactorConfiguration>()
-            .ForMember(d => d.Id, o => o.Ignore());
+            .ForMember(d => d.Id, o => o.Ignore())
+            .ForMember(d => d.Level, o => o.Ignore())
+            .ForMember(d => d.IsActive, o => o.Ignore());
 
         CreateMap<UpdateRiskFactorConfigurationDto, RiskFactorConfiguration>()
             .ForMember(d => d.Id, o => o.Ignore())

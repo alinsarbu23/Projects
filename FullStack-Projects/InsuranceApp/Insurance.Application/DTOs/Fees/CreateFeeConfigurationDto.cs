@@ -4,11 +4,11 @@ public class CreateFeeConfigurationDto
 {
     public string Name { get; set; } = string.Empty;
 
-    public string Type { get; set; } = string.Empty;
+    public int Type { get; set; }
 
     public decimal Percentage { get; set; }
 
-    public string? AppliesToRisk { get; set; }
+    public int AppliesToRisk { get; set; }
 
     public DateTime EffectiveFrom { get; set; }
 

@@ -2,6 +2,7 @@
 using Insurance.Application.DTOs.Fees;
 using Insurance.Application.Interfaces.Repositories;
 using Insurance.Application.Interfaces.Services;
+using Insurance.Domain.Enums;
 using Insurance.Domain.Models;
 using Microsoft.Extensions.Logging;
 
@@ -28,8 +29,18 @@ public class FeeConfigurationService : IFeeConfigurationService
         _logger.LogInformation("Creating fee configuration {Name}", dto.Name);
 
         var fee = _mapper.Map<FeeConfiguration>(dto);
+
         fee.Id = Guid.NewGuid();
         fee.IsActive = true;
+
+        fee.Type = (FeeType)dto.Type;
+
+        fee.AppliesToRisk = dto.AppliesToRisk == (int)BuildingRiskType.None
+            ? null
+            : (BuildingRiskType)dto.AppliesToRisk;
+
+        fee.EffectiveFrom = dto.EffectiveFrom.Date;
+        fee.EffectiveTo = dto.EffectiveTo?.Date;
 
         await _unitOfWork.FeeConfigurations.AddAsync(fee);
 
@@ -37,11 +48,11 @@ public class FeeConfigurationService : IFeeConfigurationService
 
         if (result == 0)
         {
-            _logger.LogError("Critical error while creating FeeConfiguration {Name}", dto.Name);
+            _logger.LogError("Critical error while creating Fee configuration {Name}", dto.Name);
             throw new InvalidOperationException("Failed to create fee configuration.");
         }
 
-        _logger.LogInformation("FeeConfiguration {FeeId} created successfully", fee.Id);
+        _logger.LogInformation("Fee configuration {Name} created successfully with ID {FeeId}", dto.Name, fee.Id);
 
         return fee.Id;
     }

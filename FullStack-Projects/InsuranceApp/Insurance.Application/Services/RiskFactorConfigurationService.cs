@@ -2,6 +2,7 @@
 using Insurance.Application.DTOs.RiskFactors;
 using Insurance.Application.Interfaces.Repositories;
 using Insurance.Application.Interfaces.Services;
+using Insurance.Domain.Enums;
 using Insurance.Domain.Models;
 using Microsoft.Extensions.Logging;
 
@@ -25,15 +26,20 @@ public class RiskFactorConfigurationService : IRiskFactorConfigurationService
 
     public async Task<Guid> CreateAsync(CreateRiskFactorConfigurationDto dto)
     {
-        _logger.LogInformation(
-            "Creating RiskFactorConfiguration (Level={Level}, ReferenceId={ReferenceId})",
-            dto.Level,
-            dto.ReferenceId);
+        _logger.LogInformation("Creating new RiskFactorConfiguration with Level {RiskLevel} and ReferenceId {ReferenceId}", dto.Level, dto.ReferenceId);
+
+        if (!Enum.IsDefined(typeof(RiskLevel), dto.Level))
+        {
+            _logger.LogError("Invalid risk level {RiskLevel} provided", dto.Level);
+            throw new ArgumentException("Invalid risk level.");
+        }
+
 
         var risk = _mapper.Map<RiskFactorConfiguration>(dto);
 
         risk.Id = Guid.NewGuid();
         risk.IsActive = true;
+        risk.Level = (RiskLevel)dto.Level;
 
         await _unitOfWork.RiskFactorConfigurations.AddAsync(risk);
 
@@ -41,12 +47,11 @@ public class RiskFactorConfigurationService : IRiskFactorConfigurationService
 
         if (result == 0)
         {
-            _logger.LogError("Critical error while creating RiskFactorConfiguration (Level={Level})",
-                dto.Level);
+            _logger.LogError("Critical error while creating RiskFactorConfiguration with ReferenceId {ReferenceId}", dto.ReferenceId);
             throw new InvalidOperationException("Failed to create risk factor configuration.");
         }
 
-        _logger.LogInformation("RiskFactorConfiguration {RiskId} created successfully", risk.Id);
+        _logger.LogInformation("RiskFactorConfiguration with Id {RiskId} created successfully", risk.Id);
 
         return risk.Id;
     }

@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Insurance.Application.DTOs.RiskFactors;
+using Insurance.Domain.Enums;
 
 namespace Insurance.Application.Validators.RiskFactors;
 
@@ -8,11 +9,8 @@ public class CreateRiskFactorConfigurationDtoValidator : AbstractValidator<Creat
     public CreateRiskFactorConfigurationDtoValidator()
     {
         RuleFor(x => x.Level)
-            .NotEmpty()
-            .Must(x => !string.IsNullOrWhiteSpace(x))
-            .MaximumLength(50)
-            .Must(level => !level.Any(char.IsDigit))
-            .WithMessage("Level must not contain digits.");
+            .Must(level => Enum.IsDefined(typeof(RiskLevel), level))
+            .WithMessage("Invalid risk level.");
 
         RuleFor(x => x.ReferenceId)
             .NotEmpty();
