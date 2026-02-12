@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Insurance.Application.DTOs.Policies;
+using Insurance.Application.Exceptions;
 using Insurance.Application.Interfaces.Repositories;
 using Insurance.Application.Interfaces.Services;
 using Insurance.Domain.Enums;
@@ -172,6 +173,54 @@ public class PolicyService : IPolicyService
         await _unitOfWork.SaveChangesAsync();
 
         return policy.Id;
+    }
+
+    public async Task UpdatePolicyAsync(Guid policyId, UpdatePolicyDto dto)
+    {
+        _logger.LogInformation("Updating policy {PolicyId}", policyId);
+
+        var policy = await _unitOfWork.Policies.GetByIdAsync(policyId);
+
+        if (policy == null)
+        {
+            _logger.LogWarning("Policy {PolicyId} not found", policyId);
+            throw new NotFoundException("Policy not found.");
+        }
+
+        if (policy.Status != PolicyStatus.Draft)
+        {
+            _logger.LogWarning("Update blocked. Policy {PolicyId} is not Draft", policyId);
+            throw new InvalidOperationException("Only draft policies can be updated.");
+        }
+
+        var currency = await _unitOfWork.Currencies.GetByIdAsync(dto.CurrencyId);
+
+        if (currency == null || !currency.IsActive)
+        {
+            _logger.LogWarning("Invalid currency {CurrencyId}", dto.CurrencyId);
+            throw new InvalidOperationException("Invalid or inactive currency.");
+        }
+
+        _mapper.Map(dto, policy);
+
+        policy.FinalPremium = await _calculationService.CalculateFinalPremiumAsync(
+            dto.BasePremium,
+            policy.BrokerId,
+            dto.CurrencyId,
+            policy.Building
+        );
+
+        await _unitOfWork.Policies.UpdateAsync(policy);
+
+        var result = await _unitOfWork.SaveChangesAsync();
+
+        if (result == 0)
+        {
+            _logger.LogError("Failed to update policy {PolicyId}", policyId);
+            throw new InvalidOperationException("Failed to update policy.");
+        }
+
+        _logger.LogInformation("Policy {PolicyId} updated successfully", policyId);
     }
 
     public async Task<PagedPoliciesDto> SearchAsync(

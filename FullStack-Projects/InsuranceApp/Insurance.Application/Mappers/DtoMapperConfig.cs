@@ -65,6 +65,13 @@ public class DtoMapperConfig : Profile
                     : s.Status.ToString()
             ));
 
+        CreateMap<UpdatePolicyDto, Policy>()
+            .ForMember(d => d.Id, o => o.Ignore())
+            .ForMember(d => d.BrokerId, o => o.Ignore())
+            .ForMember(d => d.BuildingId, o => o.Ignore())
+            .ForMember(d => d.Status, o => o.Ignore())
+            .ForMember(d => d.FinalPremium, o => o.Ignore());
+
         CreateMap<Broker, GetBrokerByIdDto>()
             .ForMember(d => d.Status, o => o.MapFrom(s => s.Status.ToString()));
 

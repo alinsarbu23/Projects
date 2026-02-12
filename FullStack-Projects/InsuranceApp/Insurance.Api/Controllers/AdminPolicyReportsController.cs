@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Insurance.Api.Controllers;
 
 [ApiController]
-[Route("api/admin/policy-reports")]
+[Route("api/policyReports")]
 [Authorize(Roles = Roles.Admin)]
 public class AdminPolicyReportsController : ControllerBase
 {

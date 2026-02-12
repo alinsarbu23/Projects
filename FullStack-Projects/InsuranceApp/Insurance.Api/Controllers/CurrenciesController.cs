@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace Insurance.Api.Controllers;
 
 [ApiController]
-[Route("api/admin/currencies")]
-[Authorize(Roles = $"{Roles.Admin}, {Roles.Broker}")]
+[Route("api/currencies")]
+[Authorize(Roles = $"{Roles.Admin},{Roles.Broker}")]
 public class CurrenciesController : ControllerBase
 {
     private readonly ICurrencyService _currencyService;

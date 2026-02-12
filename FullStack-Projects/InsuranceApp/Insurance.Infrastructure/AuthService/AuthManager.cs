@@ -94,7 +94,6 @@ public class AuthManager : IAuthManager
         };
     }
 
-
     public async Task<AuthResponseDto> LoginAsync(LoginDto dto)
     {
         _logger.LogInformation("Login attempt for {Email}", dto.Email);

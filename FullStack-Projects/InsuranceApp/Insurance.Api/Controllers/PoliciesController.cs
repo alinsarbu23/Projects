@@ -8,7 +8,7 @@ using System.Security.Claims;
 namespace Insurance.Api.Controllers;
 
 [ApiController]
-[Route("api/brokers/policies")]
+[Route("api/policies")]
 [Authorize(Roles = Roles.Broker)]
 public class PoliciesController : ControllerBase
 {
@@ -60,6 +60,13 @@ public class PoliciesController : ControllerBase
             pageSize);
 
         return Ok(result);
+    }
+
+    [HttpPut("{policyId}")]
+    public async Task<IActionResult> UpdatePolicy(Guid policyId, [FromBody] UpdatePolicyDto dto)
+    {
+        await _policyService.UpdatePolicyAsync(policyId, dto);
+        return NoContent();
     }
 
     [HttpPost("{policyId}/activate")]
