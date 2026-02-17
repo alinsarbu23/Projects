@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
-using Insurance.Application.Services;
 using Insurance.Application.Interfaces.Repositories;
+using Insurance.Application.Services;
 using Insurance.Domain.Enums;
 using Insurance.Domain.Models;
 using Insurance.Domain.Models.Geography;
@@ -42,52 +42,48 @@ public class PolicyCalculationServiceTests
     [Fact]
     public async Task CalculateFinalPremium_IgnoresRiskFee_WhenBuildingDoesNotMatch()
     {
-        var countryId = Guid.NewGuid();
-        var countyId = Guid.NewGuid();
-        var cityId = Guid.NewGuid();
-        var buildingTypeId = Guid.NewGuid();
-
         var building = new Building
         {
-            CityId = cityId,
-            BuildingTypeId = buildingTypeId,
+            Id = Guid.NewGuid(),
+            CityId = Guid.NewGuid(),
+            BuildingTypeId = Guid.NewGuid(),
             FloodRisk = false,
             EarthquakeRisk = false,
             City = new City
             {
-                Id = cityId,
-                CountyId = countyId,
+                Id = Guid.NewGuid(),
+                CountyId = Guid.NewGuid(),
                 County = new County
                 {
-                    Id = countyId,
-                    CountryId = countryId
+                    Id = Guid.NewGuid(),
+                    CountryId = Guid.NewGuid()
                 }
             }
         };
 
-        var unitOfWork = new Mock<IUnitOfWork>();
+        var uow = new Mock<IUnitOfWork>();
 
-        unitOfWork.Setup(x => x.Brokers.GetByIdAsync(It.IsAny<Guid>()))
+        uow.Setup(x => x.Brokers.GetByIdAsync(It.IsAny<Guid>()))
             .ReturnsAsync(new Broker
             {
                 Id = Guid.NewGuid(),
                 BrokerCode = "BR-01",
-                Name = "Test Broker",
+                Name = "Broker",
                 Status = BrokerStatus.Active,
                 CommissionPercentage = 0
             });
 
-        unitOfWork.Setup(x => x.Currencies.GetByIdAsync(It.IsAny<Guid>()))
+        uow.Setup(x => x.Currencies.GetByIdAsync(It.IsAny<Guid>()))
             .ReturnsAsync(new Currency
             {
                 Id = Guid.NewGuid(),
                 Code = "RON",
-                Name = "Romanian Leu",
+                Name = "RON",
                 ExchangeRateToBase = 1,
                 IsActive = true
             });
 
-        unitOfWork.Setup(x => x.FeeConfigurations.GetActiveAsync(null, It.IsAny<DateTime>()))
+        uow.Setup(x => x.FeeConfigurations.GetActiveAsync(null, It.IsAny<DateTime>()))
             .ReturnsAsync(new List<FeeConfiguration>
             {
             new FeeConfiguration
@@ -95,21 +91,19 @@ public class PolicyCalculationServiceTests
                 Id = Guid.NewGuid(),
                 Name = "Flood Fee",
                 Type = FeeType.RiskAdjustment,
-                AppliesToRisk = "Flood",
+                AppliesToRisk = BuildingRiskType.Flood,
                 Percentage = 10,
-                IsActive = true
+                IsActive = true,
+                EffectiveFrom = DateTime.UtcNow.AddDays(-1)
             }
             });
 
-        unitOfWork.Setup(x => x.RiskFactorConfigurations.GetActiveForBuildingAsync(
-                countryId,
-                countyId,
-                cityId,
-                buildingTypeId))
-            .ReturnsAsync([]);
+        uow.Setup(x => x.RiskFactorConfigurations.GetActiveForBuildingAsync(
+            It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<Guid>()))
+            .ReturnsAsync(new List<RiskFactorConfiguration>());
 
         var service = new PolicyCalculationService(
-            unitOfWork.Object,
+            uow.Object,
             Mock.Of<ILogger<PolicyCalculationService>>());
 
         var result = await service.CalculateFinalPremiumAsync(
@@ -120,7 +114,6 @@ public class PolicyCalculationServiceTests
 
         result.Should().Be(1000);
     }
-
 
     [Fact]
     public async Task CalculateFinalPremium_NoFees_NoRisks_ReturnsBasePremium()

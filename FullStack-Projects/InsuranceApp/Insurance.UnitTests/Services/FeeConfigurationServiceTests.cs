@@ -121,7 +121,8 @@ public class FeeConfigurationServiceTests
         var id = await service.CreateAsync(new CreateFeeConfigurationDto
         {
             Name = "Admin Fee",
-            Type = "AdminFee",
+            Type = (int)FeeType.AdminFee,
+            AppliesToRisk = (int)BuildingRiskType.None,
             Percentage = 5,
             EffectiveFrom = DateTime.UtcNow
         });

@@ -119,20 +119,20 @@ public class PolicyRepository : IPolicyRepository
 
     public async Task UpdateAsync(Policy policy)
     {
-        var dao = await _dbContext.Policies
-            .FirstAsync(p => p.Id == policy.Id);
+        var dao = await _dbContext.Policies.FirstAsync(p => p.Id == policy.Id);
 
+        dao.CurrencyId = policy.CurrencyId;
+        dao.StartDate = policy.StartDate;
+        dao.EndDate = policy.EndDate;
+        dao.BasePremium = policy.BasePremium;
+        dao.FinalPremium = policy.FinalPremium;
         dao.Status = policy.Status.ToString();
         dao.ActivatedAt = policy.ActivatedAt;
         dao.CancelledAt = policy.CancelledAt;
         dao.CancellationReason = policy.CancellationReason;
     }
 
-
-    public async Task<IReadOnlyList<PolicyReportDto>>
-        GetPolicyReportByBrokerAsync(
-            DateTime? from,
-            DateTime? to)
+    public async Task<IReadOnlyList<PolicyReportDto>> GetPolicyReportByBrokerAsync(DateTime? from, DateTime? to)
     {
         var query = _dbContext.Policies
             .AsNoTracking()

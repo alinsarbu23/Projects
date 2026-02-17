@@ -1,11 +1,8 @@
 ﻿using FluentAssertions;
 using Insurance.Application.Dtos.Identity;
-using Insurance.Application.DTOs.Brokers;
 using Insurance.Application.DTOs.Buildings;
 using Insurance.Application.DTOs.Clients;
-using Insurance.Application.DTOs.Currencies;
 using Insurance.Application.DTOs.Policies;
-using Insurance.IntegrationTests.Helpers;
 using Insurance.IntegrationTests.Infrastructure;
 using System.Net;
 using System.Net.Http.Json;
@@ -25,55 +22,37 @@ public class PoliciesIntegrationTests : BaseIntegrationTest
             "/api/auth/login",
             new { email = "admin@insurance.local", password = "Admin123!" });
 
-        var adminAuth = await adminLogin.Content
-            .ReadFromJsonAsync<AuthResponseDto>();
-
+        var adminAuth = await adminLogin.Content.ReadFromJsonAsync<AuthResponseDto>();
         Authenticate(adminAuth!.Token);
 
-        var createCurrency = await Client.PostAsJsonAsync(
-            "/api/admin/currencies",
-            new CreateCurrencyDto
-            {
-                Code = "TEST",
-                Name = "Test Currency",
-                ExchangeRateToBase = 1
-            });
-
-        var currencyId = Guid.Parse(
-            createCurrency.Headers.Location!.Segments.Last());
-
         var createBroker = await Client.PostAsJsonAsync(
-            "/api/admin/brokers",
-            new CreateBrokerDto
+            "/api/brokers",
+            new
             {
-                BrokerCode = "BR-INT",
-                Name = "Integration Broker",
-                Email = "broker@test.ro",
-                Phone = "0700000000",
-                CommissionPercentage = 2
+                brokerCode = "BR-INT",
+                name = "Integration Broker",
+                email = "integration@test.ro",
+                phone = "0700000000",
+                commissionPercentage = 2m
             });
 
-        var brokerId = Guid.Parse(
-            createBroker.Headers.Location!.Segments.Last());
+        var brokerId = Guid.Parse(createBroker.Headers.Location!.Segments.Last());
 
-        await Client.PostAsync(
-            $"/api/admin/brokers/{brokerId}/activate", null);
+        await Client.PostAsync($"/api/brokers/{brokerId}/activate", null);
 
         await Client.PostAsJsonAsync(
             "/api/auth/register",
-            new { email = "broker@test.ro", password = "Password1!" });
+            new { email = "integration@test.ro", password = "Password1!" });
 
         var brokerLogin = await Client.PostAsJsonAsync(
             "/api/auth/login",
-            new { email = "broker@test.ro", password = "Password1!" });
+            new { email = "integration@test.ro", password = "Password1!" });
 
-        var brokerAuth = await brokerLogin.Content
-            .ReadFromJsonAsync<AuthResponseDto>();
-
+        var brokerAuth = await brokerLogin.Content.ReadFromJsonAsync<AuthResponseDto>();
         Authenticate(brokerAuth!.Token);
 
         var createClient = await Client.PostAsJsonAsync(
-            "/api/brokers/clients",
+            "/api/clients",
             new CreateClientDto
             {
                 ClientTypeId = 1,
@@ -84,10 +63,10 @@ public class PoliciesIntegrationTests : BaseIntegrationTest
                 Address = "Bucharest"
             });
 
-        var clientLocation = createClient.Headers.Location!;
+        var clientId = Guid.Parse(createClient.Headers.Location!.Segments.Last());
 
         var createBuilding = await Client.PostAsJsonAsync(
-            $"{clientLocation}/buildings",
+            $"/api/buildings/client/{clientId}",
             new CreateBuildingDto
             {
                 CityId = Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc"),
@@ -98,15 +77,14 @@ public class PoliciesIntegrationTests : BaseIntegrationTest
                 InsuredValue = 200000
             });
 
-        var buildingId = Guid.Parse(
-            createBuilding.Headers.Location!.Segments.Last());
+        var buildingId = Guid.Parse(createBuilding.Headers.Location!.Segments.Last());
 
         var createPolicy = await Client.PostAsJsonAsync(
-            "/api/brokers/policies",
+            "/api/policies",
             new CreatePolicyDto
             {
                 BuildingId = buildingId,
-                CurrencyId = currencyId,
+                CurrencyId = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
                 StartDate = DateTime.UtcNow.AddDays(1),
                 EndDate = DateTime.UtcNow.AddDays(30),
                 BasePremium = 1000
@@ -114,26 +92,57 @@ public class PoliciesIntegrationTests : BaseIntegrationTest
 
         createPolicy.StatusCode.Should().Be(HttpStatusCode.Created);
 
-        var policyId = Guid.Parse(
-            createPolicy.Headers.Location!.Segments.Last());
+        var policyId = Guid.Parse(createPolicy.Headers.Location!.Segments.Last());
 
-        var activate = await Client.PostAsync(
-            $"/api/brokers/policies/{policyId}/activate", null);
+        var activatePolicy = await Client.PostAsync(
+            $"/api/policies/{policyId}/activate",
+            null);
 
-        activate.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        activatePolicy.StatusCode.Should().Be(HttpStatusCode.NoContent);
     }
 
     [Fact]
     public async Task CreatePolicy_ShouldReturn400_WhenPremiumIsNegative()
     {
-        Authenticate(await AuthHelper.Login(Client));
+        var adminLogin = await Client.PostAsJsonAsync(
+            "/api/auth/login",
+            new { email = "admin@insurance.local", password = "Admin123!" });
+
+        var adminAuth = await adminLogin.Content.ReadFromJsonAsync<AuthResponseDto>();
+        Authenticate(adminAuth!.Token);
+
+        var createBroker = await Client.PostAsJsonAsync(
+            "/api/brokers",
+            new
+            {
+                brokerCode = "BR-NEG",
+                name = "Negative Broker",
+                email = "negative@test.ro",
+                phone = "0700000000",
+                commissionPercentage = 2m
+            });
+
+        var brokerId = Guid.Parse(createBroker.Headers.Location!.Segments.Last());
+
+        await Client.PostAsync($"/api/brokers/{brokerId}/activate", null);
+
+        await Client.PostAsJsonAsync(
+            "/api/auth/register",
+            new { email = "negative@test.ro", password = "Password1!" });
+
+        var brokerLogin = await Client.PostAsJsonAsync(
+            "/api/auth/login",
+            new { email = "negative@test.ro", password = "Password1!" });
+
+        var brokerAuth = await brokerLogin.Content.ReadFromJsonAsync<AuthResponseDto>();
+        Authenticate(brokerAuth!.Token);
 
         var response = await Client.PostAsJsonAsync(
-            "/api/brokers/policies",
+            "/api/policies",
             new CreatePolicyDto
             {
                 BuildingId = Guid.NewGuid(),
-                CurrencyId = Guid.NewGuid(),
+                CurrencyId = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
                 StartDate = DateTime.UtcNow.AddDays(1),
                 EndDate = DateTime.UtcNow.AddDays(10),
                 BasePremium = -100

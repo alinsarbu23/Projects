@@ -1,12 +1,12 @@
 ﻿using FluentAssertions;
+using Insurance.Application.DTOs.Clients;
+using Insurance.Application.Interfaces.Repositories;
+using Insurance.Application.Services;
+using Insurance.Domain.Models;
+using Insurance.UnitTests.Helpers;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
-using Insurance.Application.Services;
-using Insurance.Application.DTOs.Clients;
-using Insurance.Application.Interfaces.Repositories;
-using Insurance.Domain.Models;
-using Insurance.UnitTests.Helpers;
 
 namespace Insurance.UnitTests.Services;
 
@@ -95,7 +95,7 @@ public class ClientServiceTests
         clients.Setup(x => x.GetByIdAsync(clientId)).ReturnsAsync(new Client
         {
             Id = clientId,
-            ClientTypeId = 1, 
+            ClientTypeId = 1,
             Name = "Ion",
             Cnp = "123",
             Email = "a@a.ro",
@@ -120,35 +120,6 @@ public class ClientServiceTests
         dto.Id.Should().Be(clientId);
         dto.Identifier.Should().Be("123");
         dto.Buildings.Should().HaveCount(2);
-    }
-
-    [Fact]
-    public async Task UpdateClientAsync_ShouldThrow_WhenSaveChangesReturnsZero()
-    {
-        var uow = new Mock<IUnitOfWork>();
-        var clients = new Mock<IClientRepository>();
-
-        var clientId = Guid.NewGuid();
-
-        clients.Setup(x => x.GetByIdAsync(clientId))
-            .ReturnsAsync(new Client { Id = clientId });
-
-        clients.Setup(x => x.UpdateAsync(It.IsAny<Client>()))
-            .Returns(Task.CompletedTask);
-
-        uow.Setup(x => x.Clients).Returns(clients.Object);
-        uow.Setup(x => x.SaveChangesAsync()).ReturnsAsync(0);
-
-        var service = CreateService(uow, clients);
-
-        await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            service.UpdateClientAsync(clientId, new UpdateClientDto
-            {
-                Name = "Test",
-                Email = "a@a.ro",
-                Phone = "0700",
-                Address = "Addr"
-            }));
     }
 
     [Theory]

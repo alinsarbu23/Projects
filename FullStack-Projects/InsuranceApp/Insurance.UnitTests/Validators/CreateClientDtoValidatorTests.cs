@@ -62,11 +62,15 @@ public class CreateClientDtoValidatorTests
     {
         var validator = new CreateClientDtoValidator();
 
-        var dto = BaseDto(
-            1,
-            "1234567890123",
-            null
-        );
+        var dto = new CreateClientDto
+        {
+            ClientTypeId = 1,
+            Name = "Ion",
+            Cnp = "1234567890123",
+            Email = "test@test.ro",
+            Phone = "0700000000",
+            Address = "Addr"
+        };
 
         var result = validator.Validate(dto);
 
@@ -78,11 +82,15 @@ public class CreateClientDtoValidatorTests
     {
         var validator = new CreateClientDtoValidator();
 
-        var dto = BaseDto(
-            2,
-            null,
-            "RO123"
-        );
+        var dto = new CreateClientDto
+        {
+            ClientTypeId = 2,
+            Name = "Company SRL",
+            Cui = "RO123",
+            Email = "test@test.ro",
+            Phone = "0700000000",
+            Address = "Addr"
+        };
 
         var result = validator.Validate(dto);
 

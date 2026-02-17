@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Insurance.Application.DTOs.RiskFactors;
 using Insurance.Application.Validators.RiskFactors;
+using Insurance.Domain.Enums;
 using Xunit;
 
 namespace Insurance.UnitTests.Validators;
@@ -10,11 +11,11 @@ public class CreateRiskFactorConfigurationDtoValidatorTests
     private readonly CreateRiskFactorConfigurationDtoValidator _validator = new();
 
     [Fact]
-    public void Should_Fail_When_Level_Is_Empty()
+    public void Should_Fail_When_Level_Is_Invalid()
     {
         var dto = new CreateRiskFactorConfigurationDto
         {
-            Level = "",
+            Level = 999,
             ReferenceId = Guid.NewGuid(),
             AdjustmentPercentage = 5
         };
@@ -29,7 +30,7 @@ public class CreateRiskFactorConfigurationDtoValidatorTests
     {
         var dto = new CreateRiskFactorConfigurationDto
         {
-            Level = "City",
+            Level = (int)RiskLevel.City,
             ReferenceId = Guid.NewGuid(),
             AdjustmentPercentage = 0
         };
@@ -44,7 +45,7 @@ public class CreateRiskFactorConfigurationDtoValidatorTests
     {
         var dto = new CreateRiskFactorConfigurationDto
         {
-            Level = "City",
+            Level = (int)RiskLevel.City,
             ReferenceId = Guid.NewGuid(),
             AdjustmentPercentage = 5
         };

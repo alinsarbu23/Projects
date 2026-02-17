@@ -45,7 +45,7 @@ public class RiskFactorConfigurationServiceTests
 
         var id = await service.CreateAsync(new CreateRiskFactorConfigurationDto
         {
-            Level = "City",
+            Level = (int)RiskLevel.City,
             ReferenceId = Guid.NewGuid(),
             AdjustmentPercentage = 5
         });

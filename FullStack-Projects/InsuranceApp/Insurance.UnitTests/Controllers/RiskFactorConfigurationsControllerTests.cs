@@ -1,14 +1,15 @@
 ﻿using FluentAssertions;
-using Microsoft.AspNetCore.Mvc;
-using Moq;
-using Xunit;
 using Insurance.Api.Controllers;
 using Insurance.Application.DTOs.RiskFactors;
 using Insurance.Application.Interfaces.Services;
+using Insurance.Domain.Enums;
+using Microsoft.AspNetCore.Mvc;
+using Moq;
+using Xunit;
 
 namespace Insurance.UnitTests.Controllers;
 
-    public class RiskFactorConfigurationsControllerTests
+public class RiskFactorConfigurationsControllerTests
 {
     private readonly Mock<IRiskFactorConfigurationService> _service;
     private readonly RiskFactorConfigurationsController _controller;
@@ -30,7 +31,7 @@ namespace Insurance.UnitTests.Controllers;
 
         var result = await _controller.Create(new CreateRiskFactorConfigurationDto
         {
-            Level = "City",
+            Level = (int)RiskLevel.City,
             ReferenceId = Guid.NewGuid(),
             AdjustmentPercentage = 5
         });

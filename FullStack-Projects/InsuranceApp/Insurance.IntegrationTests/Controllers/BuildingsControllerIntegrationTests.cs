@@ -1,13 +1,12 @@
 ﻿using FluentAssertions;
+using Insurance.Application.Dtos.Identity;
 using Insurance.Application.DTOs.Buildings;
-using Insurance.Application.DTOs.Geography;
-using Insurance.IntegrationTests.Helpers;
 using Insurance.IntegrationTests.Infrastructure;
 using System.Net;
 using System.Net.Http.Json;
 using Xunit;
 
-namespace Insurance.IntegrationTests.Controllers.Buildings;
+namespace Insurance.IntegrationTests.Controllers;
 
 public class BuildingsIntegrationTests : BaseIntegrationTest
 {
@@ -19,10 +18,41 @@ public class BuildingsIntegrationTests : BaseIntegrationTest
     [Fact]
     public async Task CreateBuilding_ShouldPersist()
     {
-        Authenticate(await AuthHelper.Login(Client));
+        var adminLogin = await Client.PostAsJsonAsync(
+            "/api/auth/login",
+            new { email = "admin@insurance.local", password = "Admin123!" });
+
+        var adminAuth = await adminLogin.Content.ReadFromJsonAsync<AuthResponseDto>();
+        Authenticate(adminAuth!.Token);
+
+        var createBroker = await Client.PostAsJsonAsync(
+            "/api/brokers",
+            new
+            {
+                brokerCode = "BR-BUILD",
+                name = "Build Broker",
+                email = "buildbroker@test.ro",
+                phone = "0700000000",
+                commissionPercentage = 2m
+            });
+
+        var brokerId = Guid.Parse(createBroker.Headers.Location!.Segments.Last());
+
+        await Client.PostAsync($"/api/brokers/{brokerId}/activate", null);
+
+        await Client.PostAsJsonAsync(
+            "/api/auth/register",
+            new { email = "buildbroker@test.ro", password = "Password1!" });
+
+        var brokerLogin = await Client.PostAsJsonAsync(
+            "/api/auth/login",
+            new { email = "buildbroker@test.ro", password = "Password1!" });
+
+        var brokerAuth = await brokerLogin.Content.ReadFromJsonAsync<AuthResponseDto>();
+        Authenticate(brokerAuth!.Token);
 
         var createClientResponse = await Client.PostAsJsonAsync(
-            "/api/brokers/clients",
+            "/api/clients",
             new
             {
                 clientTypeId = 1,
@@ -35,17 +65,13 @@ public class BuildingsIntegrationTests : BaseIntegrationTest
 
         createClientResponse.StatusCode.Should().Be(HttpStatusCode.Created);
 
-        var clientLocation = createClientResponse.Headers.Location!;
-        var countyId = Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
-
-        var cities = await Client.GetFromJsonAsync<List<GetCitiesByCountyDto>>(
-            $"/api/brokers/counties/{countyId}/cities");
+        var clientId = Guid.Parse(createClientResponse.Headers.Location!.Segments.Last());
 
         var createBuildingResponse = await Client.PostAsJsonAsync(
-            $"{clientLocation}/buildings",
+            $"/api/buildings/client/{clientId}",
             new CreateBuildingDto
             {
-                CityId = cities![0].Id,
+                CityId = Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc"),
                 BuildingTypeId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
                 Street = "Main Street",
                 StreetNumber = "10",

@@ -1,10 +1,11 @@
-﻿using Xunit;
-using Moq;
-using FluentAssertions;
-using Insurance.Application.Services;
+﻿using FluentAssertions;
 using Insurance.Application.Interfaces.Repositories;
+using Insurance.Application.Services;
 using Insurance.Domain.Models.Geography;
 using Insurance.UnitTests.Helpers;
+using Microsoft.Extensions.Logging;
+using Moq;
+using Xunit;
 
 namespace Insurance.UnitTests.Services;
 
@@ -19,7 +20,8 @@ public class GeographyServiceTests
 
         return new GeographyService(
             MapperFactory.Create(),
-            uowMock.Object);
+            uowMock.Object,
+            Mock.Of<ILogger<GeographyService>>());
     }
 
     [Fact]

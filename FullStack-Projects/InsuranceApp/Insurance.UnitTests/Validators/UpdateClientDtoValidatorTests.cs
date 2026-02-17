@@ -1,7 +1,7 @@
-﻿using Xunit;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Insurance.Application.DTOs.Clients;
 using Insurance.Application.Validators.Clients;
+using Xunit;
 
 namespace Insurance.UnitTests.Validators;
 
@@ -10,15 +10,16 @@ public class UpdateClientDtoValidatorTests
     [Theory]
     [InlineData(null)]
     [InlineData("")]
+    [InlineData("invalid")]
     public void ShouldFail_WhenEmailIsInvalid(string? email)
     {
         var validator = new UpdateClientDtoValidator();
 
         var dto = new UpdateClientDto
         {
-            Name = "Test",
+            Name = "Client",
             Email = email!,
-            Phone = "0700",
+            Phone = "0700000000",
             Address = "Addr"
         };
 
@@ -49,9 +50,9 @@ public class UpdateClientDtoValidatorTests
 
         var dto = new UpdateClientDto
         {
-            Name = "Test",
-            Email = "a@a.ro",
-            Phone = "0700",
+            Name = "Client",
+            Email = "client@test.ro",
+            Phone = "0700000000",
             Address = "Addr"
         };
 

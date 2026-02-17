@@ -18,14 +18,11 @@ public class UpdateClientDtoValidator : AbstractValidator<UpdateClientDto>
 
         RuleFor(x => x.Email)
             .NotEmpty()
-            .Must(x => !string.IsNullOrWhiteSpace(x))
             .WithMessage("Email is required.")
-            .MaximumLength(100)
-            .WithMessage("Email is too long.")
-            .Must(email => !email.Contains(" "))
-            .WithMessage("Email must not contain spaces.")
             .EmailAddress()
-            .WithMessage("Invalid email format.");
+            .WithMessage("Invalid email format.")
+            .Must(email => email != null && !email.Contains(" "))
+            .WithMessage("Email must not contain spaces.");
 
         RuleFor(x => x.Phone)
             .NotEmpty()

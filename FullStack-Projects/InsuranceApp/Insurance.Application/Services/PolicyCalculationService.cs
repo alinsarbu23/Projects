@@ -1,5 +1,6 @@
 ﻿using Insurance.Application.Interfaces.Repositories;
 using Insurance.Application.Interfaces.Services;
+using Insurance.Domain.Enums;
 using Insurance.Domain.Models;
 using Microsoft.Extensions.Logging;
 
@@ -59,7 +60,18 @@ public class PolicyCalculationService : IPolicyCalculationService
 
         foreach (var fee in fees)
         {
-            totalPercentage += fee.Percentage;
+            if (fee.Type == FeeType.RiskAdjustment)
+            {
+                if (fee.AppliesToRisk == BuildingRiskType.Flood && building.FloodRisk)
+                    totalPercentage += fee.Percentage;
+
+                if (fee.AppliesToRisk == BuildingRiskType.Earthquake && building.EarthquakeRisk)
+                    totalPercentage += fee.Percentage;
+            }
+            else
+            {
+                totalPercentage += fee.Percentage;
+            }
         }
 
         var risks = await _unitOfWork.RiskFactorConfigurations
