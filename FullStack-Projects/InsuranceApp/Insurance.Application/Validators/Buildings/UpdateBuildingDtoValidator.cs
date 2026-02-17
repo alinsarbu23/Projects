@@ -52,5 +52,13 @@ public class UpdateBuildingDtoValidator : AbstractValidator<UpdateBuildingDto>
         RuleFor(x => x)
             .Must(x => x.InsuredValue >= x.SurfaceArea * 100)
             .WithMessage("InsuredValue is unrealistically low for the given SurfaceArea.");
+
+        RuleFor(x => x.FloodRisk)
+            .Must(v => v == 0 || v == 1)
+            .WithMessage("FloodRisk must be 0 or 1.");
+
+        RuleFor(x => x.EarthquakeRisk)
+            .Must(v => v == 0 || v == 1)
+            .WithMessage("EarthquakeRisk must be 0 or 1.");
     }
 }

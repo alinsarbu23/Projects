@@ -18,7 +18,7 @@ public class CreateBuildingDto
 
     public required decimal InsuredValue { get; init; }
 
-    public bool FloodRisk { get; init; }
+    public required int FloodRisk { get; init; }
 
-    public bool EarthquakeRisk { get; init; }
+    public required int EarthquakeRisk { get; init; }
 }

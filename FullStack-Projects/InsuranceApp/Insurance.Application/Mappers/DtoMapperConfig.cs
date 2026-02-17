@@ -40,13 +40,21 @@ public class DtoMapperConfig : Profile
             .ForMember(d => d.BuildingType, o => o.MapFrom(s => s.BuildingType.Name));
 
         CreateMap<CreateBuildingDto, Building>()
-            .ForMember(d => d.Id, o => o.Ignore());
+            .ForMember(d => d.Id, o => o.Ignore())
+            .ForMember(d => d.FloodRisk,
+                o => o.MapFrom(s => s.FloodRisk == 1))
+            .ForMember(d => d.EarthquakeRisk,
+                o => o.MapFrom(s => s.EarthquakeRisk == 1));
 
         CreateMap<UpdateBuildingDto, Building>()
             .ForMember(d => d.Id, o => o.Ignore())
             .ForMember(d => d.ClientId, o => o.Ignore())
             .ForMember(d => d.CityId, o => o.Ignore())
-            .ForMember(d => d.BuildingTypeId, o => o.Ignore());
+            .ForMember(d => d.BuildingTypeId, o => o.Ignore())
+            .ForMember(d => d.FloodRisk,
+                o => o.MapFrom(s => s.FloodRisk == 1))
+            .ForMember(d => d.EarthquakeRisk,
+                o => o.MapFrom(s => s.EarthquakeRisk == 1));
 
         CreateMap<Policy, GetPolicyByIdDto>()
             .ForMember(d => d.Status, o => o.MapFrom(s =>

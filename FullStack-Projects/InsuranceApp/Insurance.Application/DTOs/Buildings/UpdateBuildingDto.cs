@@ -14,7 +14,7 @@ public class UpdateBuildingDto
 
     public required decimal InsuredValue { get; set; }
 
-    public required bool FloodRisk { get; set; }
+    public required int FloodRisk { get; set; }
 
-    public required bool EarthquakeRisk { get; set; }
+    public required int EarthquakeRisk { get; set; }
 }
