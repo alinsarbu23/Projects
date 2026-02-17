@@ -54,7 +54,8 @@ public class DtoMapperConfig : Profile
                     ? PolicyStatus.Expired.ToString()
                     : s.Status.ToString()
             ))
-            .ForMember(d => d.CurrencyCode, o => o.Ignore())
+            .ForMember(d => d.CurrencyCode,
+                o => o.MapFrom(s => s.Currency.Code))
             .ForMember(d => d.BuildingAddress,
                 o => o.MapFrom(s => $"{s.Building.Street} {s.Building.StreetNumber}"));
 
@@ -63,7 +64,9 @@ public class DtoMapperConfig : Profile
                 s.EndDate < DateTime.UtcNow
                     ? PolicyStatus.Expired.ToString()
                     : s.Status.ToString()
-            ));
+            ))
+            .ForMember(d => d.CurrencyCode,
+                o => o.MapFrom(s => s.Currency.Code));
 
         CreateMap<UpdatePolicyDto, Policy>()
             .ForMember(d => d.Id, o => o.Ignore())
@@ -97,6 +100,11 @@ public class DtoMapperConfig : Profile
             .ForMember(d => d.Id, o => o.Ignore())
             .ForMember(d => d.IsActive,
                 o => o.MapFrom(s => s.IsActive == 1));
+
+        CreateMap<UpdateClientDto, Client>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ForMember(dest => dest.Cnp, opt => opt.Ignore())
+            .ForMember(dest => dest.Cui, opt => opt.Ignore());
 
         CreateMap<FeeConfiguration, GetFeeConfigurationByIdDto>();
 

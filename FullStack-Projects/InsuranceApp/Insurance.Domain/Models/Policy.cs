@@ -18,6 +18,8 @@ public class Policy
 
     public Guid CurrencyId { get; set; }
 
+    public Currency Currency { get; set; } = null!;
+
     public PolicyStatus Status { get; set; }
 
     public DateTime StartDate { get; set; }

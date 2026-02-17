@@ -83,6 +83,7 @@ public class PolicyRepository : IPolicyRepository
         var query = _dbContext.Policies
             .AsNoTracking()
             .Include(p => p.Building)
+            .Include(p => p.Currency)
             .AsQueryable();
 
         query = query.Where(p => p.BrokerId == brokerId);
@@ -172,6 +173,14 @@ public class PolicyRepository : IPolicyRepository
             .AsNoTracking()
             .AnyAsync(p =>
                 p.CurrencyId == currencyId &&
+                p.Status == PolicyStatus.Active.ToString());
+    }
+
+    public async Task<bool> ExistsActiveByBuildingAsync(Guid buildingId)
+    {
+        return await _dbContext.Policies
+            .AnyAsync(p =>
+                p.BuildingId == buildingId &&
                 p.Status == PolicyStatus.Active.ToString());
     }
 }

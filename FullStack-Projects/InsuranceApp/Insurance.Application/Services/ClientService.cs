@@ -166,7 +166,7 @@ public class ClientService : IClientService
 
         if (client == null)
         {
-            _logger.LogWarning("Identifier update failed. Client {ClientId} not found", clientId);
+            _logger.LogWarning("Client {ClientId} not found", clientId);
             throw new NotFoundException("Client not found.");
         }
 
@@ -174,10 +174,28 @@ public class ClientService : IClientService
 
         if (!string.IsNullOrWhiteSpace(client.Cnp))
         {
+            var exists = await _unitOfWork.Clients
+                .ExistsByCnpAsync(dto.NewIdentifier);
+
+            if (exists)
+            {
+                _logger.LogWarning("Duplicate CNP detected: {Identifier}", dto.NewIdentifier);
+                throw new InvalidOperationException("A client with this CNP already exists.");
+            }
+
             client.Cnp = dto.NewIdentifier;
         }
         else
         {
+            var exists = await _unitOfWork.Clients
+                .ExistsByCuiAsync(dto.NewIdentifier);
+
+            if (exists)
+            {
+                _logger.LogWarning("Duplicate CUI detected: {Identifier}", dto.NewIdentifier);
+                throw new InvalidOperationException("A client with this CUI already exists.");
+            }
+
             client.Cui = dto.NewIdentifier;
         }
 
@@ -187,7 +205,7 @@ public class ClientService : IClientService
             ClientId = client.Id,
             OldIdentifier = oldIdentifier!,
             NewIdentifier = dto.NewIdentifier,
-            IdentifierType = "CLIENT",
+            IdentifierType = !string.IsNullOrWhiteSpace(client.Cnp) ? "CNP" : "CUI",
             ChangedAt = DateTime.UtcNow
         };
 
@@ -196,9 +214,9 @@ public class ClientService : IClientService
 
         var result = await _unitOfWork.SaveChangesAsync();
 
-        if (result == 0)
+        if (result <= 0)
         {
-            _logger.LogError("Critical error while updating identifier for client {ClientId}", clientId);
+            _logger.LogError("Failed to update identifier for client {ClientId}", clientId);
             throw new InvalidOperationException("Failed to update identifier.");
         }
 

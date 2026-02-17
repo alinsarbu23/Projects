@@ -56,7 +56,13 @@ public class DaoMapperConfig : Profile
 
         CreateMap<DaoBroker, DomainBroker>().ReverseMap();
 
-        CreateMap<DaoPolicy, DomainPolicy>().ReverseMap();
+        CreateMap<DaoPolicy, DomainPolicy>()
+            .ForMember(d => d.Currency,
+                o => o.MapFrom(s => s.Currency));
+
+        CreateMap<DomainPolicy, DaoPolicy>()
+            .ForMember(d => d.Currency,
+                o => o.MapFrom(s => s.Currency));
 
         CreateMap<DaoRiskFactorConfiguration, DomainRiskFactorConfiguration>()
             .ForMember(d => d.Level,

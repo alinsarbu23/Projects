@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Insurance.UnitTests.Controllers;
 
-public class AdminPolicyReportsControllerTests
+public class PolicyReportsControllerTests
 {
     [Fact]
     public async Task GetPolicyReportByBroker_ShouldReturnOk()
@@ -19,7 +19,7 @@ public class AdminPolicyReportsControllerTests
                 It.IsAny<DateTime?>(), It.IsAny<DateTime?>()))
             .ReturnsAsync(new List<PolicyReportDto>());
 
-        var controller = new AdminPolicyReportsController(service.Object);
+        var controller = new PolicyReportsController(service.Object);
 
         var result = await controller.GetPolicyReportByBroker(null, null);
 

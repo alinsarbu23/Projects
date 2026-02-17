@@ -25,10 +25,20 @@ public class CurrencyService : ICurrencyService
 
     public async Task<Guid> CreateAsync(CreateCurrencyDto dto)
     {
+        dto.Code = dto.Code.ToUpper();
+
         _logger.LogInformation("Creating currency {Code}", dto.Code);
 
-        var currency = _mapper.Map<Currency>(dto);
+        var exists = await _unitOfWork.Currencies
+            .ExistsByCodeAsync(dto.Code);
 
+        if (exists)
+        {
+            _logger.LogWarning("Currency code {Code} already exists", dto.Code);
+            throw new InvalidOperationException("Currency code must be unique.");
+        }
+
+        var currency = _mapper.Map<Currency>(dto);
         currency.Id = Guid.NewGuid();
         currency.IsActive = true;
 
@@ -36,13 +46,11 @@ public class CurrencyService : ICurrencyService
 
         var result = await _unitOfWork.SaveChangesAsync();
 
-        if (result == 0)
+        if (result <= 0)
         {
             _logger.LogError("Critical error while creating currency {Code}", dto.Code);
             throw new InvalidOperationException("Failed to create currency.");
         }
-
-        _logger.LogInformation("Currency {Code} created successfully", currency.Code);
 
         return currency.Id;
     }

@@ -6,6 +6,8 @@ public class GetPoliciesDto
 
     public string PolicyNumber { get; set; } = string.Empty;
 
+    public string CurrencyCode { get; set; } = string.Empty;
+
     public string Status { get; set; } = string.Empty;
 
     public decimal FinalPremium { get; set; }
