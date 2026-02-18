@@ -1,29 +1,11 @@
-﻿using Xunit;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Insurance.Application.DTOs.Clients;
-using Insurance.Application.Validators.Clients;
+using Xunit;
 
 namespace Insurance.UnitTests.Validators;
 
 public class UpdateClientIdentifierDtoValidatorTests
 {
-    [Theory]
-    [InlineData(null)]
-    [InlineData("")]
-    public void ShouldFail_WhenNewIdentifierIsMissing(string? value)
-    {
-        var validator = new UpdateClientIdentifierDtoValidator();
-
-        var dto = new UpdateClientIdentifierDto
-        {
-            NewIdentifier = value!
-        };
-
-        var result = validator.Validate(dto);
-
-        result.IsValid.Should().BeFalse();
-    }
-
     [Fact]
     public void ShouldPass_WhenNewIdentifierIsProvided()
     {

@@ -76,7 +76,9 @@ public class BuildingsIntegrationTests : BaseIntegrationTest
                 Street = "Main Street",
                 StreetNumber = "10",
                 SurfaceArea = 75,
-                InsuredValue = 150000
+                InsuredValue = 150000,
+                EarthquakeRisk = 1,
+                FloodRisk = 1
             });
 
         createBuildingResponse.StatusCode.Should().Be(HttpStatusCode.Created);

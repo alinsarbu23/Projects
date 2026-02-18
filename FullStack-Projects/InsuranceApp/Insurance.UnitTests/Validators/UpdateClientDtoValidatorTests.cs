@@ -35,7 +35,7 @@ public class UpdateClientDtoValidatorTests
 
         var dto = new UpdateClientIdentifierDto
         {
-            NewIdentifier = new string('1', 14)
+            NewIdentifier = new string('1', 20)
         };
 
         var result = validator.Validate(dto);

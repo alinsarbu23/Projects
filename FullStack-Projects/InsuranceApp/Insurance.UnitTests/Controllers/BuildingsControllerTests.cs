@@ -1,11 +1,11 @@
 ﻿using FluentAssertions;
-using Microsoft.AspNetCore.Mvc;
-using Moq;
-using Xunit;
 using Insurance.Api.Controllers;
 using Insurance.Application.DTOs.Buildings;
 using Insurance.Application.DTOs.Clients;
 using Insurance.Application.Interfaces.Services;
+using Microsoft.AspNetCore.Mvc;
+using Moq;
+using Xunit;
 
 namespace Insurance.UnitTests.Controllers;
 
@@ -102,8 +102,8 @@ public class BuildingsControllerTests
             NumberOfFloors = 2,
             SurfaceArea = 50,
             InsuredValue = 1000,
-            FloodRisk = true,
-            EarthquakeRisk = false
+            FloodRisk = 1,
+            EarthquakeRisk = 0
         });
 
         var created = result as CreatedAtActionResult;
@@ -129,8 +129,8 @@ public class BuildingsControllerTests
             NumberOfFloors = 2,
             SurfaceArea = 50,
             InsuredValue = 1000,
-            FloodRisk = true,
-            EarthquakeRisk = true
+            FloodRisk = 1,
+            EarthquakeRisk = 1
         };
 
         var result = await controller.UpdateBuilding(buildingId, dto);

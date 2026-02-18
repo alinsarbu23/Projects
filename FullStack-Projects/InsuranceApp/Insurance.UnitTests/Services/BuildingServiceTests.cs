@@ -107,8 +107,8 @@ public class BuildingServiceTests
                 NumberOfFloors = 1,
                 SurfaceArea = 10,
                 InsuredValue = 100,
-                FloodRisk = true,
-                EarthquakeRisk = true
+                FloodRisk = 1,
+                EarthquakeRisk = 1
             });
         });
 
@@ -150,8 +150,8 @@ public class BuildingServiceTests
             NumberOfFloors = 3,
             SurfaceArea = 77,
             InsuredValue = 999,
-            FloodRisk = true,
-            EarthquakeRisk = true
+            FloodRisk = 1,
+            EarthquakeRisk = 1
         };
 
         await service.UpdateBuildingAsync(id, dto);
@@ -194,7 +194,9 @@ public class BuildingServiceTests
             Street = "S",
             StreetNumber = "1",
             SurfaceArea = 10,
-            InsuredValue = 100
+            InsuredValue = 100,
+            EarthquakeRisk = 1,
+            FloodRisk = 1
         };
 
         var ex = await Assert.ThrowsAsync<NotFoundException>(async () =>
@@ -231,8 +233,8 @@ public class BuildingServiceTests
                 NumberOfFloors = 2,
                 SurfaceArea = 10,
                 InsuredValue = 100,
-                FloodRisk = false,
-                EarthquakeRisk = false
+                FloodRisk = 0,
+                EarthquakeRisk = 0
             });
         });
     }

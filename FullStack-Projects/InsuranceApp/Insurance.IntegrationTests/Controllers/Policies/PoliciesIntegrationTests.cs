@@ -74,7 +74,9 @@ public class PoliciesIntegrationTests : BaseIntegrationTest
                 Street = "Main",
                 StreetNumber = "1",
                 SurfaceArea = 80,
-                InsuredValue = 200000
+                InsuredValue = 200000,
+                EarthquakeRisk = 1,
+                FloodRisk = 1
             });
 
         var buildingId = Guid.Parse(createBuilding.Headers.Location!.Segments.Last());
