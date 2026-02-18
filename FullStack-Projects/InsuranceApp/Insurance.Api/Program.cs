@@ -109,6 +109,7 @@ builder.Services.AddScoped<IBrokerService, BrokerService>();
 builder.Services.AddScoped<ICurrencyService, CurrencyService>();
 builder.Services.AddScoped<IFeeConfigurationService, FeeConfigurationService>();
 builder.Services.AddScoped<IRiskFactorConfigurationService, RiskFactorConfigurationService>();
+builder.Services.AddScoped<IReportsService, ReportsService>();
 builder.Services
     .AddIdentityCore<ApiUser>()
     .AddRoles<IdentityRole>()
@@ -126,6 +127,7 @@ builder.Services.AddScoped<IAdministratorRepository, AdministratorRepository>();
 builder.Services.AddScoped<IBrokerRepository, BrokerRepository>();
 builder.Services.AddScoped<IFeeConfigurationRepository, FeeConfigurationRepository>();
 builder.Services.AddScoped<IRiskFactorConfigurationRepository, RiskFactorConfigurationRepository>();
+builder.Services.AddScoped<IReportsRepository, ReportsRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAuthManager, AuthManager>();
 

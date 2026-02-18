@@ -21,10 +21,12 @@ public interface IUnitOfWork
     IPolicyRepository Policies { get; }
 
     IRiskFactorConfigurationRepository RiskFactorConfigurations { get; }
-    
+
     IFeeConfigurationRepository FeeConfigurations { get; }
 
     ICurrencyRepository Currencies { get; }
+
+    IReportsRepository Reports { get; }
 
     Task<int> SaveChangesAsync();
 }
