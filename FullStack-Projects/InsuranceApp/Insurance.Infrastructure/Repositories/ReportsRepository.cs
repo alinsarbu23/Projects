@@ -1,5 +1,6 @@
 ﻿using Insurance.Application.DTOs.Reports;
 using Insurance.Application.Interfaces.Repositories;
+using Insurance.Domain.Enums;
 using Insurance.Infrastructure.DAOs;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,7 +29,14 @@ public class ReportsRepository : IReportsRepository
 
         if (dto.Status.HasValue)
         {
-            query = query.Where(p => p.Status == dto.Status.Value.ToString());
+            if (dto.Status == PolicyStatus.Expired)
+            {
+                query = query.Where(p => p.EndDate < DateTime.UtcNow);
+            }
+            else
+            {
+                query = query.Where(p => p.Status == dto.Status.Value.ToString());
+            }
         }
 
         if (!string.IsNullOrWhiteSpace(dto.CurrencyCode))
@@ -49,7 +57,7 @@ public class ReportsRepository : IReportsRepository
         IQueryable<Policy> query = _db.Policies.AsNoTracking();
         query = ApplyFilters(query, dto);
 
-        return await query
+        var grouped = await query
             .GroupBy(p => new
             {
                 BrokerId = p.BrokerId,
@@ -58,19 +66,31 @@ public class ReportsRepository : IReportsRepository
                 CurrencyCode = p.Currency.Code,
                 ExchangeRate = p.Currency.ExchangeRateToBase
             })
-            .Select(g => new GetPoliciesByBrokerReportDto
+            .Select(g => new
             {
-                BrokerId = g.Key.BrokerId,
-                BrokerCode = g.Key.BrokerCode,
-                BrokerName = g.Key.BrokerName,
-                CurrencyCode = g.Key.CurrencyCode,
+                g.Key.BrokerId,
+                g.Key.BrokerCode,
+                g.Key.BrokerName,
+                g.Key.CurrencyCode,
                 PolicyCount = g.Count(),
                 TotalFinalPremium = g.Sum(x => x.FinalPremium),
-                TotalFinalPremiumInBaseCurrency =
-                    g.Sum(x => x.FinalPremium * g.Key.ExchangeRate)
+                TotalFinalPremiumInBaseCurrency = g.Sum(x => x.FinalPremium * g.Key.ExchangeRate)
+            })
+            .ToListAsync();
+
+        return grouped
+            .Select(x => new GetPoliciesByBrokerReportDto
+            {
+                BrokerId = x.BrokerId,
+                BrokerCode = x.BrokerCode,
+                BrokerName = x.BrokerName,
+                CurrencyCode = x.CurrencyCode,
+                PolicyCount = x.PolicyCount,
+                TotalFinalPremium = x.TotalFinalPremium,
+                TotalFinalPremiumInBaseCurrency = x.TotalFinalPremiumInBaseCurrency
             })
             .OrderByDescending(x => x.TotalFinalPremiumInBaseCurrency)
-            .ToListAsync();
+            .ToList();
     }
 
     public async Task<IReadOnlyList<GetPoliciesByCountryReportDto>> GetPoliciesByCountryAsync(GetPoliciesReportDto dto)
@@ -78,24 +98,34 @@ public class ReportsRepository : IReportsRepository
         IQueryable<Policy> query = _db.Policies.AsNoTracking();
         query = ApplyFilters(query, dto);
 
-        return await query
+        var grouped = await query
             .GroupBy(p => new
             {
                 CountryName = p.Building.City.County.Country.Name,
                 CurrencyCode = p.Currency.Code,
                 ExchangeRate = p.Currency.ExchangeRateToBase
             })
-            .Select(g => new GetPoliciesByCountryReportDto
+            .Select(g => new
             {
-                CountryName = g.Key.CountryName,
-                CurrencyCode = g.Key.CurrencyCode,
+                g.Key.CountryName,
+                g.Key.CurrencyCode,
                 PolicyCount = g.Count(),
                 TotalFinalPremium = g.Sum(x => x.FinalPremium),
-                TotalFinalPremiumInBaseCurrency =
-                    g.Sum(x => x.FinalPremium * g.Key.ExchangeRate)
+                TotalFinalPremiumInBaseCurrency = g.Sum(x => x.FinalPremium * g.Key.ExchangeRate)
+            })
+            .ToListAsync();
+
+        return grouped
+            .Select(x => new GetPoliciesByCountryReportDto
+            {
+                CountryName = x.CountryName,
+                CurrencyCode = x.CurrencyCode,
+                PolicyCount = x.PolicyCount,
+                TotalFinalPremium = x.TotalFinalPremium,
+                TotalFinalPremiumInBaseCurrency = x.TotalFinalPremiumInBaseCurrency
             })
             .OrderByDescending(x => x.TotalFinalPremiumInBaseCurrency)
-            .ToListAsync();
+            .ToList();
     }
 
     public async Task<IReadOnlyList<GetPoliciesByCountyReportDto>> GetPoliciesByCountyAsync(GetPoliciesReportDto dto)
@@ -103,24 +133,34 @@ public class ReportsRepository : IReportsRepository
         IQueryable<Policy> query = _db.Policies.AsNoTracking();
         query = ApplyFilters(query, dto);
 
-        return await query
+        var grouped = await query
             .GroupBy(p => new
             {
                 CountyName = p.Building.City.County.Name,
                 CurrencyCode = p.Currency.Code,
                 ExchangeRate = p.Currency.ExchangeRateToBase
             })
-            .Select(g => new GetPoliciesByCountyReportDto
+            .Select(g => new
             {
-                CountyName = g.Key.CountyName,
-                CurrencyCode = g.Key.CurrencyCode,
+                g.Key.CountyName,
+                g.Key.CurrencyCode,
                 PolicyCount = g.Count(),
                 TotalFinalPremium = g.Sum(x => x.FinalPremium),
-                TotalFinalPremiumInBaseCurrency =
-                    g.Sum(x => x.FinalPremium * g.Key.ExchangeRate)
+                TotalFinalPremiumInBaseCurrency = g.Sum(x => x.FinalPremium * g.Key.ExchangeRate)
+            })
+            .ToListAsync();
+
+        return grouped
+            .Select(x => new GetPoliciesByCountyReportDto
+            {
+                CountyName = x.CountyName,
+                CurrencyCode = x.CurrencyCode,
+                PolicyCount = x.PolicyCount,
+                TotalFinalPremium = x.TotalFinalPremium,
+                TotalFinalPremiumInBaseCurrency = x.TotalFinalPremiumInBaseCurrency
             })
             .OrderByDescending(x => x.TotalFinalPremiumInBaseCurrency)
-            .ToListAsync();
+            .ToList();
     }
 
     public async Task<IReadOnlyList<GetPoliciesByCityReportDto>> GetPoliciesByCityAsync(GetPoliciesReportDto dto)
@@ -128,23 +168,33 @@ public class ReportsRepository : IReportsRepository
         IQueryable<Policy> query = _db.Policies.AsNoTracking();
         query = ApplyFilters(query, dto);
 
-        return await query
+        var grouped = await query
             .GroupBy(p => new
             {
                 CityName = p.Building.City.Name,
                 CurrencyCode = p.Currency.Code,
                 ExchangeRate = p.Currency.ExchangeRateToBase
             })
-            .Select(g => new GetPoliciesByCityReportDto
+            .Select(g => new
             {
-                CityName = g.Key.CityName,
-                CurrencyCode = g.Key.CurrencyCode,
+                g.Key.CityName,
+                g.Key.CurrencyCode,
                 PolicyCount = g.Count(),
                 TotalFinalPremium = g.Sum(x => x.FinalPremium),
-                TotalFinalPremiumInBaseCurrency =
-                    g.Sum(x => x.FinalPremium * g.Key.ExchangeRate)
+                TotalFinalPremiumInBaseCurrency = g.Sum(x => x.FinalPremium * g.Key.ExchangeRate)
+            })
+            .ToListAsync();
+
+        return grouped
+            .Select(x => new GetPoliciesByCityReportDto
+            {
+                CityName = x.CityName,
+                CurrencyCode = x.CurrencyCode,
+                PolicyCount = x.PolicyCount,
+                TotalFinalPremium = x.TotalFinalPremium,
+                TotalFinalPremiumInBaseCurrency = x.TotalFinalPremiumInBaseCurrency
             })
             .OrderByDescending(x => x.TotalFinalPremiumInBaseCurrency)
-            .ToListAsync();
+            .ToList();
     }
 }
