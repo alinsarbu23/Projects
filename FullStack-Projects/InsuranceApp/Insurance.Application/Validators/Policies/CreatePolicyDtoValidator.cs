@@ -22,6 +22,10 @@ public class CreatePolicyDtoValidator : AbstractValidator<CreatePolicyDto>
             .LessThan(x => x.EndDate)
             .WithMessage("StartDate must be before EndDate");
 
+        RuleFor(x => x.StartDate)
+            .GreaterThanOrEqualTo(DateTime.UtcNow.Date)
+            .WithMessage("StartDate cannot be in the past.");
+
         RuleFor(x => x.EndDate)
             .GreaterThan(DateTime.UtcNow.Date)
             .WithMessage("EndDate must be in the future");
