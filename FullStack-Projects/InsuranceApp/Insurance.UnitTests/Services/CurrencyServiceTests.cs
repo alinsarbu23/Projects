@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Insurance.Application.DTOs.Currencies;
+using Insurance.Application.Exceptions;
 using Insurance.Application.Interfaces.Repositories;
 using Insurance.Application.Services;
 using Insurance.Domain.Models;
@@ -25,7 +26,7 @@ public class CurrencyServiceTests
             MapperFactory.Create(),
             Mock.Of<ILogger<CurrencyService>>());
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+        await Assert.ThrowsAsync<NotFoundException>(() =>
             service.UpdateAsync(Guid.NewGuid(), new UpdateCurrencyDto()));
     }
 
@@ -65,7 +66,7 @@ public class CurrencyServiceTests
             MapperFactory.Create(),
             Mock.Of<ILogger<CurrencyService>>());
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+        await Assert.ThrowsAsync<NotFoundException>(() =>
             service.GetByIdAsync(Guid.NewGuid()));
     }
 

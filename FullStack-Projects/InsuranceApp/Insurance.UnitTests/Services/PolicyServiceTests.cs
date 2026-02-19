@@ -40,7 +40,7 @@ public class PolicyServiceTests
             MapperFactory.Create(),
             Mock.Of<ILogger<PolicyService>>());
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+        await Assert.ThrowsAsync<NotFoundException>(() =>
             service.GetByIdAsync(Guid.NewGuid()));
     }
 
@@ -113,7 +113,7 @@ public class PolicyServiceTests
             MapperFactory.Create(),
             Mock.Of<ILogger<PolicyService>>());
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+        await Assert.ThrowsAsync<NotFoundException>(() =>
             service.SearchAsync(null, "x@test.ro", null, null, null, 1, 10));
     }
 
@@ -228,7 +228,7 @@ public class PolicyServiceTests
             MapperFactory.Create(),
             Mock.Of<ILogger<PolicyService>>());
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+        await Assert.ThrowsAsync<NotFoundException>(() =>
             service.CancelAsync(Guid.NewGuid(), new DeletePolicyDto { Reason = "x" }));
     }
 
@@ -245,7 +245,7 @@ public class PolicyServiceTests
             MapperFactory.Create(),
             Mock.Of<ILogger<PolicyService>>());
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+        await Assert.ThrowsAsync<NotFoundException>(() =>
             service.GetByIdAsync(Guid.NewGuid()));
     }
 
@@ -262,7 +262,7 @@ public class PolicyServiceTests
             MapperFactory.Create(),
             Mock.Of<ILogger<PolicyService>>());
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+        await Assert.ThrowsAsync<NotFoundException>(() =>
             service.CreateDraftAsync(new CreatePolicyDto(), "x@test.ro"));
     }
 
