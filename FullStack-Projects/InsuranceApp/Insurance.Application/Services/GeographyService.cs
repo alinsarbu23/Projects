@@ -24,39 +24,33 @@ public class GeographyService : IGeographyService
 
     public async Task<IReadOnlyList<GetCitiesByCountyDto>> GetCitiesByCountyAsync(Guid countyId)
     {
-        _logger.LogInformation("Retrieving cities for County {CountyId}", countyId);
+        _logger.LogInformation($"Retrieving cities for County {countyId}");
 
         var cities = await _unitOfWork.Geography.GetCitiesByCountyIdAsync(countyId);
 
-        _logger.LogInformation(
-            "Retrieved {Count} cities for County {CountyId}",
-            cities.Count,
-            countyId);
+        _logger.LogInformation($"Retrieved {cities.Count} cities for County {countyId}");
 
         return _mapper.Map<IReadOnlyList<GetCitiesByCountyDto>>(cities);
     }
 
     public async Task<IReadOnlyList<GetCountiesByCountryDto>> GetCountiesByCountryAsync(Guid countryId)
     {
-        _logger.LogInformation("Retrieving counties for Country {CountryId}", countryId);
+        _logger.LogInformation($"Retrieving counties for Country {countryId}");
 
         var counties = await _unitOfWork.Geography.GetCountiesByCountryIdAsync(countryId);
 
-        _logger.LogInformation(
-            "Retrieved {Count} counties for Country {CountryId}",
-            counties.Count,
-            countryId);
+        _logger.LogInformation($"Retrieved {counties.Count} counties for Country {countryId}");
 
         return _mapper.Map<IReadOnlyList<GetCountiesByCountryDto>>(counties);
     }
 
     public async Task<IReadOnlyList<GetCountriesDto>> GetCountriesAsync()
     {
-        _logger.LogInformation("Retrieving all countries");
+        _logger.LogInformation($"Retrieving all countries");
 
         var countries = await _unitOfWork.Geography.GetAllCountriesAsync();
 
-        _logger.LogInformation("Retrieved {Count} countries", countries.Count);
+        _logger.LogInformation($"Retrieved {countries.Count} countries");
 
         return _mapper.Map<IReadOnlyList<GetCountriesDto>>(countries);
     }

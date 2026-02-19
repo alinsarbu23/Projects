@@ -27,7 +27,7 @@ public class FeeConfigurationService : IFeeConfigurationService
 
     public async Task<Guid> CreateAsync(CreateFeeConfigurationDto dto)
     {
-        _logger.LogInformation("Creating fee configuration {Name}", dto.Name);
+        _logger.LogInformation($"Creating fee configuration {dto.Name}");
 
         var fee = _mapper.Map<FeeConfiguration>(dto);
 
@@ -49,11 +49,11 @@ public class FeeConfigurationService : IFeeConfigurationService
 
         if (result == 0)
         {
-            _logger.LogError("Critical error while creating Fee configuration {Name}", dto.Name);
+            _logger.LogError($"Critical error while creating Fee configuration {dto.Name}");
             throw new InvalidOperationException("Failed to create fee configuration.");
         }
 
-        _logger.LogInformation("Fee configuration {Name} created successfully with ID {FeeId}", dto.Name, fee.Id);
+        _logger.LogInformation($"Fee configuration {dto.Name} created successfully with ID {fee.Id}");
 
         return fee.Id;
     }
@@ -61,36 +61,36 @@ public class FeeConfigurationService : IFeeConfigurationService
     public async Task<IReadOnlyList<GetFeeConfigurationsDto>> GetAllAsync()
     {
         var fees = await _unitOfWork.FeeConfigurations.GetAllAsync();
-        _logger.LogInformation("Retrieved {Count} fee configurations", fees.Count);
+        _logger.LogInformation($"Retrieved {fees.Count} fee configurations");
         return _mapper.Map<IReadOnlyList<GetFeeConfigurationsDto>>(fees);
     }
 
     public async Task<GetFeeConfigurationByIdDto> GetByIdAsync(Guid feeConfigurationId)
     {
-        _logger.LogInformation("Retrieving FeeConfiguration {FeeId}", feeConfigurationId);
+        _logger.LogInformation($"Retrieving FeeConfiguration {feeConfigurationId}");
 
         var fee = await _unitOfWork.FeeConfigurations.GetByIdAsync(feeConfigurationId);
 
         if (fee == null)
         {
-            _logger.LogWarning("FeeConfiguration {FeeId} not found", feeConfigurationId);
+            _logger.LogWarning($"FeeConfiguration {feeConfigurationId} not found");
             throw new NotFoundException("Fee configuration not found");
         }
 
-        _logger.LogInformation("FeeConfiguration {FeeId} retrieved successfully", feeConfigurationId);
+        _logger.LogInformation($"FeeConfiguration {feeConfigurationId} retrieved successfully");
 
         return _mapper.Map<GetFeeConfigurationByIdDto>(fee);
     }
 
     public async Task UpdateAsync(Guid feeConfigurationId, UpdateFeeConfigurationDto dto)
     {
-        _logger.LogInformation("Updating FeeConfiguration {FeeId}", feeConfigurationId);
+        _logger.LogInformation($"Updating FeeConfiguration {feeConfigurationId}");
 
         var fee = await _unitOfWork.FeeConfigurations.GetByIdAsync(feeConfigurationId);
 
         if (fee == null)
         {
-            _logger.LogWarning("FeeConfiguration {FeeId} not found", feeConfigurationId);
+            _logger.LogWarning($"FeeConfiguration {feeConfigurationId} not found");
             throw new NotFoundException("Fee configuration not found");
         }
 
@@ -112,10 +112,10 @@ public class FeeConfigurationService : IFeeConfigurationService
 
         if (result == 0)
         {
-            _logger.LogError("Critical error while updating FeeConfiguration {FeeId}", feeConfigurationId);
+            _logger.LogError($"Critical error while updating FeeConfiguration {feeConfigurationId}");
             throw new InvalidOperationException("Failed to update fee configuration.");
         }
 
-        _logger.LogInformation("FeeConfiguration {FeeId} updated successfully", feeConfigurationId);
+        _logger.LogInformation($"FeeConfiguration {feeConfigurationId} updated successfully");
     }
 }

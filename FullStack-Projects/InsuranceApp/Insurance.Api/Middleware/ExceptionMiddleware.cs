@@ -23,11 +23,7 @@ public class ExceptionMiddleware
         }
         catch (Exception ex)
         {
-            _logger.LogError(
-                ex,
-                "Exception on {Method} {Path}",
-                context.Request.Method,
-                context.Request.Path);
+            _logger.LogError(ex, $"Exception on {context.Request.Method} {context.Request.Path}");
 
             await HandleExceptionAsync(context, ex);
         }

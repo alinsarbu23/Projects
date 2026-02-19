@@ -27,14 +27,13 @@ public class RiskFactorConfigurationService : IRiskFactorConfigurationService
 
     public async Task<Guid> CreateAsync(CreateRiskFactorConfigurationDto dto)
     {
-        _logger.LogInformation("Creating new RiskFactorConfiguration with Level {RiskLevel} and ReferenceId {ReferenceId}", dto.Level, dto.ReferenceId);
+        _logger.LogInformation($"Creating new RiskFactorConfiguration with Level {dto.Level} and ReferenceId {dto.ReferenceId}");
 
         if (!Enum.IsDefined(typeof(RiskLevel), dto.Level))
         {
-            _logger.LogError("Invalid risk level {RiskLevel} provided", dto.Level);
+            _logger.LogError($"Invalid risk level {dto.Level} provided");
             throw new ArgumentException("Invalid risk level.");
         }
-
 
         var risk = _mapper.Map<RiskFactorConfiguration>(dto);
 
@@ -48,24 +47,24 @@ public class RiskFactorConfigurationService : IRiskFactorConfigurationService
 
         if (result == 0)
         {
-            _logger.LogError("Critical error while creating RiskFactorConfiguration with ReferenceId {ReferenceId}", dto.ReferenceId);
+            _logger.LogError($"Critical error while creating RiskFactorConfiguration with ReferenceId {dto.ReferenceId}");
             throw new InvalidOperationException("Failed to create risk factor configuration.");
         }
 
-        _logger.LogInformation("RiskFactorConfiguration with Id {RiskId} created successfully", risk.Id);
+        _logger.LogInformation($"RiskFactorConfiguration with Id {risk.Id} created successfully");
 
         return risk.Id;
     }
 
     public async Task UpdateAsync(Guid riskFactorId, UpdateRiskFactorConfigurationDto dto)
     {
-        _logger.LogInformation("Updating RiskFactorConfiguration {RiskId}", riskFactorId);
+        _logger.LogInformation($"Updating RiskFactorConfiguration {riskFactorId}");
 
         var risk = await _unitOfWork.RiskFactorConfigurations.GetByIdAsync(riskFactorId);
 
         if (risk == null)
         {
-            _logger.LogWarning("RiskFactorConfiguration {RiskId} not found", riskFactorId);
+            _logger.LogWarning($"RiskFactorConfiguration {riskFactorId} not found");
             throw new NotFoundException("Risk factor not found");
         }
 
@@ -87,26 +86,26 @@ public class RiskFactorConfigurationService : IRiskFactorConfigurationService
 
         if (result == 0)
         {
-            _logger.LogError("Critical error while updating RiskFactorConfiguration {RiskId}", riskFactorId);
+            _logger.LogError($"Critical error while updating RiskFactorConfiguration {riskFactorId}");
             throw new InvalidOperationException("Failed to update risk factor configuration.");
         }
 
-        _logger.LogInformation("RiskFactorConfiguration {RiskId} updated successfully", riskFactorId);
+        _logger.LogInformation($"RiskFactorConfiguration {riskFactorId} updated successfully");
     }
 
     public async Task<GetRiskFactorConfigurationByIdDto> GetByIdAsync(Guid riskFactorId)
     {
-        _logger.LogInformation("Retrieving RiskFactorConfiguration {RiskId}", riskFactorId);
+        _logger.LogInformation($"Retrieving RiskFactorConfiguration {riskFactorId}");
 
         var risk = await _unitOfWork.RiskFactorConfigurations.GetByIdAsync(riskFactorId);
 
         if (risk == null)
         {
-            _logger.LogWarning("RiskFactorConfiguration {RiskId} not found", riskFactorId);
+            _logger.LogWarning($"RiskFactorConfiguration {riskFactorId} not found");
             throw new NotFoundException("Risk factor not found");
         }
 
-        _logger.LogInformation("RiskFactorConfiguration {RiskId} retrieved successfully", riskFactorId);
+        _logger.LogInformation($"RiskFactorConfiguration {riskFactorId} retrieved successfully");
 
         return _mapper.Map<GetRiskFactorConfigurationByIdDto>(risk);
     }
@@ -114,7 +113,7 @@ public class RiskFactorConfigurationService : IRiskFactorConfigurationService
     public async Task<IReadOnlyList<GetRiskFactorConfigurationsDto>> GetAllAsync()
     {
         var risks = await _unitOfWork.RiskFactorConfigurations.GetAllAsync();
-        _logger.LogInformation("Retrieved {Count} risk factor configurations", risks.Count);
+        _logger.LogInformation($"Retrieved {risks.Count} risk factor configurations");
         return _mapper.Map<IReadOnlyList<GetRiskFactorConfigurationsDto>>(risks);
     }
 }

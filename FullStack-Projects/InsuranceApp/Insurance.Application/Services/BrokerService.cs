@@ -24,17 +24,17 @@ public class BrokerService : IBrokerService
 
     public async Task<Guid> CreateAsync(CreateBrokerDto dto)
     {
-        _logger.LogInformation("Creating broker with code {BrokerCode}", dto.BrokerCode);
+        _logger.LogInformation($"Creating broker with code {dto.BrokerCode}");
 
         if (await _unitOfWork.Brokers.GetByCodeAsync(dto.BrokerCode) != null)
         {
-            _logger.LogWarning("Broker creation failed. Duplicate BrokerCode {BrokerCode}", dto.BrokerCode);
+            _logger.LogWarning($"Broker creation failed. Duplicate BrokerCode {dto.BrokerCode}");
             throw new ArgumentException("Broker code must be unique");
         }
 
         if (await _unitOfWork.Brokers.GetByEmailAsync(dto.Email) != null)
         {
-            _logger.LogWarning("Broker creation failed. Duplicate Email {Email}", dto.Email);
+            _logger.LogWarning($"Broker creation failed. Duplicate Email {dto.Email}");
             throw new ArgumentException("Broker email must be unique");
         }
 
@@ -48,24 +48,24 @@ public class BrokerService : IBrokerService
 
         if (result == 0)
         {
-            _logger.LogError("Critical error while saving broker {BrokerCode}", dto.BrokerCode);
+            _logger.LogError($"Critical error while saving broker {dto.BrokerCode}");
             throw new InvalidOperationException("Failed to create broker.");
         }
 
-        _logger.LogInformation("Broker {BrokerId} created successfully", broker.Id);
+        _logger.LogInformation($"Broker {broker.Id} created successfully");
 
         return broker.Id;
     }
 
     public async Task UpdateAsync(Guid brokerId, UpdateBrokerDto dto)
     {
-        _logger.LogInformation("Updating broker {BrokerId}", brokerId);
+        _logger.LogInformation($"Updating broker {brokerId}");
 
         var broker = await _unitOfWork.Brokers.GetByIdAsync(brokerId);
 
         if (broker == null)
         {
-            _logger.LogWarning("Update failed. Broker {BrokerId} not found", brokerId);
+            _logger.LogWarning($"Update failed. Broker {brokerId} not found");
             throw new NotFoundException("Broker not found");
         }
 
@@ -77,28 +77,28 @@ public class BrokerService : IBrokerService
 
         if (result == 0)
         {
-            _logger.LogError("Critical error while updating broker {BrokerId}", brokerId);
+            _logger.LogError($"Critical error while updating broker {brokerId}");
             throw new InvalidOperationException("Failed to update broker.");
         }
 
-        _logger.LogInformation("Broker {BrokerId} updated successfully", brokerId);
+        _logger.LogInformation($"Broker {brokerId} updated successfully");
     }
 
     public async Task ActivateAsync(Guid brokerId)
     {
-        _logger.LogInformation("Activating broker {BrokerId}", brokerId);
+        _logger.LogInformation($"Activating broker {brokerId}");
 
         var broker = await _unitOfWork.Brokers.GetByIdAsync(brokerId);
 
         if (broker == null)
         {
-            _logger.LogWarning("Activation failed. Broker {BrokerId} not found", brokerId);
+            _logger.LogWarning($"Activation failed. Broker {brokerId} not found");
             throw new NotFoundException("Broker not found");
         }
 
         if (broker.Status == BrokerStatus.Active)
         {
-            _logger.LogWarning("Broker {BrokerId} is already active", brokerId);
+            _logger.LogWarning($"Broker {brokerId} is already active");
             throw new InvalidOperationException("Broker is already active.");
         }
 
@@ -110,28 +110,28 @@ public class BrokerService : IBrokerService
 
         if (result == 0)
         {
-            _logger.LogError("Critical error while activating broker {BrokerId}", brokerId);
+            _logger.LogError($"Critical error while activating broker {brokerId}");
             throw new InvalidOperationException("Failed to activate broker.");
         }
 
-        _logger.LogInformation("Broker {BrokerId} activated successfully", brokerId);
+        _logger.LogInformation($"Broker {brokerId} activated successfully");
     }
 
     public async Task DeactivateAsync(Guid brokerId)
     {
-        _logger.LogInformation("Deactivating broker {BrokerId}", brokerId);
+        _logger.LogInformation($"Deactivating broker {brokerId}");
 
         var broker = await _unitOfWork.Brokers.GetByIdAsync(brokerId);
 
         if (broker == null)
         {
-            _logger.LogWarning("Deactivation failed. Broker {BrokerId} not found", brokerId);
+            _logger.LogWarning($"Deactivation failed. Broker {brokerId} not found");
             throw new NotFoundException("Broker not found");
         }
 
         if (broker.Status == BrokerStatus.Inactive)
         {
-            _logger.LogWarning("Broker {BrokerId} is already inactive", brokerId);
+            _logger.LogWarning($"Broker {brokerId} is already inactive");
             throw new InvalidOperationException("Broker is already inactive.");
         }
 
@@ -143,26 +143,26 @@ public class BrokerService : IBrokerService
 
         if (result == 0)
         {
-            _logger.LogError("Critical error while deactivating broker {BrokerId}", brokerId);
+            _logger.LogError($"Critical error while deactivating broker {brokerId}");
             throw new InvalidOperationException("Failed to deactivate broker.");
         }
 
-        _logger.LogInformation("Broker {BrokerId} deactivated successfully", brokerId);
+        _logger.LogInformation($"Broker {brokerId} deactivated successfully");
     }
 
     public async Task<GetBrokerByIdDto> GetByIdAsync(Guid brokerId)
     {
-        _logger.LogInformation("Retrieving broker {BrokerId}", brokerId);
+        _logger.LogInformation($"Retrieving broker {brokerId}");
 
         var broker = await _unitOfWork.Brokers.GetByIdAsync(brokerId);
 
         if (broker == null)
         {
-            _logger.LogWarning("Broker {BrokerId} not found", brokerId);
+            _logger.LogWarning($"Broker {brokerId} not found");
             throw new NotFoundException("Broker not found");
         }
 
-        _logger.LogInformation("Broker {BrokerId} retrieved successfully", brokerId);
+        _logger.LogInformation($"Broker {brokerId} retrieved successfully");
 
         return _mapper.Map<GetBrokerByIdDto>(broker);
     }
@@ -170,7 +170,7 @@ public class BrokerService : IBrokerService
     public async Task<IReadOnlyList<GetBrokersDto>> GetAllAsync()
     {
         var brokers = await _unitOfWork.Brokers.GetAllAsync();
-        _logger.LogInformation("Retrieved {Count} brokers", brokers.Count);
+        _logger.LogInformation($"Retrieved {brokers.Count} brokers");
         return _mapper.Map<IReadOnlyList<GetBrokersDto>>(brokers);
     }
 }

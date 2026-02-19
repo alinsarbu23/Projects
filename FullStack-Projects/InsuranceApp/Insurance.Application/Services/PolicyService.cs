@@ -30,21 +30,20 @@ public class PolicyService : IPolicyService
 
     public async Task ActivateAsync(Guid policyId)
     {
-        _logger.LogInformation("Activating policy {PolicyId}", policyId);
+        _logger.LogInformation($"Activating policy {policyId}");
 
         var policy = await _unitOfWork.Policies.GetByIdAsync(policyId);
 
         if (policy == null)
         {
-            _logger.LogWarning("Policy {PolicyId} not found", policyId);
+            _logger.LogWarning($"Policy {policyId} not found");
             throw new NotFoundException("Policy not found.");
         }
 
         if (policy.Status != PolicyStatus.Draft)
         {
             _logger.LogWarning(
-                "Activation blocked. Policy {PolicyId} is not in Draft state",
-                policyId);
+                $"Activation blocked. Policy {policyId} is not in Draft state");
 
             throw new InvalidOperationException(
                 "Only draft policies can be activated.");
@@ -53,8 +52,7 @@ public class PolicyService : IPolicyService
         if (policy.EndDate < DateTime.UtcNow.Date)
         {
             _logger.LogWarning(
-                "Activation blocked. Policy {PolicyId} already ended",
-                policyId);
+                $"Activation blocked. Policy {policyId} already ended");
 
             throw new InvalidOperationException(
                 "Cannot activate a policy that already ended.");
@@ -66,8 +64,7 @@ public class PolicyService : IPolicyService
         if (existsActivePolicy)
         {
             _logger.LogWarning(
-                "Activation blocked. Building {BuildingId} already has an active policy",
-                policy.BuildingId);
+                $"Activation blocked. Building {policy.BuildingId} already has an active policy");
 
             throw new InvalidOperationException(
                 "There is already an active policy for this building.");
@@ -82,11 +79,11 @@ public class PolicyService : IPolicyService
 
         if (result <= 0)
         {
-            _logger.LogError("Failed to activate policy {PolicyId}", policyId);
+            _logger.LogError($"Failed to activate policy {policyId}");
             throw new InvalidOperationException("Failed to activate policy.");
         }
 
-        _logger.LogInformation("Policy {PolicyId} activated successfully", policyId);
+        _logger.LogInformation($"Policy {policyId} activated successfully");
     }
 
     public async Task CancelAsync(Guid policyId, DeletePolicyDto dto)
@@ -115,7 +112,7 @@ public class PolicyService : IPolicyService
         await _unitOfWork.Policies.UpdateAsync(policy);
         await _unitOfWork.SaveChangesAsync();
 
-        _logger.LogInformation("Policy {PolicyId} cancelled", policyId);
+        _logger.LogInformation($"Policy {policyId} cancelled");
     }
 
     public async Task<GetPolicyByIdDto> GetByIdAsync(Guid policyId)
@@ -123,7 +120,7 @@ public class PolicyService : IPolicyService
         var policy = await _unitOfWork.Policies.GetByIdAsync(policyId);
         if (policy == null)
         {
-            _logger.LogWarning("Policy {PolicyId} not found", policyId);
+            _logger.LogWarning($"Policy {policyId} not found");
             throw new NotFoundException("Policy not found");
         }
 
@@ -145,28 +142,26 @@ public class PolicyService : IPolicyService
         var result = await _unitOfWork.Policies.GetPolicyReportByBrokerAsync(from, to);
 
         _logger.LogInformation(
-            "Policy report generated (grouped by broker). From={From}, To={To}",
-            from,
-            to);
+            $"Policy report generated (grouped by broker). From={from}, To={to}");
 
         return result;
     }
 
     public async Task<Guid> CreateDraftAsync(CreatePolicyDto dto, string brokerEmail)
     {
-        _logger.LogInformation("Creating draft policy for building {BuildingId}", dto.BuildingId);
+        _logger.LogInformation($"Creating draft policy for building {dto.BuildingId}");
 
         var broker = await _unitOfWork.Brokers.GetByEmailAsync(brokerEmail);
 
         if (broker == null)
         {
-            _logger.LogWarning("Broker with email {BrokerEmail} not found", brokerEmail);
+            _logger.LogWarning($"Broker with email {brokerEmail} not found");
             throw new NotFoundException("Broker not found.");
         }
 
         if (broker.Status != BrokerStatus.Active)
         {
-            _logger.LogWarning("Broker {BrokerId} is not active", broker.Id);
+            _logger.LogWarning($"Broker {broker.Id} is not active");
             throw new InvalidOperationException("Broker is not active.");
         }
 
@@ -174,7 +169,7 @@ public class PolicyService : IPolicyService
 
         if (building == null)
         {
-            _logger.LogWarning("Building {BuildingId} not found", dto.BuildingId);
+            _logger.LogWarning($"Building {dto.BuildingId} not found");
             throw new NotFoundException("Building not found.");
         }
 
@@ -184,8 +179,7 @@ public class PolicyService : IPolicyService
         if (existsActivePolicy)
         {
             _logger.LogWarning(
-                "Attempt to create policy for building {BuildingId} which already has an active policy",
-                dto.BuildingId);
+                $"Attempt to create policy for building {dto.BuildingId} which already has an active policy");
 
             throw new InvalidOperationException(
                 "There is already an active policy for this building.");
@@ -217,30 +211,30 @@ public class PolicyService : IPolicyService
 
         if (result <= 0)
         {
-            _logger.LogError("Failed to create draft policy for building {BuildingId}", dto.BuildingId);
+            _logger.LogError($"Failed to create draft policy for building {dto.BuildingId}");
             throw new InvalidOperationException("Failed to create policy.");
         }
 
-        _logger.LogInformation("Draft policy {PolicyId} created successfully", policy.Id);
+        _logger.LogInformation($"Draft policy {policy.Id} created successfully");
 
         return policy.Id;
     }
 
     public async Task UpdatePolicyAsync(Guid policyId, UpdatePolicyDto dto)
     {
-        _logger.LogInformation("Updating policy {PolicyId}", policyId);
+        _logger.LogInformation($"Updating policy {policyId}");
 
         var policy = await _unitOfWork.Policies.GetByIdAsync(policyId);
 
         if (policy == null)
         {
-            _logger.LogWarning("Policy {PolicyId} not found", policyId);
+            _logger.LogWarning($"Policy {policyId} not found");
             throw new NotFoundException("Policy not found.");
         }
 
         if (policy.Status != PolicyStatus.Draft)
         {
-            _logger.LogWarning("Update blocked. Policy {PolicyId} is not Draft", policyId);
+            _logger.LogWarning($"Update blocked. Policy {policyId} is not Draft");
             throw new InvalidOperationException("Only draft policies can be updated.");
         }
 
@@ -248,7 +242,7 @@ public class PolicyService : IPolicyService
 
         if (currency == null || !currency.IsActive)
         {
-            _logger.LogWarning("Invalid currency {CurrencyId}", dto.CurrencyId);
+            _logger.LogWarning($"Invalid currency {dto.CurrencyId}");
             throw new InvalidOperationException("Invalid or inactive currency.");
         }
 
@@ -267,11 +261,11 @@ public class PolicyService : IPolicyService
 
         if (result == 0)
         {
-            _logger.LogError("Failed to update policy {PolicyId}", policyId);
+            _logger.LogError($"Failed to update policy {policyId}");
             throw new InvalidOperationException("Failed to update policy.");
         }
 
-        _logger.LogInformation("Policy {PolicyId} updated successfully", policyId);
+        _logger.LogInformation($"Policy {policyId} updated successfully");
     }
 
     public async Task<PagedPoliciesDto> SearchAsync(

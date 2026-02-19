@@ -24,11 +24,7 @@ public class PolicyCalculationService : IPolicyCalculationService
         Guid currencyId,
         Building building)
     {
-        _logger.LogInformation(
-            "Calculating premium (BrokerId={BrokerId}, CurrencyId={CurrencyId}, BasePremium={BasePremium})",
-            brokerId,
-            currencyId,
-            basePremium);
+        _logger.LogInformation($"Calculating premium (BrokerId={brokerId}, CurrencyId={currencyId}, BasePremium={basePremium})");
 
         decimal totalPercentage = 0m;
 
@@ -36,7 +32,7 @@ public class PolicyCalculationService : IPolicyCalculationService
 
         if (broker == null)
         {
-            _logger.LogWarning("Premium calculation failed. Broker {BrokerId} not found", brokerId);
+            _logger.LogWarning($"Premium calculation failed. Broker {brokerId} not found");
             throw new NotFoundException("Broker not found");
         }
 
@@ -49,8 +45,7 @@ public class PolicyCalculationService : IPolicyCalculationService
 
         if (currency == null || !currency.IsActive)
         {
-            _logger.LogWarning("Premium calculation failed. Invalid or inactive currency {CurrencyId}",
-                currencyId);
+            _logger.LogWarning($"Premium calculation failed. Invalid or inactive currency {currencyId}");
             throw new InvalidOperationException("Invalid or inactive currency");
         }
 
@@ -93,9 +88,7 @@ public class PolicyCalculationService : IPolicyCalculationService
 
         var rounded = Math.Round(finalPremium, 2);
 
-        _logger.LogInformation(
-            "Premium calculated successfully. FinalPremium={FinalPremium}",
-            rounded);
+        _logger.LogInformation($"Premium calculated successfully. FinalPremium={rounded}");
 
         return rounded;
     }

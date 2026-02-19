@@ -28,14 +28,14 @@ public class CurrencyService : ICurrencyService
     {
         dto.Code = dto.Code.ToUpper();
 
-        _logger.LogInformation("Creating currency {Code}", dto.Code);
+        _logger.LogInformation($"Creating currency {dto.Code}");
 
         var exists = await _unitOfWork.Currencies
             .ExistsByCodeAsync(dto.Code);
 
         if (exists)
         {
-            _logger.LogWarning("Currency code {Code} already exists", dto.Code);
+            _logger.LogWarning($"Currency code {dto.Code} already exists");
             throw new InvalidOperationException("Currency code must be unique.");
         }
 
@@ -49,7 +49,7 @@ public class CurrencyService : ICurrencyService
 
         if (result <= 0)
         {
-            _logger.LogError("Critical error while creating currency {Code}", dto.Code);
+            _logger.LogError($"Critical error while creating currency {dto.Code}");
             throw new InvalidOperationException("Failed to create currency.");
         }
 
@@ -58,13 +58,13 @@ public class CurrencyService : ICurrencyService
 
     public async Task UpdateAsync(Guid currencyId, UpdateCurrencyDto dto)
     {
-        _logger.LogInformation("Updating currency {CurrencyId}", currencyId);
+        _logger.LogInformation($"Updating currency {currencyId}");
 
         var currency = await _unitOfWork.Currencies.GetByIdAsync(currencyId);
 
         if (currency == null)
         {
-            _logger.LogWarning("Currency {CurrencyId} not found", currencyId);
+            _logger.LogWarning($"Currency {currencyId} not found");
             throw new NotFoundException("Currency not found");
         }
 
@@ -84,7 +84,7 @@ public class CurrencyService : ICurrencyService
 
             if (isUsedInActivePolicies)
             {
-                _logger.LogWarning("Attempt to deactivate currency {CurrencyId} used by active policies", currencyId);
+                _logger.LogWarning($"Attempt to deactivate currency {currencyId} used by active policies");
                 throw new InvalidOperationException("Cannot deactivate currency used by active policies");
             }
         }
@@ -97,37 +97,37 @@ public class CurrencyService : ICurrencyService
 
         if (result == 0)
         {
-            _logger.LogError("Critical error while updating currency {CurrencyId}", currencyId);
+            _logger.LogError($"Critical error while updating currency {currencyId}");
             throw new InvalidOperationException("Failed to update currency.");
         }
 
-        _logger.LogInformation("Currency {CurrencyId} updated successfully", currencyId);
+        _logger.LogInformation($"Currency {currencyId} updated successfully");
     }
 
     public async Task<GetCurrencyByIdDto> GetByIdAsync(Guid currencyId)
     {
-        _logger.LogInformation("Retrieving currency {CurrencyId}", currencyId);
+        _logger.LogInformation($"Retrieving currency {currencyId}");
 
         var currency = await _unitOfWork.Currencies.GetByIdAsync(currencyId);
 
         if (currency == null)
         {
-            _logger.LogWarning("Currency {CurrencyId} not found", currencyId);
+            _logger.LogWarning($"Currency {currencyId} not found");
             throw new NotFoundException("Currency not found");
         }
 
-        _logger.LogInformation("Currency {CurrencyId} retrieved successfully", currencyId);
+        _logger.LogInformation($"Currency {currencyId} retrieved successfully");
 
         return _mapper.Map<GetCurrencyByIdDto>(currency);
     }
 
     public async Task<IReadOnlyList<GetCurrenciesDto>> GetAllAsync()
     {
-        _logger.LogInformation("Retrieving all currencies");
+        _logger.LogInformation($"Retrieving all currencies");
 
         var currencies = await _unitOfWork.Currencies.GetAllAsync();
 
-        _logger.LogInformation("Retrieved {Count} currencies", currencies.Count);
+        _logger.LogInformation($"Retrieved {currencies.Count} currencies");
 
         return _mapper.Map<IReadOnlyList<GetCurrenciesDto>>(currencies);
     }

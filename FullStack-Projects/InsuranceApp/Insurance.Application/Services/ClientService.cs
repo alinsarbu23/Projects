@@ -27,22 +27,19 @@ public class ClientService : IClientService
 
     public async Task<Guid> CreateClientAsync(CreateClientDto dto)
     {
-        _logger.LogInformation(
-            "Creating client {Name} (ClientTypeId={ClientTypeId})",
-            dto.Name,
-            dto.ClientTypeId);
+        _logger.LogInformation($"Creating client {dto.Name} (ClientTypeId={dto.ClientTypeId})");
 
         if (!string.IsNullOrWhiteSpace(dto.Cnp) &&
             await _unitOfWork.Clients.ExistsByCnpAsync(dto.Cnp))
         {
-            _logger.LogWarning("Client creation failed. Duplicate CNP {Cnp}", dto.Cnp);
+            _logger.LogWarning($"Client creation failed. Duplicate CNP {dto.Cnp}");
             throw new ArgumentException("A client with the current CNP already exists.");
         }
 
         if (!string.IsNullOrWhiteSpace(dto.Cui) &&
             await _unitOfWork.Clients.ExistsByCuiAsync(dto.Cui))
         {
-            _logger.LogWarning("Client creation failed. Duplicate CUI {Cui}", dto.Cui);
+            _logger.LogWarning($"Client creation failed. Duplicate CUI {dto.Cui}");
             throw new ArgumentException("A client with the current CUI already exists.");
         }
 
@@ -55,24 +52,24 @@ public class ClientService : IClientService
 
         if (result == 0)
         {
-            _logger.LogError("Critical error while saving client {Name}", dto.Name);
+            _logger.LogError($"Critical error while saving client {dto.Name}");
             throw new InvalidOperationException("Failed to create client.");
         }
 
-        _logger.LogInformation("Client {ClientId} created successfully", client.Id);
+        _logger.LogInformation($"Client {client.Id} created successfully");
 
         return client.Id;
     }
 
     public async Task<GetClientByIdDto> GetClientByIdAsync(Guid clientId)
     {
-        _logger.LogInformation("Retrieving client {ClientId}", clientId);
+        _logger.LogInformation($"Retrieving client {clientId}");
 
         var client = await _unitOfWork.Clients.GetByIdAsync(clientId);
 
         if (client == null)
         {
-            _logger.LogWarning("Client {ClientId} not found", clientId);
+            _logger.LogWarning($"Client {clientId} not found");
             throw new NotFoundException("Client not found.");
         }
 
@@ -86,7 +83,7 @@ public class ClientService : IClientService
 
         dto.Buildings = _mapper.Map<IReadOnlyList<ClientBuildingSummaryDto>>(buildings);
 
-        _logger.LogInformation("Client {ClientId} retrieved successfully", clientId);
+        _logger.LogInformation($"Client {clientId} retrieved successfully");
 
         return dto;
     }
@@ -97,12 +94,7 @@ public class ClientService : IClientService
         int page,
         int pageSize)
     {
-        _logger.LogInformation(
-            "Searching clients (Name={Name}, Identifier={Identifier}, Page={Page}, PageSize={PageSize})",
-            name,
-            identifier,
-            page,
-            pageSize);
+        _logger.LogInformation($"Searching clients (Name={name}, Identifier={identifier}, Page={page}, PageSize={pageSize})");
 
         var totalCount = await _unitOfWork.Clients.CountAsync(name, identifier);
         var clients = await _unitOfWork.Clients.SearchAsync(name, identifier, page, pageSize);
@@ -117,10 +109,7 @@ public class ClientService : IClientService
             dto.Identifier = client.Cnp ?? client.Cui ?? string.Empty;
         }
 
-        _logger.LogInformation(
-            "Search completed. Found {TotalCount} clients, returning {ReturnedCount}",
-            totalCount,
-            dtos.Count);
+        _logger.LogInformation($"Search completed. Found {totalCount} clients, returning {dtos.Count}");
 
         return new PagedClientsDto
         {
@@ -133,13 +122,13 @@ public class ClientService : IClientService
 
     public async Task UpdateClientAsync(Guid clientId, UpdateClientDto dto)
     {
-        _logger.LogInformation("Updating client {ClientId}", clientId);
+        _logger.LogInformation($"Updating client {clientId}");
 
         var client = await _unitOfWork.Clients.GetByIdAsync(clientId);
 
         if (client == null)
         {
-            _logger.LogWarning("Update failed. Client {ClientId} not found", clientId);
+            _logger.LogWarning($"Update failed. Client {clientId} not found");
             throw new NotFoundException("Client not found.");
         }
 
@@ -151,22 +140,22 @@ public class ClientService : IClientService
 
         if (result == 0)
         {
-            _logger.LogError("Critical error while updating client {ClientId}", clientId);
+            _logger.LogError($"Critical error while updating client {clientId}");
             throw new InvalidOperationException("Failed to update client.");
         }
 
-        _logger.LogInformation("Client {ClientId} updated successfully", clientId);
+        _logger.LogInformation($"Client {clientId} updated successfully");
     }
 
     public async Task UpdateClientIdentifierAsync(Guid clientId, UpdateClientIdentifierDto dto)
     {
-        _logger.LogInformation("Updating identifier for client {ClientId}", clientId);
+        _logger.LogInformation($"Updating identifier for client {clientId}");
 
         var client = await _unitOfWork.Clients.GetByIdAsync(clientId);
 
         if (client == null)
         {
-            _logger.LogWarning("Client {ClientId} not found", clientId);
+            _logger.LogWarning($"Client {clientId} not found");
             throw new NotFoundException("Client not found.");
         }
 
@@ -179,7 +168,7 @@ public class ClientService : IClientService
 
             if (exists)
             {
-                _logger.LogWarning("Duplicate CNP detected: {Identifier}", dto.NewIdentifier);
+                _logger.LogWarning($"Duplicate CNP detected: {dto.NewIdentifier}");
                 throw new InvalidOperationException("A client with this CNP already exists.");
             }
 
@@ -192,7 +181,7 @@ public class ClientService : IClientService
 
             if (exists)
             {
-                _logger.LogWarning("Duplicate CUI detected: {Identifier}", dto.NewIdentifier);
+                _logger.LogWarning($"Duplicate CUI detected: {dto.NewIdentifier}");
                 throw new InvalidOperationException("A client with this CUI already exists.");
             }
 
@@ -216,10 +205,10 @@ public class ClientService : IClientService
 
         if (result <= 0)
         {
-            _logger.LogError("Failed to update identifier for client {ClientId}", clientId);
+            _logger.LogError($"Failed to update identifier for client {clientId}");
             throw new InvalidOperationException("Failed to update identifier.");
         }
 
-        _logger.LogInformation("Client {ClientId} identifier updated successfully", clientId);
+        _logger.LogInformation($"Client {clientId} identifier updated successfully");
     }
 }

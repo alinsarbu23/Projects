@@ -23,28 +23,24 @@ public class BuildingService : IBuildingService
 
     public async Task<Guid> CreateBuildingAsync(Guid clientId, CreateBuildingDto dto)
     {
-        _logger.LogInformation(
-            "Creating building for Client {ClientId} (CityId={CityId}, BuildingTypeId={BuildingTypeId})",
-            clientId,
-            dto.CityId,
-            dto.BuildingTypeId);
+        _logger.LogInformation($"Creating building for Client {clientId} (CityId={dto.CityId}, BuildingTypeId={dto.BuildingTypeId})");
 
         var clientExists = await _unitOfWork.Clients.ExistsAsync(clientId);
         if (!clientExists)
         {
-            _logger.LogWarning("Create building failed. Client {ClientId} not found", clientId);
+            _logger.LogWarning($"Create building failed. Client {clientId} not found");
             throw new NotFoundException("Client not found.");
         }
 
         if (!await _unitOfWork.Cities.ExistsAsync(dto.CityId))
         {
-            _logger.LogWarning("Create building failed. Invalid CityId {CityId}", dto.CityId);
+            _logger.LogWarning($"Create building failed. Invalid CityId {dto.CityId}");
             throw new ArgumentException("Invalid city.");
         }
 
         if (!await _unitOfWork.BuildingTypes.ExistsAsync(dto.BuildingTypeId))
         {
-            _logger.LogWarning("Create building failed. Invalid BuildingTypeId {BuildingTypeId}", dto.BuildingTypeId);
+            _logger.LogWarning($"Create building failed. Invalid BuildingTypeId {dto.BuildingTypeId}");
             throw new ArgumentException("Invalid building type.");
         }
 
@@ -58,55 +54,52 @@ public class BuildingService : IBuildingService
 
         if (result == 0)
         {
-            _logger.LogError("Critical error while saving building for Client {ClientId}", clientId);
+            _logger.LogError($"Critical error while saving building for Client {clientId}");
             throw new InvalidOperationException("Failed to create building.");
         }
 
-        _logger.LogInformation("Building {BuildingId} created successfully", building.Id);
+        _logger.LogInformation($"Building {building.Id} created successfully");
 
         return building.Id;
     }
 
     public async Task<GetBuildingByIdDto> GetBuildingByIdAsync(Guid buildingId)
     {
-        _logger.LogInformation("Retrieving building {BuildingId}", buildingId);
+        _logger.LogInformation($"Retrieving building {buildingId}");
 
         var building = await _unitOfWork.Buildings.GetByIdAsync(buildingId);
 
         if (building == null)
         {
-            _logger.LogWarning("Building {BuildingId} not found", buildingId);
+            _logger.LogWarning($"Building {buildingId} not found");
             throw new NotFoundException($"Building with id {buildingId} not found.");
         }
 
-        _logger.LogInformation("Building {BuildingId} retrieved successfully", buildingId);
+        _logger.LogInformation($"Building {buildingId} retrieved successfully");
 
         return _mapper.Map<GetBuildingByIdDto>(building);
     }
 
     public async Task<IReadOnlyList<ClientBuildingSummaryDto>> GetBuildingsForClientAsync(Guid clientId)
     {
-        _logger.LogInformation("Retrieving buildings for Client {ClientId}", clientId);
+        _logger.LogInformation($"Retrieving buildings for Client {clientId}");
 
         var buildings = await _unitOfWork.Buildings.GetBuildingsByClientIdAsync(clientId);
 
-        _logger.LogInformation(
-            "Retrieved {Count} buildings for Client {ClientId}",
-            buildings.Count,
-            clientId);
+        _logger.LogInformation($"Retrieved {buildings.Count} buildings for Client {clientId}");
 
         return _mapper.Map<IReadOnlyList<ClientBuildingSummaryDto>>(buildings);
     }
 
     public async Task UpdateBuildingAsync(Guid buildingId, UpdateBuildingDto dto)
     {
-        _logger.LogInformation("Updating building {BuildingId}", buildingId);
+        _logger.LogInformation($"Updating building {buildingId}");
 
         var building = await _unitOfWork.Buildings.GetByIdAsync(buildingId);
 
         if (building == null)
         {
-            _logger.LogWarning("Update failed. Building {BuildingId} not found", buildingId);
+            _logger.LogWarning($"Update failed. Building {buildingId} not found");
             throw new NotFoundException($"Building with id {buildingId} not found.");
         }
 
@@ -118,10 +111,10 @@ public class BuildingService : IBuildingService
 
         if (rowsAffected == 0)
         {
-            _logger.LogError("Critical error while updating building {BuildingId}", buildingId);
+            _logger.LogError($"Critical error while updating building {buildingId}");
             throw new InvalidOperationException("Failed to update building.");
         }
 
-        _logger.LogInformation("Building {BuildingId} updated successfully", buildingId);
+        _logger.LogInformation($"Building {buildingId} updated successfully");
     }
 }

@@ -39,31 +39,31 @@ public class AuthManager : IAuthManager
 
     public async Task<AuthResponseDto> RegisterAsync(RegisterDto dto)
     {
-        _logger.LogInformation("Register attempt for {Email}", dto.Email);
+        _logger.LogInformation($"Register attempt for {dto.Email}");
 
         var broker = await _unitOfWork.Brokers.GetByEmailAsync(dto.Email);
 
         if (broker == null)
         {
-            _logger.LogWarning("Register blocked. No broker found for {Email}", dto.Email);
+            _logger.LogWarning($"Register blocked. No broker found for {dto.Email}");
             throw new NotFoundException("Broker account does not exist.");
         }
 
         if (broker.Status != BrokerStatus.Active)
         {
-            _logger.LogWarning("Register blocked. Broker {BrokerId} is not active", broker.Id);
+            _logger.LogWarning($"Register blocked. Broker {broker.Id} is not active");
             throw new InvalidOperationException("Broker account is not active.");
         }
 
         if (await _userManager.FindByEmailAsync(dto.Email) != null)
         {
-            _logger.LogWarning("Register blocked. Email {Email} already registered", dto.Email);
+            _logger.LogWarning($"Register blocked. Email {dto.Email} already registered");
             throw new ArgumentException("User with this email already exists.");
         }
 
         if (!await _roleManager.RoleExistsAsync(Roles.Broker))
         {
-            _logger.LogError("Critical configuration error. Role {Role} not found", Roles.Broker);
+            _logger.LogError($"Critical configuration error. Role {Roles.Broker} not found");
             throw new InvalidOperationException($"Role '{Roles.Broker}' is not configured.");
         }
 
@@ -77,17 +77,15 @@ public class AuthManager : IAuthManager
 
         if (!result.Succeeded)
         {
-            _logger.LogError("Register failed for {Email}. Errors: {Errors}",
-                dto.Email,
-                string.Join("; ", result.Errors.Select(e => e.Description)));
+            var errors = string.Join("; ", result.Errors.Select(e => e.Description));
+            _logger.LogError($"Register failed for {dto.Email}. Errors: {errors}");
 
-            throw new ArgumentException(
-                string.Join("; ", result.Errors.Select(e => e.Description)));
+            throw new ArgumentException(errors);
         }
 
         await _userManager.AddToRoleAsync(user, Roles.Broker);
 
-        _logger.LogInformation("Broker {BrokerId} successfully registered", broker.Id);
+        _logger.LogInformation($"Broker {broker.Id} successfully registered");
 
         return new AuthResponseDto
         {
@@ -97,23 +95,23 @@ public class AuthManager : IAuthManager
 
     public async Task<AuthResponseDto> LoginAsync(LoginDto dto)
     {
-        _logger.LogInformation("Login attempt for {Email}", dto.Email);
+        _logger.LogInformation($"Login attempt for {dto.Email}");
 
         var user = await _userManager.FindByEmailAsync(dto.Email);
 
         if (user == null)
         {
-            _logger.LogWarning("Login failed. User {Email} not found", dto.Email);
+            _logger.LogWarning($"Login failed. User {dto.Email} not found");
             throw new ArgumentException("Invalid credentials.");
         }
 
         if (!await _userManager.CheckPasswordAsync(user, dto.Password))
         {
-            _logger.LogWarning("Login failed. Invalid password for {Email}", dto.Email);
+            _logger.LogWarning($"Login failed. Invalid password for {dto.Email}");
             throw new ArgumentException("Invalid credentials.");
         }
 
-        _logger.LogInformation("User {Email} logged in successfully", dto.Email);
+        _logger.LogInformation($"User {dto.Email} logged in successfully");
 
         return new AuthResponseDto
         {
