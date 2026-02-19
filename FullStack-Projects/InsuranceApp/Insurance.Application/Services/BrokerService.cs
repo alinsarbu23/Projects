@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Insurance.Application.DTOs.Brokers;
+using Insurance.Application.Exceptions;
 using Insurance.Application.Interfaces.Repositories;
 using Insurance.Application.Interfaces.Services;
 using Insurance.Domain.Enums;
@@ -65,7 +66,7 @@ public class BrokerService : IBrokerService
         if (broker == null)
         {
             _logger.LogWarning("Update failed. Broker {BrokerId} not found", brokerId);
-            throw new InvalidOperationException("Broker not found");
+            throw new NotFoundException("Broker not found");
         }
 
         _mapper.Map(dto, broker);
@@ -92,7 +93,7 @@ public class BrokerService : IBrokerService
         if (broker == null)
         {
             _logger.LogWarning("Activation failed. Broker {BrokerId} not found", brokerId);
-            throw new InvalidOperationException("Broker not found");
+            throw new NotFoundException("Broker not found");
         }
 
         if (broker.Status == BrokerStatus.Active)
@@ -125,7 +126,7 @@ public class BrokerService : IBrokerService
         if (broker == null)
         {
             _logger.LogWarning("Deactivation failed. Broker {BrokerId} not found", brokerId);
-            throw new InvalidOperationException("Broker not found");
+            throw new NotFoundException("Broker not found");
         }
 
         if (broker.Status == BrokerStatus.Inactive)
@@ -158,7 +159,7 @@ public class BrokerService : IBrokerService
         if (broker == null)
         {
             _logger.LogWarning("Broker {BrokerId} not found", brokerId);
-            throw new InvalidOperationException("Broker not found");
+            throw new NotFoundException("Broker not found");
         }
 
         _logger.LogInformation("Broker {BrokerId} retrieved successfully", brokerId);

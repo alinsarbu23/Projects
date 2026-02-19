@@ -1,4 +1,5 @@
-﻿using Insurance.Application.Interfaces.Repositories;
+﻿using Insurance.Application.Exceptions;
+using Insurance.Application.Interfaces.Repositories;
 using Insurance.Application.Interfaces.Services;
 using Insurance.Domain.Enums;
 using Insurance.Domain.Models;
@@ -36,7 +37,7 @@ public class PolicyCalculationService : IPolicyCalculationService
         if (broker == null)
         {
             _logger.LogWarning("Premium calculation failed. Broker {BrokerId} not found", brokerId);
-            throw new InvalidOperationException("Broker not found");
+            throw new NotFoundException("Broker not found");
         }
 
         if (broker.CommissionPercentage > 0)

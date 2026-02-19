@@ -95,7 +95,7 @@ public class PolicyService : IPolicyService
 
         if (policy == null)
         {
-            throw new InvalidOperationException("Policy not found");
+            throw new NotFoundException("Policy not found");
         }
 
         if (policy.Status == PolicyStatus.Cancelled)
@@ -124,7 +124,7 @@ public class PolicyService : IPolicyService
         if (policy == null)
         {
             _logger.LogWarning("Policy {PolicyId} not found", policyId);
-            throw new InvalidOperationException("Policy not found");
+            throw new NotFoundException("Policy not found");
         }
 
         return _mapper.Map<GetPolicyByIdDto>(policy);
@@ -161,7 +161,7 @@ public class PolicyService : IPolicyService
         if (broker == null)
         {
             _logger.LogWarning("Broker with email {BrokerEmail} not found", brokerEmail);
-            throw new InvalidOperationException("Broker not found.");
+            throw new NotFoundException("Broker not found.");
         }
 
         if (broker.Status != BrokerStatus.Active)
@@ -175,7 +175,7 @@ public class PolicyService : IPolicyService
         if (building == null)
         {
             _logger.LogWarning("Building {BuildingId} not found", dto.BuildingId);
-            throw new InvalidOperationException("Building not found.");
+            throw new NotFoundException("Building not found.");
         }
 
         var existsActivePolicy = await _unitOfWork.Policies
@@ -284,7 +284,7 @@ public class PolicyService : IPolicyService
         int pageSize)
     {
         var broker = await _unitOfWork.Brokers.GetByEmailAsync(brokerEmail)
-            ?? throw new InvalidOperationException("Broker not found");
+            ?? throw new NotFoundException("Broker not found");
 
         PolicyStatus? parsedStatus = null;
 

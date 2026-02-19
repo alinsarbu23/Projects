@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Insurance.Application.DTOs.Currencies;
+using Insurance.Application.Exceptions;
 using Insurance.Application.Interfaces.Repositories;
 using Insurance.Application.Interfaces.Services;
 using Insurance.Domain.Models;
@@ -64,7 +65,17 @@ public class CurrencyService : ICurrencyService
         if (currency == null)
         {
             _logger.LogWarning("Currency {CurrencyId} not found", currencyId);
-            throw new InvalidOperationException("Currency not found");
+            throw new NotFoundException("Currency not found");
+        }
+
+        if (dto.IsActive == 1 && currency.IsActive)
+        {
+            throw new InvalidOperationException("Currency is already active.");
+        }
+
+        if (dto.IsActive == 0 && !currency.IsActive)
+        {
+            throw new InvalidOperationException("Currency is already inactive.");
         }
 
         if (dto.IsActive == 0 && currency.IsActive)
@@ -73,12 +84,8 @@ public class CurrencyService : ICurrencyService
 
             if (isUsedInActivePolicies)
             {
-                _logger.LogWarning(
-                    "Attempt to deactivate currency {CurrencyId} used by active policies",
-                    currencyId);
-
-                throw new InvalidOperationException(
-                    "Cannot deactivate currency used by active policies");
+                _logger.LogWarning("Attempt to deactivate currency {CurrencyId} used by active policies", currencyId);
+                throw new InvalidOperationException("Cannot deactivate currency used by active policies");
             }
         }
 
@@ -106,7 +113,7 @@ public class CurrencyService : ICurrencyService
         if (currency == null)
         {
             _logger.LogWarning("Currency {CurrencyId} not found", currencyId);
-            throw new InvalidOperationException("Currency not found");
+            throw new NotFoundException("Currency not found");
         }
 
         _logger.LogInformation("Currency {CurrencyId} retrieved successfully", currencyId);

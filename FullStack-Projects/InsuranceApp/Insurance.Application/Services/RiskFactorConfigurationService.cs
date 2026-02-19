@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Insurance.Application.DTOs.RiskFactors;
+using Insurance.Application.Exceptions;
 using Insurance.Application.Interfaces.Repositories;
 using Insurance.Application.Interfaces.Services;
 using Insurance.Domain.Enums;
@@ -65,7 +66,17 @@ public class RiskFactorConfigurationService : IRiskFactorConfigurationService
         if (risk == null)
         {
             _logger.LogWarning("RiskFactorConfiguration {RiskId} not found", riskFactorId);
-            throw new InvalidOperationException("Risk factor not found");
+            throw new NotFoundException("Risk factor not found");
+        }
+
+        if (dto.IsActive == 1 && risk.IsActive)
+        {
+            throw new InvalidOperationException("Risk factor is already active.");
+        }
+
+        if (dto.IsActive == 0 && !risk.IsActive)
+        {
+            throw new InvalidOperationException("Risk factor is already inactive.");
         }
 
         _mapper.Map(dto, risk);
@@ -92,7 +103,7 @@ public class RiskFactorConfigurationService : IRiskFactorConfigurationService
         if (risk == null)
         {
             _logger.LogWarning("RiskFactorConfiguration {RiskId} not found", riskFactorId);
-            throw new InvalidOperationException("Risk factor not found");
+            throw new NotFoundException("Risk factor not found");
         }
 
         _logger.LogInformation("RiskFactorConfiguration {RiskId} retrieved successfully", riskFactorId);

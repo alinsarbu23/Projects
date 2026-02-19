@@ -1,5 +1,6 @@
 ﻿using Insurance.Application.Dtos.Identity;
 using Insurance.Application.DTOs.Identity;
+using Insurance.Application.Exceptions;
 using Insurance.Application.Interfaces.Repositories;
 using Insurance.Application.Interfaces.Services;
 using Insurance.Domain.Enums;
@@ -45,7 +46,7 @@ public class AuthManager : IAuthManager
         if (broker == null)
         {
             _logger.LogWarning("Register blocked. No broker found for {Email}", dto.Email);
-            throw new InvalidOperationException("Broker account does not exist.");
+            throw new NotFoundException("Broker account does not exist.");
         }
 
         if (broker.Status != BrokerStatus.Active)

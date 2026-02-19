@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Insurance.Application.DTOs.Fees;
+using Insurance.Application.Exceptions;
 using Insurance.Application.Interfaces.Repositories;
 using Insurance.Application.Interfaces.Services;
 using Insurance.Domain.Enums;
@@ -73,7 +74,7 @@ public class FeeConfigurationService : IFeeConfigurationService
         if (fee == null)
         {
             _logger.LogWarning("FeeConfiguration {FeeId} not found", feeConfigurationId);
-            throw new InvalidOperationException("Fee configuration not found");
+            throw new NotFoundException("Fee configuration not found");
         }
 
         _logger.LogInformation("FeeConfiguration {FeeId} retrieved successfully", feeConfigurationId);
@@ -90,7 +91,17 @@ public class FeeConfigurationService : IFeeConfigurationService
         if (fee == null)
         {
             _logger.LogWarning("FeeConfiguration {FeeId} not found", feeConfigurationId);
-            throw new InvalidOperationException("Fee configuration not found");
+            throw new NotFoundException("Fee configuration not found");
+        }
+
+        if (dto.IsActive == 1 && fee.IsActive)
+        {
+            throw new InvalidOperationException("Fee configuration is already active.");
+        }
+
+        if (dto.IsActive == 0 && !fee.IsActive)
+        {
+            throw new InvalidOperationException("Fee configuration is already inactive.");
         }
 
         _mapper.Map(dto, fee);
