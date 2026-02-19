@@ -1,5 +1,4 @@
 ﻿using Insurance.Infrastructure;
-using Insurance.Infrastructure.Seed;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +23,8 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
                 services.Remove(descriptor);
             }
 
-            var connectionString = context.Configuration.GetConnectionString("InsuranceDb");
+            var connectionString =
+                context.Configuration.GetConnectionString("InsuranceDb");
 
             services.AddDbContext<InsuranceDbContext>(options =>
             {
@@ -38,10 +38,6 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 
             db.Database.EnsureDeleted();
             db.Database.Migrate();
-
-            DatabaseSeeder.SeedAsync(sp)
-                .GetAwaiter()
-                .GetResult();
         });
     }
 }
