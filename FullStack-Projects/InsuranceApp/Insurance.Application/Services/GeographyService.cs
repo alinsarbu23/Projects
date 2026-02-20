@@ -2,6 +2,7 @@
 using Insurance.Application.DTOs.Geography;
 using Insurance.Application.Interfaces.Repositories;
 using Insurance.Application.Interfaces.Services;
+using Microsoft.Extensions.Logging;
 
 namespace Insurance.Application.Services;
 
@@ -9,27 +10,48 @@ public class GeographyService : IGeographyService
 {
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
-    public GeographyService(IMapper mapper, IUnitOfWork unitOfWork)
+    private readonly ILogger<GeographyService> _logger;
+
+    public GeographyService(
+        IMapper mapper,
+        IUnitOfWork unitOfWork,
+        ILogger<GeographyService> logger)
     {
         _mapper = mapper;
         _unitOfWork = unitOfWork;
+        _logger = logger;
     }
 
     public async Task<IReadOnlyList<GetCitiesByCountyDto>> GetCitiesByCountyAsync(Guid countyId)
     {
-        var countries = await _unitOfWork.Geography.GetCitiesByCountyIdAsync(countyId);
-        return _mapper.Map<IReadOnlyList<GetCitiesByCountyDto>>(countries);
+        _logger.LogInformation($"Retrieving cities for County {countyId}");
+
+        var cities = await _unitOfWork.Geography.GetCitiesByCountyIdAsync(countyId);
+
+        _logger.LogInformation($"Retrieved {cities.Count} cities for County {countyId}");
+
+        return _mapper.Map<IReadOnlyList<GetCitiesByCountyDto>>(cities);
     }
 
     public async Task<IReadOnlyList<GetCountiesByCountryDto>> GetCountiesByCountryAsync(Guid countryId)
     {
+        _logger.LogInformation($"Retrieving counties for Country {countryId}");
+
         var counties = await _unitOfWork.Geography.GetCountiesByCountryIdAsync(countryId);
+
+        _logger.LogInformation($"Retrieved {counties.Count} counties for Country {countryId}");
+
         return _mapper.Map<IReadOnlyList<GetCountiesByCountryDto>>(counties);
     }
 
     public async Task<IReadOnlyList<GetCountriesDto>> GetCountriesAsync()
     {
+        _logger.LogInformation($"Retrieving all countries");
+
         var countries = await _unitOfWork.Geography.GetAllCountriesAsync();
+
+        _logger.LogInformation($"Retrieved {countries.Count} countries");
+
         return _mapper.Map<IReadOnlyList<GetCountriesDto>>(countries);
     }
 }

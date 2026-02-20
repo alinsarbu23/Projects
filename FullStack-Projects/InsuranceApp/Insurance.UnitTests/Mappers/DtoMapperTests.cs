@@ -70,14 +70,14 @@ public class DtoMapperTests
             NumberOfFloors = 3,
             SurfaceArea = 100,
             InsuredValue = 2000,
-            FloodRisk = true,
-            EarthquakeRisk = true
+            FloodRisk = 1,
+            EarthquakeRisk = 1
         };
 
         dto.ConstructionYear.Should().Be(1999);
         dto.NumberOfFloors.Should().Be(3);
-        dto.FloodRisk.Should().BeTrue();
-        dto.EarthquakeRisk.Should().BeTrue();
+        dto.FloodRisk.Should().Be(1);
+        dto.EarthquakeRisk.Should().Be(1);
     }
 
     [Fact]

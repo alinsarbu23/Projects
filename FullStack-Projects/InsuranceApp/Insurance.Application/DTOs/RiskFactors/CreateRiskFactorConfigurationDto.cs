@@ -2,7 +2,7 @@
 
 public class CreateRiskFactorConfigurationDto
 {
-    public string Level { get; set; } = string.Empty;
+    public int Level { get; set; }
 
     public Guid ReferenceId { get; set; }
 

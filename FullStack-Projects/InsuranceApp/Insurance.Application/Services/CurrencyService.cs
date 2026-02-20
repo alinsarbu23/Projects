@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Insurance.Application.DTOs.Currencies;
+using Insurance.Application.Exceptions;
 using Insurance.Application.Interfaces.Repositories;
 using Insurance.Application.Interfaces.Services;
 using Insurance.Domain.Models;
@@ -25,25 +26,56 @@ public class CurrencyService : ICurrencyService
 
     public async Task<Guid> CreateAsync(CreateCurrencyDto dto)
     {
-        var currency = _mapper.Map<Currency>(dto);
+        dto.Code = dto.Code.ToUpper();
 
+        _logger.LogInformation($"Creating currency {dto.Code}");
+
+        var exists = await _unitOfWork.Currencies
+            .ExistsByCodeAsync(dto.Code);
+
+        if (exists)
+        {
+            _logger.LogWarning($"Currency code {dto.Code} already exists");
+            throw new InvalidOperationException("Currency code must be unique.");
+        }
+
+        var currency = _mapper.Map<Currency>(dto);
         currency.Id = Guid.NewGuid();
         currency.IsActive = true;
 
         await _unitOfWork.Currencies.AddAsync(currency);
-        await _unitOfWork.SaveChangesAsync();
 
-        _logger.LogInformation("Currency {Code} created", currency.Code);
+        var result = await _unitOfWork.SaveChangesAsync();
+
+        if (result <= 0)
+        {
+            _logger.LogError($"Critical error while creating currency {dto.Code}");
+            throw new InvalidOperationException("Failed to create currency.");
+        }
 
         return currency.Id;
     }
 
     public async Task UpdateAsync(Guid currencyId, UpdateCurrencyDto dto)
     {
+        _logger.LogInformation($"Updating currency {currencyId}");
+
         var currency = await _unitOfWork.Currencies.GetByIdAsync(currencyId);
+
         if (currency == null)
         {
-            throw new InvalidOperationException("Currency not found");
+            _logger.LogWarning($"Currency {currencyId} not found");
+            throw new NotFoundException("Currency not found");
+        }
+
+        if (dto.IsActive == 1 && currency.IsActive)
+        {
+            throw new InvalidOperationException("Currency is already active.");
+        }
+
+        if (dto.IsActive == 0 && !currency.IsActive)
+        {
+            throw new InvalidOperationException("Currency is already inactive.");
         }
 
         if (dto.IsActive == 0 && currency.IsActive)
@@ -52,6 +84,7 @@ public class CurrencyService : ICurrencyService
 
             if (isUsedInActivePolicies)
             {
+                _logger.LogWarning($"Attempt to deactivate currency {currencyId} used by active policies");
                 throw new InvalidOperationException("Cannot deactivate currency used by active policies");
             }
         }
@@ -59,26 +92,43 @@ public class CurrencyService : ICurrencyService
         _mapper.Map(dto, currency);
 
         await _unitOfWork.Currencies.UpdateAsync(currency);
-        await _unitOfWork.SaveChangesAsync();
-    }
 
+        var result = await _unitOfWork.SaveChangesAsync();
+
+        if (result == 0)
+        {
+            _logger.LogError($"Critical error while updating currency {currencyId}");
+            throw new InvalidOperationException("Failed to update currency.");
+        }
+
+        _logger.LogInformation($"Currency {currencyId} updated successfully");
+    }
 
     public async Task<GetCurrencyByIdDto> GetByIdAsync(Guid currencyId)
     {
+        _logger.LogInformation($"Retrieving currency {currencyId}");
+
         var currency = await _unitOfWork.Currencies.GetByIdAsync(currencyId);
+
         if (currency == null)
         {
-            throw new InvalidOperationException("Currency not found");
+            _logger.LogWarning($"Currency {currencyId} not found");
+            throw new NotFoundException("Currency not found");
         }
 
-        _logger.LogInformation("Currency {CurrencyId} retrieved", currencyId);
+        _logger.LogInformation($"Currency {currencyId} retrieved successfully");
+
         return _mapper.Map<GetCurrencyByIdDto>(currency);
     }
 
     public async Task<IReadOnlyList<GetCurrenciesDto>> GetAllAsync()
     {
+        _logger.LogInformation($"Retrieving all currencies");
+
         var currencies = await _unitOfWork.Currencies.GetAllAsync();
-        _logger.LogInformation("All currencies retrieved");
+
+        _logger.LogInformation($"Retrieved {currencies.Count} currencies");
+
         return _mapper.Map<IReadOnlyList<GetCurrenciesDto>>(currencies);
     }
 }

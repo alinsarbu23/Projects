@@ -31,6 +31,7 @@ public class CreateBrokerDtoValidatorTests
             BrokerCode = "BR-01",
             Name = "Broker",
             Email = "broker@test.ro",
+            Phone = "0722000000",
             CommissionPercentage = 1
         };
 

@@ -6,7 +6,7 @@ using System.Net;
 using System.Net.Http.Json;
 using Xunit;
 
-namespace Insurance.IntegrationTests.Controllers.Geography;
+namespace Insurance.IntegrationTests.Controllers;
 
 public class GeographyIntegrationTests : BaseIntegrationTest
 {
@@ -18,7 +18,7 @@ public class GeographyIntegrationTests : BaseIntegrationTest
     {
         Authenticate(await AuthHelper.Login(Client));
 
-        var response = await Client.GetAsync("/api/brokers/countries");
+        var response = await Client.GetAsync("/api/countries");
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var countries = await response.Content
@@ -35,7 +35,7 @@ public class GeographyIntegrationTests : BaseIntegrationTest
         var countyId = Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
 
         var response = await Client.GetAsync(
-            $"/api/brokers/counties/{countyId}/cities");
+            $"/api/counties/{countyId}/cities");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 

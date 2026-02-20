@@ -102,6 +102,20 @@ public static class DatabaseSeeder
             await db.SaveChangesAsync();
         }
 
+        if (!db.Currencies.Any())
+        {
+            db.Currencies.Add(new Currency
+            {
+                Id = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
+                Code = "RON",
+                Name = "Romanian Leu",
+                ExchangeRateToBase = 1,
+                IsActive = true
+            });
+
+            await db.SaveChangesAsync();
+        }
+
         if (!db.BuildingTypes.Any())
         {
             db.BuildingTypes.AddRange(

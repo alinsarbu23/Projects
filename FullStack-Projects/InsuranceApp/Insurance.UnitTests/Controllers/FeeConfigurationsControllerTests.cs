@@ -1,10 +1,11 @@
 ﻿using FluentAssertions;
-using Microsoft.AspNetCore.Mvc;
-using Moq;
-using Xunit;
 using Insurance.Api.Controllers;
 using Insurance.Application.DTOs.Fees;
 using Insurance.Application.Interfaces.Services;
+using Insurance.Domain.Enums;
+using Microsoft.AspNetCore.Mvc;
+using Moq;
+using Xunit;
 
 namespace Insurance.UnitTests.Controllers;
 
@@ -31,7 +32,8 @@ public class FeeConfigurationsControllerTests
         var result = await _controller.Create(new CreateFeeConfigurationDto
         {
             Name = "Admin Fee",
-            Type = "AdminFee",
+            Type = (int)FeeType.AdminFee,
+            AppliesToRisk = (int)BuildingRiskType.None,
             Percentage = 5,
             EffectiveFrom = DateTime.UtcNow
         });

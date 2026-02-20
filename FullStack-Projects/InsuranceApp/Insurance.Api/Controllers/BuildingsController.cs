@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Insurance.Api.Controllers;
 
 [ApiController]
-[Route("api/brokers")]
+[Route("api/buildings")]
 [Authorize(Roles = Roles.Broker)]
 public class BuildingsController : ControllerBase
 {
@@ -19,7 +19,7 @@ public class BuildingsController : ControllerBase
         _buildingService = buildingService;
     }
 
-    [HttpGet("clients/{clientId:guid}/buildings")]
+    [HttpGet("client/{clientId:guid}")]
     public async Task<ActionResult<IReadOnlyList<ClientBuildingSummaryDto>>> GetBuildingsForClient(Guid clientId)
     {
         var buildings = await _buildingService.GetBuildingsForClientAsync(clientId);
@@ -33,7 +33,7 @@ public class BuildingsController : ControllerBase
         return Ok(building);
     }
 
-    [HttpPost("clients/{clientId:guid}/buildings")]
+    [HttpPost("client/{clientId:guid}")]
     public async Task<IActionResult> CreateBuilding(Guid clientId, [FromBody] CreateBuildingDto dto)
     {
         var buildingId = await _buildingService.CreateBuildingAsync(clientId, dto);

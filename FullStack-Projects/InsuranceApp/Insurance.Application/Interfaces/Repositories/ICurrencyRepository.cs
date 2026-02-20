@@ -15,4 +15,6 @@ public interface ICurrencyRepository
     Task AddAsync(Currency currency);
 
     Task UpdateAsync(Currency currency);
+
+    Task<bool> ExistsByCodeAsync(string code);
 }

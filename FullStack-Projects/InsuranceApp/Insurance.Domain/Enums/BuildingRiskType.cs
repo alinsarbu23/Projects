@@ -2,6 +2,7 @@
 
 public enum BuildingRiskType
 {
-    Earthquake,
-    Flood
+    None = 0,
+    Earthquake = 1,
+    Flood = 2
 }

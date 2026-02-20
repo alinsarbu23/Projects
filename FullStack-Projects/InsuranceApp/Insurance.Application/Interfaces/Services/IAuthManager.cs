@@ -6,5 +6,6 @@ namespace Insurance.Application.Interfaces.Services;
 public interface IAuthManager
 {
     Task<AuthResponseDto> RegisterAsync(RegisterDto dto);
+
     Task<AuthResponseDto> LoginAsync(LoginDto dto);
 }

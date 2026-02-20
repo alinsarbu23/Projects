@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Insurance.Application.DTOs.Fees;
 using Insurance.Application.Validators.Fees;
+using Insurance.Domain.Enums;
 using Xunit;
 
 namespace Insurance.UnitTests.Validators;
@@ -15,7 +16,8 @@ public class CreateFeeConfigurationDtoValidatorTests
         var dto = new CreateFeeConfigurationDto
         {
             Name = "Fee",
-            Type = "AdminFee",
+            Type = (int)FeeType.AdminFee,
+            AppliesToRisk = (int)BuildingRiskType.None,
             Percentage = 0,
             EffectiveFrom = DateTime.UtcNow
         };
@@ -29,7 +31,8 @@ public class CreateFeeConfigurationDtoValidatorTests
         var dto = new CreateFeeConfigurationDto
         {
             Name = "Fee",
-            Type = "AdminFee",
+            Type = (int)FeeType.AdminFee,
+            AppliesToRisk = (int)BuildingRiskType.None,
             Percentage = 5,
             EffectiveFrom = DateTime.UtcNow,
             EffectiveTo = DateTime.UtcNow.AddDays(-1)
@@ -44,7 +47,8 @@ public class CreateFeeConfigurationDtoValidatorTests
         var dto = new CreateFeeConfigurationDto
         {
             Name = "Fee",
-            Type = "AdminFee",
+            Type = (int)FeeType.AdminFee,
+            AppliesToRisk = (int)BuildingRiskType.None,
             Percentage = 5,
             EffectiveFrom = DateTime.UtcNow
         };

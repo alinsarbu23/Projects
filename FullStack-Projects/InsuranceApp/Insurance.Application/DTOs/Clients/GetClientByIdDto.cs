@@ -8,7 +8,6 @@ public class GetClientByIdDto
 
     public required string Name { get; init; }
 
-
     /// <summary>
     /// CNP for INDIVIDUAL, CUI for COMPANY
     /// </summary>

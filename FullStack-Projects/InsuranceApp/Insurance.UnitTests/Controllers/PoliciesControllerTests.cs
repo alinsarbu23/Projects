@@ -1,10 +1,17 @@
 ﻿using FluentAssertions;
-using Microsoft.AspNetCore.Mvc;
-using Moq;
-using Xunit;
 using Insurance.Api.Controllers;
 using Insurance.Application.DTOs.Policies;
+using Insurance.Application.Interfaces.Repositories;
 using Insurance.Application.Interfaces.Services;
+using Insurance.Application.Services;
+using Insurance.Domain.Enums;
+using Insurance.Domain.Models;
+using Insurance.Domain.Models.Geography;
+using Insurance.UnitTests.Helpers;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Moq;
+using Xunit;
 
 namespace Insurance.UnitTests.Controllers;
 public class PoliciesControllerTests
@@ -28,6 +35,88 @@ public class PoliciesControllerTests
         var result = await _controller.GetById(Guid.NewGuid());
 
         result.Result.Should().BeOfType<OkObjectResult>();
+    }
+
+    [Fact]
+    public async Task UpdatePolicyAsync_WhenDraftPolicy_UpdatesAndRecalculatesPremium()
+    {
+        var policyId = Guid.NewGuid();
+        var brokerId = Guid.NewGuid();
+        var currencyId = Guid.NewGuid();
+
+        var policy = new Policy
+        {
+            Id = policyId,
+            BrokerId = brokerId,
+            BuildingId = Guid.NewGuid(),
+            CurrencyId = currencyId,
+            Status = PolicyStatus.Draft,
+            StartDate = DateTime.UtcNow.AddDays(1),
+            EndDate = DateTime.UtcNow.AddDays(10),
+            BasePremium = 100,
+            FinalPremium = 120,
+            Building = new Building
+            {
+                Id = Guid.NewGuid(),
+                City = new City
+                {
+                    County = new County
+                    {
+                        CountryId = Guid.NewGuid()
+                    }
+                }
+            }
+        };
+
+        var uow = new Mock<IUnitOfWork>();
+        var calc = new Mock<IPolicyCalculationService>();
+
+        uow.Setup(x => x.Policies.GetByIdAsync(policyId))
+            .ReturnsAsync(policy);
+
+        uow.Setup(x => x.Currencies.GetByIdAsync(It.IsAny<Guid>()))
+            .ReturnsAsync(new Currency
+            {
+                Id = currencyId,
+                Code = "RON",
+                Name = "Romanian Leu",
+                ExchangeRateToBase = 1,
+                IsActive = true
+            });
+
+        calc.Setup(x => x.CalculateFinalPremiumAsync(
+                It.IsAny<decimal>(),
+                brokerId,
+                It.IsAny<Guid>(),
+                policy.Building))
+            .ReturnsAsync(200);
+
+        uow.Setup(x => x.SaveChangesAsync())
+            .ReturnsAsync(1);
+
+        var service = new PolicyService(
+            uow.Object,
+            calc.Object,
+            MapperFactory.Create(),
+            Mock.Of<ILogger<PolicyService>>());
+
+        var dto = new UpdatePolicyDto
+        {
+            CurrencyId = currencyId,
+            StartDate = DateTime.UtcNow.AddDays(2),
+            EndDate = DateTime.UtcNow.AddDays(20),
+            BasePremium = 150
+        };
+
+        await service.UpdatePolicyAsync(policyId, dto);
+
+        policy.BasePremium.Should().Be(150);
+        policy.FinalPremium.Should().Be(200);
+        policy.StartDate.Should().Be(dto.StartDate);
+        policy.EndDate.Should().Be(dto.EndDate);
+
+        uow.Verify(x => x.Policies.UpdateAsync(policy), Times.Once);
+        uow.Verify(x => x.SaveChangesAsync(), Times.Once);
     }
 
     [Fact]

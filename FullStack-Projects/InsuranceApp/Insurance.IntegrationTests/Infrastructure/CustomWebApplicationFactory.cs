@@ -1,5 +1,4 @@
 ﻿using Insurance.Infrastructure;
-using Insurance.Infrastructure.Seed;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -24,24 +23,13 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
                 services.Remove(descriptor);
             }
 
-            var connectionString = context.Configuration.GetConnectionString("InsuranceDb");
+            var connectionString =
+                context.Configuration.GetConnectionString("InsuranceDb");
 
             services.AddDbContext<InsuranceDbContext>(options =>
             {
                 options.UseSqlServer(connectionString);
             });
-
-            var sp = services.BuildServiceProvider();
-
-            using var scope = sp.CreateScope();
-            var db = scope.ServiceProvider.GetRequiredService<InsuranceDbContext>();
-
-            db.Database.EnsureDeleted();
-            db.Database.Migrate();
-
-            DatabaseSeeder.SeedAsync(sp)
-                .GetAwaiter()
-                .GetResult();
         });
     }
 }

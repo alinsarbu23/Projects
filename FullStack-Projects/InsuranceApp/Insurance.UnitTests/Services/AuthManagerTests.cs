@@ -1,11 +1,15 @@
-﻿using Xunit;
-using FluentAssertions;
-using Moq;
+﻿using FluentAssertions;
+using Insurance.Application.DTOs.Identity;
+using Insurance.Application.Interfaces.Repositories;
+using Insurance.Domain.Enums;
+using Insurance.Domain.Models;
+using Insurance.Infrastructure.AuthService;
+using Insurance.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
-using Insurance.Infrastructure.Services;
-using Insurance.Infrastructure.Identity;
-using Insurance.Application.DTOs.Identity;
+using Microsoft.Extensions.Logging;
+using Moq;
+using Xunit;
 
 namespace Insurance.UnitTests.Services;
 
@@ -58,10 +62,27 @@ public class AuthManagerTests
         var roles = MockRoleManager();
         var config = MockJwtConfig();
 
+        var uow = new Mock<IUnitOfWork>();
+        uow.Setup(x => x.Brokers.GetByEmailAsync("a@a.ro"))
+           .ReturnsAsync(new Broker
+           {
+               Id = Guid.NewGuid(),
+               BrokerCode = "BR-01",
+               Name = "Test Broker",
+               Email = "a@a.ro",
+               Status = BrokerStatus.Active,
+               CommissionPercentage = 0
+           });
+
         users.Setup(x => x.FindByEmailAsync("a@a.ro"))
              .ReturnsAsync(new ApiUser());
 
-        var manager = new AuthManager(users.Object, roles.Object, config.Object);
+        var manager = new AuthManager(
+            users.Object,
+            roles.Object,
+            config.Object,
+            uow.Object,
+            Mock.Of<ILogger<AuthManager>>());
 
         await Assert.ThrowsAsync<ArgumentException>(() =>
             manager.RegisterAsync(new RegisterDto
@@ -70,6 +91,7 @@ public class AuthManagerTests
                 Password = "Password1!"
             }));
     }
+
 
     [Fact]
     public async Task LoginAsync_ShouldThrow_WhenUserNotFound()
@@ -81,7 +103,15 @@ public class AuthManagerTests
         users.Setup(x => x.FindByEmailAsync("x@a.ro"))
              .ReturnsAsync((ApiUser?)null);
 
-        var manager = new AuthManager(users.Object, roles.Object, config.Object);
+        var unitOfWork = new Mock<IUnitOfWork>();
+
+        var manager = new AuthManager(
+            users.Object,
+            roles.Object,
+            config.Object,
+            unitOfWork.Object,
+            Mock.Of<ILogger<AuthManager>>());
+
 
         await Assert.ThrowsAsync<ArgumentException>(() =>
             manager.LoginAsync(new LoginDto
@@ -106,7 +136,15 @@ public class AuthManagerTests
         users.Setup(x => x.CheckPasswordAsync(user, "wrong"))
              .ReturnsAsync(false);
 
-        var manager = new AuthManager(users.Object, roles.Object, config.Object);
+        var unitOfWork = new Mock<IUnitOfWork>();
+
+        var manager = new AuthManager(
+            users.Object,
+            roles.Object,
+            config.Object,
+            unitOfWork.Object,
+            Mock.Of<ILogger<AuthManager>>());
+
 
         await Assert.ThrowsAsync<ArgumentException>(() =>
             manager.LoginAsync(new LoginDto
@@ -139,7 +177,15 @@ public class AuthManagerTests
         users.Setup(x => x.GetRolesAsync(user))
              .ReturnsAsync(new List<string> { Roles.Broker });
 
-        var manager = new AuthManager(users.Object, roles.Object, config.Object);
+        var unitOfWork = new Mock<IUnitOfWork>();
+
+        var manager = new AuthManager(
+            users.Object,
+            roles.Object,
+            config.Object,
+            unitOfWork.Object,
+            Mock.Of<ILogger<AuthManager>>());
+
 
         var result = await manager.LoginAsync(new LoginDto
         {

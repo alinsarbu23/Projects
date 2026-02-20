@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Insurance.Application.DTOs.Fees;
+using Insurance.Application.Exceptions;
 using Insurance.Application.Interfaces.Repositories;
 using Insurance.Application.Services;
 using Insurance.Domain.Enums;
@@ -25,7 +26,7 @@ public class FeeConfigurationServiceTests
             MapperFactory.Create(),
             Mock.Of<ILogger<FeeConfigurationService>>());
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+        await Assert.ThrowsAsync<NotFoundException>(() =>
             service.UpdateAsync(Guid.NewGuid(), new UpdateFeeConfigurationDto()));
     }
 
@@ -69,7 +70,7 @@ public class FeeConfigurationServiceTests
             MapperFactory.Create(),
             Mock.Of<ILogger<FeeConfigurationService>>());
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+        await Assert.ThrowsAsync<NotFoundException>(() =>
             service.GetByIdAsync(Guid.NewGuid()));
     }
 
@@ -121,7 +122,8 @@ public class FeeConfigurationServiceTests
         var id = await service.CreateAsync(new CreateFeeConfigurationDto
         {
             Name = "Admin Fee",
-            Type = "AdminFee",
+            Type = (int)FeeType.AdminFee,
+            AppliesToRisk = (int)BuildingRiskType.None,
             Percentage = 5,
             EffectiveFrom = DateTime.UtcNow
         });

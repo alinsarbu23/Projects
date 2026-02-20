@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
+using Insurance.Domain.Enums;
 using Insurance.Infrastructure;
 using Insurance.Infrastructure.Repositories;
-using Insurance.Domain.Enums;
 using Insurance.UnitTests.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
@@ -217,8 +217,6 @@ public class PolicyRepositoryTests
         result[0].TotalFinalPremium.Should().Be(300);
     }
 
-
-
     [Fact]
     public async Task SearchAsync_ShouldApplyPaging()
     {
@@ -228,6 +226,16 @@ public class PolicyRepositoryTests
         var brokerId = Guid.NewGuid();
         var clientId = Guid.NewGuid();
         var buildingId = Guid.NewGuid();
+        var currencyId = Guid.NewGuid();
+
+        db.Currencies.Add(new Infrastructure.DAOs.Currency
+        {
+            Id = currencyId,
+            Code = "CHF",
+            Name = "Swiss Franc",
+            ExchangeRateToBase = 5.1m,
+            IsActive = true
+        });
 
         db.Buildings.Add(new Infrastructure.DAOs.Building
         {
@@ -238,7 +246,9 @@ public class PolicyRepositoryTests
             Street = "Street",
             StreetNumber = "1",
             SurfaceArea = 10,
-            InsuredValue = 100
+            InsuredValue = 100,
+            FloodRisk = false,
+            EarthquakeRisk = false
         });
 
         for (int i = 0; i < 5; i++)
@@ -248,6 +258,9 @@ public class PolicyRepositoryTests
                 Id = Guid.NewGuid(),
                 BrokerId = brokerId,
                 BuildingId = buildingId,
+                CurrencyId = currencyId,
+                BasePremium = 100,
+                FinalPremium = 120,
                 Status = PolicyStatus.Active.ToString(),
                 StartDate = DateTime.UtcNow,
                 EndDate = DateTime.UtcNow.AddDays(30)
@@ -267,6 +280,7 @@ public class PolicyRepositoryTests
 
         result.Should().HaveCount(2);
     }
+
     [Fact]
     public async Task ExistsActivePolicyWithCurrencyAsync_ShouldReturnTrue_WhenExists()
     {

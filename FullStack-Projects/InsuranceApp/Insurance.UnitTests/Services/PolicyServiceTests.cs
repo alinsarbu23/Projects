@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Insurance.Application.DTOs.Policies;
+using Insurance.Application.Exceptions;
 using Insurance.Application.Interfaces.Repositories;
 using Insurance.Application.Interfaces.Services;
 using Insurance.Application.Services;
@@ -39,7 +40,7 @@ public class PolicyServiceTests
             MapperFactory.Create(),
             Mock.Of<ILogger<PolicyService>>());
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+        await Assert.ThrowsAsync<NotFoundException>(() =>
             service.GetByIdAsync(Guid.NewGuid()));
     }
 
@@ -112,7 +113,7 @@ public class PolicyServiceTests
             MapperFactory.Create(),
             Mock.Of<ILogger<PolicyService>>());
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+        await Assert.ThrowsAsync<NotFoundException>(() =>
             service.SearchAsync(null, "x@test.ro", null, null, null, 1, 10));
     }
 
@@ -227,7 +228,7 @@ public class PolicyServiceTests
             MapperFactory.Create(),
             Mock.Of<ILogger<PolicyService>>());
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+        await Assert.ThrowsAsync<NotFoundException>(() =>
             service.CancelAsync(Guid.NewGuid(), new DeletePolicyDto { Reason = "x" }));
     }
 
@@ -244,7 +245,7 @@ public class PolicyServiceTests
             MapperFactory.Create(),
             Mock.Of<ILogger<PolicyService>>());
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+        await Assert.ThrowsAsync<NotFoundException>(() =>
             service.GetByIdAsync(Guid.NewGuid()));
     }
 
@@ -261,10 +262,9 @@ public class PolicyServiceTests
             MapperFactory.Create(),
             Mock.Of<ILogger<PolicyService>>());
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+        await Assert.ThrowsAsync<NotFoundException>(() =>
             service.CreateDraftAsync(new CreatePolicyDto(), "x@test.ro"));
     }
-
 
     [Fact]
     public async Task ActivateAsync_WhenPolicyNotFound_Throws()
@@ -279,7 +279,7 @@ public class PolicyServiceTests
             MapperFactory.Create(),
             Mock.Of<ILogger<PolicyService>>());
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+        await Assert.ThrowsAsync<NotFoundException>(() =>
             service.ActivateAsync(Guid.NewGuid()));
     }
 

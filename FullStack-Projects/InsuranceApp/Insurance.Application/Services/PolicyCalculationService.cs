@@ -1,4 +1,5 @@
-﻿using Insurance.Application.Interfaces.Repositories;
+﻿using Insurance.Application.Exceptions;
+using Insurance.Application.Interfaces.Repositories;
 using Insurance.Application.Interfaces.Services;
 using Insurance.Domain.Enums;
 using Insurance.Domain.Models;
@@ -23,10 +24,23 @@ public class PolicyCalculationService : IPolicyCalculationService
         Guid currencyId,
         Building building)
     {
+        _logger.LogInformation($"Calculating premium (BrokerId={brokerId}, CurrencyId={currencyId}, BasePremium={basePremium})");
+
         decimal totalPercentage = 0m;
 
-        var broker = await _unitOfWork.Brokers.GetByIdAsync(brokerId)
-            ?? throw new InvalidOperationException("Broker not found");
+        var broker = await _unitOfWork.Brokers.GetByIdAsync(brokerId);
+
+        if (broker == null)
+        {
+            _logger.LogWarning($"Premium calculation failed. Broker {brokerId} not found");
+            throw new NotFoundException("Broker not found");
+        }
+
+        if (broker.Status != BrokerStatus.Active)
+        {
+            _logger.LogWarning($"Premium calculation failed. Broker {brokerId} is not active");
+            throw new InvalidOperationException("Broker is not active.");
+        }
 
         if (broker.CommissionPercentage > 0)
         {
@@ -34,8 +48,10 @@ public class PolicyCalculationService : IPolicyCalculationService
         }
 
         var currency = await _unitOfWork.Currencies.GetByIdAsync(currencyId);
+
         if (currency == null || !currency.IsActive)
         {
+            _logger.LogWarning($"Premium calculation failed. Invalid or inactive currency {currencyId}");
             throw new InvalidOperationException("Invalid or inactive currency");
         }
 
@@ -48,26 +64,11 @@ public class PolicyCalculationService : IPolicyCalculationService
         {
             if (fee.Type == FeeType.RiskAdjustment)
             {
-                if (string.IsNullOrWhiteSpace(fee.AppliesToRisk))
-                    continue;
-
-                if (!Enum.TryParse<BuildingRiskType>(
-                        fee.AppliesToRisk,
-                        ignoreCase: true,
-                        out var riskType))
-                    continue;
-
-                var applies = riskType switch
-                {
-                    BuildingRiskType.Earthquake => building.EarthquakeRisk,
-                    BuildingRiskType.Flood => building.FloodRisk,
-                    _ => false
-                };
-
-                if (applies)
-                {
+                if (fee.AppliesToRisk == BuildingRiskType.Flood && building.FloodRisk)
                     totalPercentage += fee.Percentage;
-                }
+
+                if (fee.AppliesToRisk == BuildingRiskType.Earthquake && building.EarthquakeRisk)
+                    totalPercentage += fee.Percentage;
             }
             else
             {
@@ -91,6 +92,10 @@ public class PolicyCalculationService : IPolicyCalculationService
 
         var finalPremium = finalPremiumInBase / currency.ExchangeRateToBase;
 
-        return Math.Round(finalPremium, 2);
+        var rounded = Math.Round(finalPremium, 2);
+
+        _logger.LogInformation($"Premium calculated successfully. FinalPremium={rounded}");
+
+        return rounded;
     }
 }

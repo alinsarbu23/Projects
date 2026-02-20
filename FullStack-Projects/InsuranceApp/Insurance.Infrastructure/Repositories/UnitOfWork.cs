@@ -30,6 +30,8 @@ public class UnitOfWork : IUnitOfWork
 
     public IRiskFactorConfigurationRepository RiskFactorConfigurations { get; }
 
+    public IReportsRepository Reports { get; }
+
     public UnitOfWork(
         InsuranceDbContext context,
         IClientRepository clientRepository,
@@ -43,7 +45,8 @@ public class UnitOfWork : IUnitOfWork
         ICurrencyRepository currencies,
         IFeeConfigurationRepository feeConfigurations,
         IPolicyRepository policies,
-        IRiskFactorConfigurationRepository riskFactorConfigurations)
+        IRiskFactorConfigurationRepository riskFactorConfigurations,
+        IReportsRepository reports)
     {
         Clients = clientRepository;
         Buildings = buildingRepository;
@@ -57,6 +60,7 @@ public class UnitOfWork : IUnitOfWork
         FeeConfigurations = feeConfigurations;
         RiskFactorConfigurations = riskFactorConfigurations;
         Policies = policies;
+        Reports = reports;
         _context = context;
     }
 

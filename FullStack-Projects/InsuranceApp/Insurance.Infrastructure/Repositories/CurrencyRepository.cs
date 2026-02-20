@@ -60,4 +60,9 @@ public class CurrencyRepository : ICurrencyRepository
 
         _mapper.Map(currency, dao);
     }
+
+    public async Task<bool> ExistsByCodeAsync(string code)
+    {
+        return await _context.Currencies.AnyAsync(x => x.Code.ToLower() == code.ToLower());
+    }
 }

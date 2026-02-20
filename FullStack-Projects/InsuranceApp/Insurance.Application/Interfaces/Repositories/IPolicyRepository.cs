@@ -12,6 +12,9 @@ public interface IPolicyRepository
 
     Task<bool> ExistsActivePolicyWithCurrencyAsync(Guid currencyId);
 
+    Task<bool> ExistsActiveByBuildingAsync(Guid buildingId);
+
+
     public Task<IReadOnlyList<Policy>> SearchAsync(
        Guid? clientId,
        Guid brokerId,

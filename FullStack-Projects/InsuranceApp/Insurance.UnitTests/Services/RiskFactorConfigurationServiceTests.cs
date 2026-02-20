@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Insurance.Application.DTOs.RiskFactors;
+using Insurance.Application.Exceptions;
 using Insurance.Application.Interfaces.Repositories;
 using Insurance.Application.Services;
 using Insurance.Domain.Enums;
@@ -25,7 +26,7 @@ public class RiskFactorConfigurationServiceTests
             MapperFactory.Create(),
             Mock.Of<ILogger<RiskFactorConfigurationService>>());
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+        await Assert.ThrowsAsync<NotFoundException>(() =>
             service.UpdateAsync(Guid.NewGuid(), new UpdateRiskFactorConfigurationDto()));
     }
 
@@ -45,7 +46,7 @@ public class RiskFactorConfigurationServiceTests
 
         var id = await service.CreateAsync(new CreateRiskFactorConfigurationDto
         {
-            Level = "City",
+            Level = (int)RiskLevel.City,
             ReferenceId = Guid.NewGuid(),
             AdjustmentPercentage = 5
         });
@@ -67,7 +68,7 @@ public class RiskFactorConfigurationServiceTests
             MapperFactory.Create(),
             Mock.Of<ILogger<RiskFactorConfigurationService>>());
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+        await Assert.ThrowsAsync<NotFoundException>(() =>
             service.GetByIdAsync(Guid.NewGuid()));
     }
 
@@ -138,7 +139,7 @@ public class RiskFactorConfigurationServiceTests
             MapperFactory.Create(),
             Mock.Of<ILogger<RiskFactorConfigurationService>>());
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+        await Assert.ThrowsAsync<NotFoundException>(() =>
             service.GetByIdAsync(Guid.NewGuid()));
     }
 

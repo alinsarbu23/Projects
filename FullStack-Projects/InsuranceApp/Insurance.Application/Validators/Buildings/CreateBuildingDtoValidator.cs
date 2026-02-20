@@ -2,6 +2,7 @@
 using Insurance.Application.DTOs.Buildings;
 
 namespace Insurance.Application.Validators.Buildings;
+
 public class CreateBuildingDtoValidator : AbstractValidator<CreateBuildingDto>
 {
     public CreateBuildingDtoValidator()
@@ -61,5 +62,13 @@ public class CreateBuildingDtoValidator : AbstractValidator<CreateBuildingDto>
             .WithMessage("InsuredValue must be greater than 1,000.")
             .LessThanOrEqualTo(500_000_000)
             .WithMessage("InsuredValue exceeds realistic limits.");
+
+        RuleFor(x => x.FloodRisk)
+            .Must(v => v == 0 || v == 1)
+            .WithMessage("FloodRisk must be 0 or 1.");
+
+        RuleFor(x => x.EarthquakeRisk)
+            .Must(v => v == 0 || v == 1)
+            .WithMessage("EarthquakeRisk must be 0 or 1.");
     }
 }

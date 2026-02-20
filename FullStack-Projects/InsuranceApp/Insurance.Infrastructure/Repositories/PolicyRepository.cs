@@ -8,24 +8,24 @@ namespace Insurance.Infrastructure.Repositories;
 
 public class PolicyRepository : IPolicyRepository
 {
-    private readonly InsuranceDbContext _dbContext;
+    private readonly InsuranceDbContext _context;
     private readonly IMapper _mapper;
 
     public PolicyRepository(InsuranceDbContext dbContext, IMapper mapper)
     {
-        _dbContext = dbContext;
+        _context = dbContext;
         _mapper = mapper;
     }
 
     public async Task AddAsync(Policy policy)
     {
         var dao = _mapper.Map<DAOs.Policy>(policy);
-        await _dbContext.Policies.AddAsync(dao);
+        await _context.Policies.AddAsync(dao);
     }
 
     public async Task<Policy?> GetByIdAsync(Guid id)
     {
-        var dao = await _dbContext.Policies
+        var dao = await _context.Policies
             .AsNoTracking()
             .Include(p => p.Building)
             .Include(p => p.Currency)
@@ -41,7 +41,7 @@ public class PolicyRepository : IPolicyRepository
         DateTime? startDate,
         DateTime? endDate)
     {
-        var query = _dbContext.Policies
+        var query = _context.Policies
             .AsNoTracking()
             .Include(p => p.Building)
             .AsQueryable();
@@ -80,9 +80,10 @@ public class PolicyRepository : IPolicyRepository
         int page,
         int pageSize)
     {
-        var query = _dbContext.Policies
+        var query = _context.Policies
             .AsNoTracking()
             .Include(p => p.Building)
+            .Include(p => p.Currency)
             .AsQueryable();
 
         query = query.Where(p => p.BrokerId == brokerId);
@@ -119,22 +120,22 @@ public class PolicyRepository : IPolicyRepository
 
     public async Task UpdateAsync(Policy policy)
     {
-        var dao = await _dbContext.Policies
-            .FirstAsync(p => p.Id == policy.Id);
+        var dao = await _context.Policies.FirstAsync(p => p.Id == policy.Id);
 
+        dao.CurrencyId = policy.CurrencyId;
+        dao.StartDate = policy.StartDate;
+        dao.EndDate = policy.EndDate;
+        dao.BasePremium = policy.BasePremium;
+        dao.FinalPremium = policy.FinalPremium;
         dao.Status = policy.Status.ToString();
         dao.ActivatedAt = policy.ActivatedAt;
         dao.CancelledAt = policy.CancelledAt;
         dao.CancellationReason = policy.CancellationReason;
     }
 
-
-    public async Task<IReadOnlyList<PolicyReportDto>>
-        GetPolicyReportByBrokerAsync(
-            DateTime? from,
-            DateTime? to)
+    public async Task<IReadOnlyList<PolicyReportDto>> GetPolicyReportByBrokerAsync(DateTime? from, DateTime? to)
     {
-        var query = _dbContext.Policies
+        var query = _context.Policies
             .AsNoTracking()
             .Include(p => p.Broker)
             .AsQueryable();
@@ -168,10 +169,18 @@ public class PolicyRepository : IPolicyRepository
 
     public async Task<bool> ExistsActivePolicyWithCurrencyAsync(Guid currencyId)
     {
-        return await _dbContext.Policies
+        return await _context.Policies
             .AsNoTracking()
             .AnyAsync(p =>
                 p.CurrencyId == currencyId &&
+                p.Status == PolicyStatus.Active.ToString());
+    }
+
+    public async Task<bool> ExistsActiveByBuildingAsync(Guid buildingId)
+    {
+        return await _context.Policies
+            .AnyAsync(p =>
+                p.BuildingId == buildingId &&
                 p.Status == PolicyStatus.Active.ToString());
     }
 }

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Insurance.Api.Controllers;
 
 [ApiController]
-[Route("api/admin/risk-factors")]
+[Route("api/riskFactorConfigurations")]
 [Authorize(Roles = Roles.Admin)]
 public class RiskFactorConfigurationsController : ControllerBase
 {

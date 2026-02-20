@@ -5,6 +5,7 @@ using Insurance.Application.Interfaces.Repositories;
 using Insurance.Application.Services;
 using Insurance.Domain.Models;
 using Insurance.UnitTests.Helpers;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
@@ -15,7 +16,7 @@ public class BuildingServiceTests
     private static BuildingService Create(Mock<IUnitOfWork> uow, Mock<IBuildingRepository> buildingsRepo)
     {
         uow.Setup(x => x.Buildings).Returns(buildingsRepo.Object);
-        return new BuildingService(MapperFactory.Create(), uow.Object);
+        return new BuildingService(MapperFactory.Create(), uow.Object, Mock.Of<ILogger<BuildingService>>());
     }
 
     [Fact]
@@ -106,8 +107,8 @@ public class BuildingServiceTests
                 NumberOfFloors = 1,
                 SurfaceArea = 10,
                 InsuredValue = 100,
-                FloodRisk = true,
-                EarthquakeRisk = true
+                FloodRisk = 1,
+                EarthquakeRisk = 1
             });
         });
 
@@ -149,8 +150,8 @@ public class BuildingServiceTests
             NumberOfFloors = 3,
             SurfaceArea = 77,
             InsuredValue = 999,
-            FloodRisk = true,
-            EarthquakeRisk = true
+            FloodRisk = 1,
+            EarthquakeRisk = 1
         };
 
         await service.UpdateBuildingAsync(id, dto);
@@ -184,7 +185,7 @@ public class BuildingServiceTests
             .Setup(x => x.GetByIdAsync(clientId))
             .ReturnsAsync((Client?)null);
 
-        var service = new BuildingService(MapperFactory.Create(), uow.Object);
+        var service = new BuildingService(MapperFactory.Create(), uow.Object, Mock.Of<ILogger<BuildingService>>());
 
         var dto = new CreateBuildingDto
         {
@@ -193,7 +194,9 @@ public class BuildingServiceTests
             Street = "S",
             StreetNumber = "1",
             SurfaceArea = 10,
-            InsuredValue = 100
+            InsuredValue = 100,
+            EarthquakeRisk = 1,
+            FloodRisk = 1
         };
 
         var ex = await Assert.ThrowsAsync<NotFoundException>(async () =>
@@ -230,8 +233,8 @@ public class BuildingServiceTests
                 NumberOfFloors = 2,
                 SurfaceArea = 10,
                 InsuredValue = 100,
-                FloodRisk = false,
-                EarthquakeRisk = false
+                FloodRisk = 0,
+                EarthquakeRisk = 0
             });
         });
     }

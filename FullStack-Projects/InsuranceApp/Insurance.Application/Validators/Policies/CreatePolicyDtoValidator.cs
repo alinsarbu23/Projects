@@ -14,11 +14,17 @@ public class CreatePolicyDtoValidator : AbstractValidator<CreatePolicyDto>
             .NotEmpty();
 
         RuleFor(x => x.BasePremium)
-            .GreaterThan(0);
+            .GreaterThan(0)
+            .LessThanOrEqualTo(100_000_000)
+            .WithMessage("BasePremium must be realistic.");
 
         RuleFor(x => x.StartDate)
             .LessThan(x => x.EndDate)
             .WithMessage("StartDate must be before EndDate");
+
+        RuleFor(x => x.StartDate)
+            .GreaterThanOrEqualTo(DateTime.UtcNow.Date)
+            .WithMessage("StartDate cannot be in the past.");
 
         RuleFor(x => x.EndDate)
             .GreaterThan(DateTime.UtcNow.Date)

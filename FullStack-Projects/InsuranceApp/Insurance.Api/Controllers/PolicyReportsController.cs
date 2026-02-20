@@ -7,13 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 namespace Insurance.Api.Controllers;
 
 [ApiController]
-[Route("api/admin/policy-reports")]
+[Route("api/policyReports")]
 [Authorize(Roles = Roles.Admin)]
-public class AdminPolicyReportsController : ControllerBase
+public class PolicyReportsController : ControllerBase
 {
     private readonly IPolicyService _policyService;
 
-    public AdminPolicyReportsController(IPolicyService policyService)
+    public PolicyReportsController(IPolicyService policyService)
     {
         _policyService = policyService;
     }

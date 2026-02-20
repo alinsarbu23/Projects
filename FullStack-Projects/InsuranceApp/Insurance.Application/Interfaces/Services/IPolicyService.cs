@@ -22,4 +22,6 @@ public interface IPolicyService
         int pageSize);
 
     Task<IReadOnlyList<PolicyReportDto>> GetPolicyReportByBrokerAsync(DateTime? from, DateTime? to);
+
+    Task UpdatePolicyAsync(Guid policyId, UpdatePolicyDto dto);
 }
