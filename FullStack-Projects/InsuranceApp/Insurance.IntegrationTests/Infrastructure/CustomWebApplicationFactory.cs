@@ -30,14 +30,6 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             {
                 options.UseSqlServer(connectionString);
             });
-
-            var sp = services.BuildServiceProvider();
-
-            using var scope = sp.CreateScope();
-            var db = scope.ServiceProvider.GetRequiredService<InsuranceDbContext>();
-
-            db.Database.EnsureDeleted();
-            db.Database.Migrate();
         });
     }
 }

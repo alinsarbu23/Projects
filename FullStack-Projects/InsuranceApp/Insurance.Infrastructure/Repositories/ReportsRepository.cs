@@ -24,7 +24,7 @@ public class ReportsRepository : IReportsRepository
 
         if (dto.To.HasValue)
         {
-            query = query.Where(p => p.StartDate <= dto.To.Value);
+            query = query.Where(p => p.EndDate <= dto.To.Value);
         }
 
         if (dto.Status.HasValue)

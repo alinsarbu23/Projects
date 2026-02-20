@@ -1,12 +1,15 @@
 ﻿using Insurance.Application.Dtos.Identity;
+using Insurance.Infrastructure;
 using Insurance.IntegrationTests.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Xunit;
 
 namespace Insurance.IntegrationTests;
 
-public abstract class BaseIntegrationTest : IClassFixture<CustomWebApplicationFactory>
+public abstract class BaseIntegrationTest : IClassFixture<CustomWebApplicationFactory>, IAsyncLifetime
 {
     protected readonly CustomWebApplicationFactory Factory;
     protected HttpClient Client;
@@ -15,6 +18,22 @@ public abstract class BaseIntegrationTest : IClassFixture<CustomWebApplicationFa
     {
         Factory = factory;
         Client = factory.CreateClient();
+    }
+
+    public async Task InitializeAsync()
+    {
+        using var scope = Factory.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<InsuranceDbContext>();
+
+        await db.Database.EnsureDeletedAsync();
+        await db.Database.MigrateAsync();
+
+        await TestDataSeeder.SeedAsync(scope.ServiceProvider);
+    }
+
+    public Task DisposeAsync()
+    {
+        return Task.CompletedTask;
     }
 
     protected void Authenticate(string token)
