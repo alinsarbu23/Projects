@@ -4,6 +4,7 @@ using Client = Insurance.Infrastructure.DAOs.Client;
 using ClientIdentifier = Insurance.Infrastructure.DAOs.ClientIdentifier;
 
 namespace Insurance.Infrastructure.Configurations;
+
 public class ClientIdentifierConfiguration : IEntityTypeConfiguration<ClientIdentifier>
 {
     public void Configure(EntityTypeBuilder<ClientIdentifier> builder)

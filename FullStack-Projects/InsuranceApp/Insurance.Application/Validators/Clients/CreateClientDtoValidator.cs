@@ -66,7 +66,6 @@ public class CreateClientDtoValidator : AbstractValidator<CreateClientDto>
             .When(x => x.ClientTypeId == IndividualClientTypeId && !string.IsNullOrWhiteSpace(x.Cnp))
             .WithMessage("CNP must contain only digits.");
 
-
         RuleFor(x => x.Cui)
             .NotEmpty()
             .When(x => x.ClientTypeId == CompanyClientTypeId)

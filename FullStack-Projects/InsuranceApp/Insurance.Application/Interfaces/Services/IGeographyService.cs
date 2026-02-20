@@ -1,6 +1,6 @@
-﻿namespace Insurance.Application.Interfaces.Services;
+﻿using Insurance.Application.DTOs.Geography;
 
-using Insurance.Application.DTOs.Geography;
+namespace Insurance.Application.Interfaces.Services;
 
 public interface IGeographyService
 {

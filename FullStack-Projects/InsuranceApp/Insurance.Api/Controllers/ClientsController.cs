@@ -53,8 +53,7 @@ public class ClientsController : ControllerBase
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10)
     {
-        var result = await _clientService
-            .SearchClientsAsync(name, identifier, page, pageSize);
+        var result = await _clientService.SearchClientsAsync(name, identifier, page, pageSize);
 
         return Ok(result);
     }

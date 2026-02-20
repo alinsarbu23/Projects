@@ -2,6 +2,7 @@
 using Insurance.Application.DTOs.Buildings;
 
 namespace Insurance.Application.Validators.Buildings;
+
 public class CreateBuildingDtoValidator : AbstractValidator<CreateBuildingDto>
 {
     public CreateBuildingDtoValidator()
@@ -69,6 +70,5 @@ public class CreateBuildingDtoValidator : AbstractValidator<CreateBuildingDto>
         RuleFor(x => x.EarthquakeRisk)
             .Must(v => v == 0 || v == 1)
             .WithMessage("EarthquakeRisk must be 0 or 1.");
-
     }
 }

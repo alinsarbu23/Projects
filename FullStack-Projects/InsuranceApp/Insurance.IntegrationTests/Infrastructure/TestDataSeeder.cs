@@ -136,7 +136,6 @@ public static class TestDataSeeder
                     Name = "Industrial"
                 }
             );
-
             await db.SaveChangesAsync();
         }
     }

@@ -295,5 +295,4 @@ public class DaoMapperTests
         dao.BasePremium.Should().Be(1000);
         dao.FinalPremium.Should().Be(1200);
     }
-
 }

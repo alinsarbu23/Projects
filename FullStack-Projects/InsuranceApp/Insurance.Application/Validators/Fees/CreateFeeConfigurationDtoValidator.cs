@@ -4,8 +4,7 @@ using Insurance.Domain.Enums;
 
 namespace Insurance.Application.Validators.Fees;
 
-public class CreateFeeConfigurationDtoValidator
-    : AbstractValidator<CreateFeeConfigurationDto>
+public class CreateFeeConfigurationDtoValidator : AbstractValidator<CreateFeeConfigurationDto>
 {
     public CreateFeeConfigurationDtoValidator()
     {

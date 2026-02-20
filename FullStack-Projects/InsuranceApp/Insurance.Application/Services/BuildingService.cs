@@ -114,7 +114,6 @@ public class BuildingService : IBuildingService
             _logger.LogError($"Critical error while updating building {buildingId}");
             throw new InvalidOperationException("Failed to update building.");
         }
-
         _logger.LogInformation($"Building {buildingId} updated successfully");
     }
 }
