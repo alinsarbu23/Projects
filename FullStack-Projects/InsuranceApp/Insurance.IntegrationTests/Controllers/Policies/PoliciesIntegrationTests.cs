@@ -124,13 +124,15 @@ public class PoliciesIntegrationTests : BaseIntegrationTest
                 commissionPercentage = 2m
             });
 
+        createBroker.StatusCode.Should().Be(HttpStatusCode.Created);
         var brokerId = Guid.Parse(createBroker.Headers.Location!.Segments.Last());
 
-        await Client.PostAsync($"/api/brokers/{brokerId}/activate", null);
+        var activateResponse = await Client.PostAsync($"/api/brokers/{brokerId}/activate", null);
+        activateResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
-        await Client.PostAsJsonAsync(
-            "/api/auth/register",
-            new { email = "negative@test.ro", password = "Password1!" });
+        var registerResponse = await Client.PostAsJsonAsync("/api/auth/register", new { email = "negative@test.ro", password = "Password1!" });
+
+        registerResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var brokerLogin = await Client.PostAsJsonAsync(
             "/api/auth/login",
@@ -151,5 +153,8 @@ public class PoliciesIntegrationTests : BaseIntegrationTest
             });
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+        var content = await response.Content.ReadAsStringAsync();
+        content.Should().Contain("Base Premium");
     }
 }

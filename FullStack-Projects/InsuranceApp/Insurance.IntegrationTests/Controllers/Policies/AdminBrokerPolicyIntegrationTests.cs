@@ -100,5 +100,8 @@ public class AdminBrokerPolicyIntegrationTests : BaseIntegrationTest
             });
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+        var content = await response.Content.ReadAsStringAsync();
+        content.Should().Contain("Broker is not active");
     }
 }

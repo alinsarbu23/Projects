@@ -36,6 +36,12 @@ public class PolicyCalculationService : IPolicyCalculationService
             throw new NotFoundException("Broker not found");
         }
 
+        if (broker.Status != BrokerStatus.Active)
+        {
+            _logger.LogWarning($"Premium calculation failed. Broker {brokerId} is not active");
+            throw new InvalidOperationException("Broker is not active.");
+        }
+
         if (broker.CommissionPercentage > 0)
         {
             totalPercentage += broker.CommissionPercentage;
