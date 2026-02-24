@@ -9,9 +9,7 @@ public class PolicyMaintenanceService : IPolicyMaintenanceService
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<PolicyMaintenanceService> _logger;
 
-    public PolicyMaintenanceService(
-        IUnitOfWork unitOfWork,
-        ILogger<PolicyMaintenanceService> logger)
+    public PolicyMaintenanceService(IUnitOfWork unitOfWork, ILogger<PolicyMaintenanceService> logger)
     {
         _unitOfWork = unitOfWork;
         _logger = logger;
@@ -29,8 +27,6 @@ public class PolicyMaintenanceService : IPolicyMaintenanceService
             return;
         }
 
-        _logger.LogInformation(
-            "Expired {Count} policies automatically.",
-            affectedRows);
+        _logger.LogInformation("Expired {Count} policies automatically.", affectedRows);
     }
 }

@@ -192,7 +192,6 @@ public class PoliciesControllerTests
         service.Verify(x => x.ActivateAsync(It.IsAny<Guid>()), Times.Once);
     }
 
-
     [Fact]
     public async Task Cancel_ShouldReturnNoContent()
     {

@@ -199,9 +199,7 @@ public class ClientServiceTests
     [Theory]
     [InlineData(1, "NEW_CNP")]
     [InlineData(2, "NEW_CUI")]
-    public async Task UpdateClientIdentifierAsync_ShouldUpdateCorrectField(
-        int clientTypeId,
-        string newValue)
+    public async Task UpdateClientIdentifierAsync_ShouldUpdateCorrectField(int clientTypeId, string newValue)
     {
         var uow = new Mock<IUnitOfWork>();
         var clients = new Mock<IClientRepository>();
@@ -234,8 +232,6 @@ public class ClientServiceTests
                 : c.Cui == newValue && c.Cnp == null
         )), Times.Once);
     }
-
-
 
     [Fact]
     public async Task SearchClientsAsync_ShouldSetIdentifierCorrectly()

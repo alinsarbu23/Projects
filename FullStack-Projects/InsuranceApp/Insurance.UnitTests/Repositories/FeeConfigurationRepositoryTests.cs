@@ -136,6 +136,7 @@ public class FeeConfigurationRepositoryTests
         result.Should().HaveCount(1);
         result[0].Name.Should().Be("Active Fee");
     }
+
     [Fact]
     public async Task GetActiveAsync_FiltersByType_WhenProvided()
     {

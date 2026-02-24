@@ -235,8 +235,6 @@ public class RiskFactorConfigurationServiceTests
         dto.Id.Should().Be(risk.Id);
     }
 
-
-
     [Fact]
     public async Task UpdateAsync_WhenRiskExists_UpdatesAndSaves()
     {
