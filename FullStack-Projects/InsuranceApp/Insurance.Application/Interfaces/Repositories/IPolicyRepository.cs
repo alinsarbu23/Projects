@@ -34,4 +34,6 @@ public interface IPolicyRepository
     Task<IReadOnlyList<PolicyReportDto>> GetPolicyReportByBrokerAsync(
         DateTime? from,
         DateTime? to);
+
+    Task<int> ExpireActivePoliciesAsync(DateTime today);
 }

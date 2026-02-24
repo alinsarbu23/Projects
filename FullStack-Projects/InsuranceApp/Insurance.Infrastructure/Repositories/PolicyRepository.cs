@@ -183,4 +183,14 @@ public class PolicyRepository : IPolicyRepository
                 p.BuildingId == buildingId &&
                 p.Status == PolicyStatus.Active.ToString());
     }
+
+    public async Task<int> ExpireActivePoliciesAsync(DateTime today)
+    {
+        return await _context.Policies
+            .Where(p =>
+                p.Status == PolicyStatus.Active.ToString() &&
+                p.EndDate < today)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(p => p.Status, PolicyStatus.Expired.ToString()));
+    }
 }

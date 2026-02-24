@@ -1,5 +1,6 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Insurance.Api.BackgroundServices;
 using Insurance.Api.Middleware;
 using Insurance.Application.Interfaces.Repositories;
 using Insurance.Application.Interfaces.Services;
@@ -130,6 +131,8 @@ builder.Services.AddScoped<IRiskFactorConfigurationRepository, RiskFactorConfigu
 builder.Services.AddScoped<IReportsRepository, ReportsRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAuthManager, AuthManager>();
+builder.Services.AddScoped<IPolicyMaintenanceService, PolicyMaintenanceService>();
+builder.Services.AddHostedService<PolicyBackgroundService>();
 
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
