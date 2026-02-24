@@ -27,7 +27,7 @@ public class ReportsService : IReportsService
         }
     }
 
-    public async Task<IReadOnlyList<GetPoliciesByBrokerReportDto>> GetPoliciesByBrokerAsync(GetPoliciesReportDto dto)
+    public async Task<PagedResultDto<GetPoliciesByBrokerReportDto>> GetPoliciesByBrokerAsync(GetPoliciesReportDto dto, int page, int pageSize)
     {
         Validate(dto);
 
@@ -35,19 +35,32 @@ public class ReportsService : IReportsService
 
         var result = await _unitOfWork.Reports.GetPoliciesByBrokerAsync(dto);
 
-        if (result.Count == 0)
+        var totalCount = result.Count;
+
+        if (totalCount == 0)
         {
             _logger.LogWarning("Broker report returned no data");
         }
         else
         {
-            _logger.LogInformation($"Broker report returned {result.Count} rows");
+            _logger.LogInformation($"Broker report returned {totalCount} rows");
         }
 
-        return result;
+        var items = result
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+
+        return new PagedResultDto<GetPoliciesByBrokerReportDto>
+        {
+            Page = page,
+            PageSize = pageSize,
+            TotalCount = totalCount,
+            Items = items
+        };
     }
 
-    public async Task<IReadOnlyList<GetPoliciesByCountryReportDto>> GetPoliciesByCountryAsync(GetPoliciesReportDto dto)
+    public async Task<PagedResultDto<GetPoliciesByCountryReportDto>> GetPoliciesByCountryAsync(GetPoliciesReportDto dto, int page, int pageSize)
     {
         Validate(dto);
 
@@ -55,19 +68,32 @@ public class ReportsService : IReportsService
 
         var result = await _unitOfWork.Reports.GetPoliciesByCountryAsync(dto);
 
-        if (result.Count == 0)
+        var totalCount = result.Count;
+
+        if (totalCount == 0)
         {
             _logger.LogWarning("Country report returned no data");
         }
         else
         {
-            _logger.LogInformation($"Country report returned {result.Count} rows");
+            _logger.LogInformation($"Country report returned {totalCount} rows");
         }
 
-        return result;
+        var items = result
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+
+        return new PagedResultDto<GetPoliciesByCountryReportDto>
+        {
+            Page = page,
+            PageSize = pageSize,
+            TotalCount = totalCount,
+            Items = items
+        };
     }
 
-    public async Task<IReadOnlyList<GetPoliciesByCountyReportDto>> GetPoliciesByCountyAsync(GetPoliciesReportDto dto)
+    public async Task<PagedResultDto<GetPoliciesByCountyReportDto>> GetPoliciesByCountyAsync(GetPoliciesReportDto dto, int page, int pageSize)
     {
         Validate(dto);
 
@@ -75,19 +101,32 @@ public class ReportsService : IReportsService
 
         var result = await _unitOfWork.Reports.GetPoliciesByCountyAsync(dto);
 
-        if (result.Count == 0)
+        var totalCount = result.Count;
+
+        if (totalCount == 0)
         {
             _logger.LogWarning("County report returned no data");
         }
         else
         {
-            _logger.LogInformation($"County report returned {result.Count} rows");
+            _logger.LogInformation($"County report returned {totalCount} rows");
         }
 
-        return result;
+        var items = result
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+
+        return new PagedResultDto<GetPoliciesByCountyReportDto>
+        {
+            Page = page,
+            PageSize = pageSize,
+            TotalCount = totalCount,
+            Items = items
+        };
     }
 
-    public async Task<IReadOnlyList<GetPoliciesByCityReportDto>> GetPoliciesByCityAsync(GetPoliciesReportDto dto)
+    public async Task<PagedResultDto<GetPoliciesByCityReportDto>> GetPoliciesByCityAsync(GetPoliciesReportDto dto, int page, int pageSize)
     {
         Validate(dto);
 
@@ -95,15 +134,28 @@ public class ReportsService : IReportsService
 
         var result = await _unitOfWork.Reports.GetPoliciesByCityAsync(dto);
 
-        if (result.Count == 0)
+        var totalCount = result.Count;
+
+        if (totalCount == 0)
         {
             _logger.LogWarning("City report returned no data");
         }
         else
         {
-            _logger.LogInformation($"City report returned {result.Count} rows");
+            _logger.LogInformation($"City report returned {totalCount} rows");
         }
 
-        return result;
+        var items = result
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+
+        return new PagedResultDto<GetPoliciesByCityReportDto>
+        {
+            Page = page,
+            PageSize = pageSize,
+            TotalCount = totalCount,
+            Items = items
+        };
     }
 }

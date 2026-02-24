@@ -4,11 +4,11 @@ namespace Insurance.Application.Interfaces.Services;
 
 public interface IReportsService
 {
-    Task<IReadOnlyList<GetPoliciesByBrokerReportDto>> GetPoliciesByBrokerAsync(GetPoliciesReportDto dto);
+    Task<PagedResultDto<GetPoliciesByBrokerReportDto>> GetPoliciesByBrokerAsync(GetPoliciesReportDto dto, int page, int pageSize);
 
-    Task<IReadOnlyList<GetPoliciesByCountryReportDto>> GetPoliciesByCountryAsync(GetPoliciesReportDto dto);
+    Task<PagedResultDto<GetPoliciesByCountryReportDto>> GetPoliciesByCountryAsync(GetPoliciesReportDto dto, int page, int pageSize);
 
-    Task<IReadOnlyList<GetPoliciesByCountyReportDto>> GetPoliciesByCountyAsync(GetPoliciesReportDto dto);
+    Task<PagedResultDto<GetPoliciesByCountyReportDto>> GetPoliciesByCountyAsync(GetPoliciesReportDto dto, int page, int pageSize);
 
-    Task<IReadOnlyList<GetPoliciesByCityReportDto>> GetPoliciesByCityAsync(GetPoliciesReportDto dto);
+    Task<PagedResultDto<GetPoliciesByCityReportDto>> GetPoliciesByCityAsync(GetPoliciesReportDto dto, int page, int pageSize);
 }

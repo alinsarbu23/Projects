@@ -18,31 +18,47 @@ public class ReportsController : ControllerBase
         _reportsService = reportsService;
     }
 
-    [HttpGet("policies-by-country")]
-    public async Task<ActionResult<IReadOnlyList<GetPoliciesByCountryReportDto>>> GetPoliciesByCountryAsync([FromQuery] GetPoliciesReportDto dto)
+    [HttpGet("policies-by-broker")]
+    public async Task<ActionResult<PagedResultDto<GetPoliciesByBrokerReportDto>>> GetPoliciesByBroker(
+            [FromQuery] GetPoliciesReportDto dto,
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 20)
     {
-        var result = await _reportsService.GetPoliciesByCountryAsync(dto);
+        var result = await _reportsService.GetPoliciesByBrokerAsync(dto, page, pageSize);
+
+        return Ok(result);
+    }
+
+    [HttpGet("policies-by-country")]
+    public async Task<ActionResult<PagedResultDto<GetPoliciesByCountryReportDto>>> GetPoliciesByCountry(
+            [FromQuery] GetPoliciesReportDto dto,
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 20)
+    {
+        var result = await _reportsService.GetPoliciesByCountryAsync(dto, page, pageSize);
+
         return Ok(result);
     }
 
     [HttpGet("policies-by-county")]
-    public async Task<ActionResult<IReadOnlyList<GetPoliciesByCountyReportDto>>> GetPoliciesByCountyAsync([FromQuery] GetPoliciesReportDto dto)
+    public async Task<ActionResult<PagedResultDto<GetPoliciesByCountyReportDto>>> GetPoliciesByCounty(
+            [FromQuery] GetPoliciesReportDto dto,
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 20)
     {
-        var result = await _reportsService.GetPoliciesByCountyAsync(dto);
+        var result = await _reportsService.GetPoliciesByCountyAsync(dto, page, pageSize);
+
         return Ok(result);
     }
 
     [HttpGet("policies-by-city")]
-    public async Task<ActionResult<IReadOnlyList<GetPoliciesByCityReportDto>>> GetPoliciesByCityAsync([FromQuery] GetPoliciesReportDto dto)
+    public async Task<ActionResult<PagedResultDto<GetPoliciesByCityReportDto>>> GetPoliciesByCity(
+            [FromQuery] GetPoliciesReportDto dto,
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 20)
     {
-        var result = await _reportsService.GetPoliciesByCityAsync(dto);
-        return Ok(result);
-    }
+        var result = await _reportsService.GetPoliciesByCityAsync(dto, page, pageSize);
 
-    [HttpGet("policies-by-broker")]
-    public async Task<ActionResult<IReadOnlyList<GetPoliciesByBrokerReportDto>>> GetPoliciesByBrokerAsync([FromQuery] GetPoliciesReportDto dto)
-    {
-        var result = await _reportsService.GetPoliciesByBrokerAsync(dto);
         return Ok(result);
     }
 }

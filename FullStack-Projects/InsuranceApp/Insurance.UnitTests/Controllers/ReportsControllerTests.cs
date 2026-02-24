@@ -19,58 +19,118 @@ public class ReportsControllerTests
     }
 
     [Fact]
-    public async Task GetPoliciesByBrokerAsync_ShouldReturnOk()
+    public async Task GetPoliciesByCountry_ShouldReturnOk_WithPagedResult()
     {
-        _serviceMock
-            .Setup(x => x.GetPoliciesByBrokerAsync(It.IsAny<GetPoliciesReportDto>()))
-            .ReturnsAsync(new List<GetPoliciesByBrokerReportDto>());
+        var pagedResult = new PagedResultDto<GetPoliciesByCountryReportDto>
+        {
+            Page = 1,
+            PageSize = 10,
+            TotalCount = 2,
+            Items = new List<GetPoliciesByCountryReportDto>
+            {
+                new()
+                {
+                    CountryName = "Romania",
+                    CurrencyCode = "RON",
+                    PolicyCount = 2,
+                    TotalFinalPremium = 2000,
+                    TotalFinalPremiumInBaseCurrency = 2000
+                }
+            }
+        };
 
-        var result = await _controller.GetPoliciesByBrokerAsync(new GetPoliciesReportDto());
+        _serviceMock
+            .Setup(x => x.GetPoliciesByCountryAsync(It.IsAny<GetPoliciesReportDto>(), 1, 10))
+            .ReturnsAsync(pagedResult);
+
+        var result = await _controller.GetPoliciesByCountry(new GetPoliciesReportDto(), 1, 10);
 
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
-        Assert.IsAssignableFrom<IReadOnlyList<GetPoliciesByBrokerReportDto>>(okResult.Value);
-        _serviceMock.Verify(x => x.GetPoliciesByBrokerAsync(It.IsAny<GetPoliciesReportDto>()), Times.Once);
+        var value = Assert.IsType<PagedResultDto<GetPoliciesByCountryReportDto>>(okResult.Value);
+
+        Assert.Equal(1, value.Page);
+        Assert.Equal(10, value.PageSize);
+        Assert.Equal(2, value.TotalCount);
+        Assert.Single(value.Items);
     }
 
     [Fact]
-    public async Task GetPoliciesByCountryAsync_ShouldReturnOk()
+    public async Task GetPoliciesByCity_ShouldReturnOk_WithPagedResult()
     {
-        _serviceMock
-            .Setup(x => x.GetPoliciesByCountryAsync(It.IsAny<GetPoliciesReportDto>()))
-            .ReturnsAsync(new List<GetPoliciesByCountryReportDto>());
+        var pagedResult = new PagedResultDto<GetPoliciesByCityReportDto>
+        {
+            Page = 1,
+            PageSize = 5,
+            TotalCount = 3,
+            Items = new List<GetPoliciesByCityReportDto>
+            {
+                new()
+                {
+                    CityName = "Cluj-Napoca",
+                    CurrencyCode = "RON",
+                    PolicyCount = 3,
+                    TotalFinalPremium = 3000,
+                    TotalFinalPremiumInBaseCurrency = 3000
+                }
+            }
+        };
 
-        var result = await _controller.GetPoliciesByCountryAsync(new GetPoliciesReportDto());
+        _serviceMock
+            .Setup(x => x.GetPoliciesByCityAsync(It.IsAny<GetPoliciesReportDto>(), 1, 5))
+            .ReturnsAsync(pagedResult);
+
+        var result = await _controller.GetPoliciesByCity(new GetPoliciesReportDto(), 1, 5);
 
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
-        Assert.IsAssignableFrom<IReadOnlyList<GetPoliciesByCountryReportDto>>(okResult.Value);
-        _serviceMock.Verify(x => x.GetPoliciesByCountryAsync(It.IsAny<GetPoliciesReportDto>()), Times.Once);
+        var value = Assert.IsType<PagedResultDto<GetPoliciesByCityReportDto>>(okResult.Value);
+
+        Assert.Equal(3, value.TotalCount);
+        Assert.Single(value.Items);
     }
 
     [Fact]
-    public async Task GetPoliciesByCountyAsync_ShouldReturnOk()
+    public async Task GetPoliciesByBroker_ShouldCallService_WithCorrectParameters()
     {
+        var pagedResult = new PagedResultDto<GetPoliciesByBrokerReportDto>
+        {
+            Page = 2,
+            PageSize = 5,
+            TotalCount = 10,
+            Items = new List<GetPoliciesByBrokerReportDto>()
+        };
+
         _serviceMock
-            .Setup(x => x.GetPoliciesByCountyAsync(It.IsAny<GetPoliciesReportDto>()))
-            .ReturnsAsync(new List<GetPoliciesByCountyReportDto>());
+            .Setup(x => x.GetPoliciesByBrokerAsync(It.IsAny<GetPoliciesReportDto>(), 2, 5))
+            .ReturnsAsync(pagedResult);
 
-        var result = await _controller.GetPoliciesByCountyAsync(new GetPoliciesReportDto());
+        await _controller.GetPoliciesByBroker(new GetPoliciesReportDto(), 2, 5);
 
-        var okResult = Assert.IsType<OkObjectResult>(result.Result);
-        Assert.IsAssignableFrom<IReadOnlyList<GetPoliciesByCountyReportDto>>(okResult.Value);
-        _serviceMock.Verify(x => x.GetPoliciesByCountyAsync(It.IsAny<GetPoliciesReportDto>()), Times.Once);
+        _serviceMock.Verify(
+            x => x.GetPoliciesByBrokerAsync(It.IsAny<GetPoliciesReportDto>(), 2, 5),
+            Times.Once);
     }
 
     [Fact]
-    public async Task GetPoliciesByCityAsync_ShouldReturnOk()
+    public async Task GetPoliciesByCounty_ShouldReturnOk()
     {
-        _serviceMock
-            .Setup(x => x.GetPoliciesByCityAsync(It.IsAny<GetPoliciesReportDto>()))
-            .ReturnsAsync(new List<GetPoliciesByCityReportDto>());
+        var pagedResult = new PagedResultDto<GetPoliciesByCountyReportDto>
+        {
+            Page = 1,
+            PageSize = 10,
+            TotalCount = 0,
+            Items = new List<GetPoliciesByCountyReportDto>()
+        };
 
-        var result = await _controller.GetPoliciesByCityAsync(new GetPoliciesReportDto());
+        _serviceMock
+            .Setup(x => x.GetPoliciesByCountyAsync(It.IsAny<GetPoliciesReportDto>(), 1, 10))
+            .ReturnsAsync(pagedResult);
+
+        var result = await _controller.GetPoliciesByCounty(new GetPoliciesReportDto(), 1, 10);
 
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
-        Assert.IsAssignableFrom<IReadOnlyList<GetPoliciesByCityReportDto>>(okResult.Value);
-        _serviceMock.Verify(x => x.GetPoliciesByCityAsync(It.IsAny<GetPoliciesReportDto>()), Times.Once);
+        var value = Assert.IsType<PagedResultDto<GetPoliciesByCountyReportDto>>(okResult.Value);
+
+        Assert.Empty(value.Items);
+        Assert.Equal(0, value.TotalCount);
     }
 }

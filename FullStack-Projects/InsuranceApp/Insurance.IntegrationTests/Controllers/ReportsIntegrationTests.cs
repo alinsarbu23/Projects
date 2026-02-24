@@ -29,8 +29,6 @@ public class ReportsIntegrationTests : BaseIntegrationTest
 
             await DatabaseSeeder.SeedAsync(scope.ServiceProvider);
 
-            var country = db.Countries.First();
-            var county = db.Counties.First();
             var city = db.Cities.First();
 
             var residential = db.BuildingTypes.First(x => x.Name == "Residential");
@@ -147,13 +145,14 @@ public class ReportsIntegrationTests : BaseIntegrationTest
         await SeedReportsData();
         await LoginAsAdmin();
 
-        var response = await Client.GetAsync("/api/reports/policies-by-city");
+        var response = await Client.GetAsync("/api/reports/policies-by-city?page=1&pageSize=10");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var result = await response.Content.ReadFromJsonAsync<List<GetPoliciesByCityReportDto>>();
+        var result = await response.Content.ReadFromJsonAsync<PagedResultDto<GetPoliciesByCityReportDto>>();
 
-        result.Should().HaveCount(2);
+        result!.Items.Should().HaveCount(2);
+        result.TotalCount.Should().Be(2);
     }
 
     [Fact]
@@ -162,13 +161,14 @@ public class ReportsIntegrationTests : BaseIntegrationTest
         await SeedReportsData();
         await LoginAsAdmin();
 
-        var response = await Client.GetAsync("/api/reports/policies-by-county");
+        var response = await Client.GetAsync("/api/reports/policies-by-county?page=1&pageSize=10");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var result = await response.Content.ReadFromJsonAsync<List<GetPoliciesByCountyReportDto>>();
+        var result = await response.Content.ReadFromJsonAsync<PagedResultDto<GetPoliciesByCountyReportDto>>();
 
-        result.Should().HaveCount(2);
+        result!.Items.Should().HaveCount(2);
+        result.TotalCount.Should().Be(2);
     }
 
     [Fact]
@@ -177,13 +177,14 @@ public class ReportsIntegrationTests : BaseIntegrationTest
         await SeedReportsData();
         await LoginAsAdmin();
 
-        var response = await Client.GetAsync("/api/reports/policies-by-broker");
+        var response = await Client.GetAsync("/api/reports/policies-by-broker?page=1&pageSize=10");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var result = await response.Content.ReadFromJsonAsync<List<GetPoliciesByBrokerReportDto>>();
+        var result = await response.Content.ReadFromJsonAsync<PagedResultDto<GetPoliciesByBrokerReportDto>>();
 
-        result.Should().HaveCount(2);
+        result!.Items.Should().HaveCount(2);
+        result.TotalCount.Should().Be(2);
     }
 
     [Fact]
@@ -192,16 +193,14 @@ public class ReportsIntegrationTests : BaseIntegrationTest
         await SeedReportsData();
         await LoginAsAdmin();
 
-        var response = await Client.GetAsync(
-            "/api/reports/policies-by-city?currencyCode=RON");
+        var response = await Client.GetAsync("/api/reports/policies-by-city?currencyCode=RON&page=1&pageSize=10");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var result = await response.Content
-            .ReadFromJsonAsync<List<GetPoliciesByCityReportDto>>();
+        var result = await response.Content.ReadFromJsonAsync<PagedResultDto<GetPoliciesByCityReportDto>>();
 
-        result.Should().HaveCount(1);
-        result![0].CurrencyCode.Should().Be("RON");
+        result!.Items.Should().HaveCount(1);
+        result.Items[0].CurrencyCode.Should().Be("RON");
     }
 
     [Fact]
@@ -215,21 +214,16 @@ public class ReportsIntegrationTests : BaseIntegrationTest
         using (var scope = Factory.Services.CreateScope())
         {
             var db = scope.ServiceProvider.GetRequiredService<InsuranceDbContext>();
-
-            buildingTypeId = db.BuildingTypes
-                .First(x => x.Name == "Residential")
-                .Id;
+            buildingTypeId = db.BuildingTypes.First(x => x.Name == "Residential").Id;
         }
 
-        var response = await Client.GetAsync(
-            $"/api/reports/policies-by-city?buildingTypeId={buildingTypeId}");
+        var response = await Client.GetAsync($"/api/reports/policies-by-city?buildingTypeId={buildingTypeId}&page=1&pageSize=10");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var result = await response.Content
-            .ReadFromJsonAsync<List<GetPoliciesByCityReportDto>>();
+        var result = await response.Content.ReadFromJsonAsync<PagedResultDto<GetPoliciesByCityReportDto>>();
 
-        result.Should().HaveCount(1);
+        result!.Items.Should().HaveCount(1);
     }
 
     [Fact]
@@ -238,14 +232,14 @@ public class ReportsIntegrationTests : BaseIntegrationTest
         await SeedReportsData();
         await LoginAsAdmin();
 
-        var response = await Client.GetAsync("/api/reports/policies-by-broker?status=Cancelled");
+        var response = await Client.GetAsync("/api/reports/policies-by-broker?status=Cancelled&page=1&pageSize=10");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var result = await response.Content.ReadFromJsonAsync<List<GetPoliciesByBrokerReportDto>>();
+        var result = await response.Content.ReadFromJsonAsync<PagedResultDto<GetPoliciesByBrokerReportDto>>();
 
-        result.Should().HaveCount(1);
-        result![0].PolicyCount.Should().Be(1);
+        result!.Items.Should().HaveCount(1);
+        result.Items[0].PolicyCount.Should().Be(1);
     }
 
     [Fact]
@@ -254,13 +248,14 @@ public class ReportsIntegrationTests : BaseIntegrationTest
         await SeedReportsData();
         await LoginAsAdmin();
 
-        var response = await Client.GetAsync("/api/reports/policies-by-country?from=2030-01-01&to=2030-12-31");
+        var response = await Client.GetAsync("/api/reports/policies-by-country?from=2030-01-01&to=2030-12-31&page=1&pageSize=10");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var result = await response.Content.ReadFromJsonAsync<List<GetPoliciesByCountryReportDto>>();
+        var result = await response.Content.ReadFromJsonAsync<PagedResultDto<GetPoliciesByCountryReportDto>>();
 
-        result.Should().BeEmpty();
+        result!.Items.Should().BeEmpty();
+        result.TotalCount.Should().Be(0);
     }
 
     [Fact]
@@ -269,7 +264,7 @@ public class ReportsIntegrationTests : BaseIntegrationTest
         await SeedReportsData();
         await LoginAsAdmin();
 
-        var response = await Client.GetAsync("/api/reports/policies-by-country?from=2025-12-01&to=2025-01-01");
+        var response = await Client.GetAsync("/api/reports/policies-by-country?from=2025-12-01&to=2025-01-01&page=1&pageSize=10");
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }

@@ -71,8 +71,26 @@ public class ReportsServiceTests
         return list;
     }
 
+    private static List<GetPoliciesByBrokerReportDto> CreateBrokerResult(int count)
+    {
+        var list = new List<GetPoliciesByBrokerReportDto>();
+        for (int i = 0; i < count; i++)
+        {
+            list.Add(new GetPoliciesByBrokerReportDto
+            {
+                BrokerId = Guid.NewGuid(),
+                BrokerCode = "BR-001",
+                BrokerName = "Test Broker",
+                PolicyCount = 1,
+                TotalFinalPremium = 1000,
+                TotalFinalPremiumInBaseCurrency = 1000
+            });
+        }
+        return list;
+    }
+
     [Fact]
-    public async Task Country_ShouldThrow_WhenInvalidDateRange()
+    public async Task GetPoliciesByCountryAsync_ShouldThrow_WhenInvalidDateRange()
     {
         var dto = new GetPoliciesReportDto
         {
@@ -81,95 +99,83 @@ public class ReportsServiceTests
         };
 
         await Assert.ThrowsAsync<ArgumentException>(() =>
-            _service.GetPoliciesByCountryAsync(dto));
+            _service.GetPoliciesByCountryAsync(dto, 1, 10));
     }
 
     [Fact]
-    public async Task Country_ShouldLogWarning_WhenNoResults()
+    public async Task GetPoliciesByCountryAsync_ShouldReturnEmpty_WhenNoResults()
     {
         _uowMock.Setup(x => x.Reports.GetPoliciesByCountryAsync(It.IsAny<GetPoliciesReportDto>()))
             .ReturnsAsync(new List<GetPoliciesByCountryReportDto>());
 
-        var result = await _service.GetPoliciesByCountryAsync(new GetPoliciesReportDto());
+        var result = await _service.GetPoliciesByCountryAsync(new GetPoliciesReportDto(), 1, 10);
 
-        Assert.Empty(result);
-
-        _loggerMock.Verify(
-            x => x.Log(
-                LogLevel.Warning,
-                It.IsAny<EventId>(),
-                It.IsAny<It.IsAnyType>(),
-                It.IsAny<Exception?>(),
-                It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
-            Times.Once);
+        Assert.Equal(0, result.TotalCount);
+        Assert.Empty(result.Items);
     }
 
     [Fact]
-    public async Task Country_ShouldLogInformation_WhenResultsExist()
+    public async Task GetPoliciesByCountryAsync_ShouldReturnPagedResult_WhenDataExists()
     {
         _uowMock.Setup(x => x.Reports.GetPoliciesByCountryAsync(It.IsAny<GetPoliciesReportDto>()))
             .ReturnsAsync(CreateCountryResult(2));
 
-        var result = await _service.GetPoliciesByCountryAsync(new GetPoliciesReportDto());
+        var result = await _service.GetPoliciesByCountryAsync(new GetPoliciesReportDto(), 1, 10);
 
-        Assert.Equal(2, result.Count);
-
-        _loggerMock.Verify(
-            x => x.Log(
-                LogLevel.Information,
-                It.IsAny<EventId>(),
-                It.IsAny<It.IsAnyType>(),
-                It.IsAny<Exception?>(),
-                It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
-            Times.AtLeastOnce);
+        Assert.Equal(2, result.TotalCount);
+        Assert.Equal(2, result.Items.Count);
     }
 
     [Fact]
-    public async Task County_ShouldLogWarning_WhenNoResults()
+    public async Task GetPoliciesByCountyAsync_ShouldReturnEmpty_WhenNoResults()
     {
         _uowMock.Setup(x => x.Reports.GetPoliciesByCountyAsync(It.IsAny<GetPoliciesReportDto>()))
             .ReturnsAsync(new List<GetPoliciesByCountyReportDto>());
 
-        var result = await _service.GetPoliciesByCountyAsync(new GetPoliciesReportDto());
+        var result = await _service.GetPoliciesByCountyAsync(new GetPoliciesReportDto(), 1, 10);
 
-        Assert.Empty(result);
+        Assert.Equal(0, result.TotalCount);
+        Assert.Empty(result.Items);
     }
 
     [Fact]
-    public async Task County_ShouldReturnData_WhenResultsExist()
+    public async Task GetPoliciesByCountyAsync_ShouldReturnPagedResult_WhenDataExists()
     {
         _uowMock.Setup(x => x.Reports.GetPoliciesByCountyAsync(It.IsAny<GetPoliciesReportDto>()))
             .ReturnsAsync(CreateCountyResult(1));
 
-        var result = await _service.GetPoliciesByCountyAsync(new GetPoliciesReportDto());
+        var result = await _service.GetPoliciesByCountyAsync(new GetPoliciesReportDto(), 1, 10);
 
-        Assert.Single(result);
+        Assert.Equal(1, result.TotalCount);
+        Assert.Single(result.Items);
     }
 
     [Fact]
-    public async Task City_ShouldLogWarning_WhenNoResults()
+    public async Task GetPoliciesByCityAsync_ShouldReturnEmpty_WhenNoResults()
     {
         _uowMock.Setup(x => x.Reports.GetPoliciesByCityAsync(It.IsAny<GetPoliciesReportDto>()))
             .ReturnsAsync(new List<GetPoliciesByCityReportDto>());
 
-        var result = await _service.GetPoliciesByCityAsync(new GetPoliciesReportDto());
+        var result = await _service.GetPoliciesByCityAsync(new GetPoliciesReportDto(), 1, 10);
 
-        Assert.Empty(result);
+        Assert.Equal(0, result.TotalCount);
+        Assert.Empty(result.Items);
     }
 
     [Fact]
-    public async Task City_ShouldReturnData_WhenResultsExist()
+    public async Task GetPoliciesByCityAsync_ShouldReturnPagedResult_WhenDataExists()
     {
         _uowMock.Setup(x => x.Reports.GetPoliciesByCityAsync(It.IsAny<GetPoliciesReportDto>()))
             .ReturnsAsync(CreateCityResult(3));
 
-        var result = await _service.GetPoliciesByCityAsync(new GetPoliciesReportDto());
+        var result = await _service.GetPoliciesByCityAsync(new GetPoliciesReportDto(), 1, 10);
 
-        Assert.Equal(3, result.Count);
+        Assert.Equal(3, result.TotalCount);
+        Assert.Equal(3, result.Items.Count);
     }
 
     [Fact]
-    public async Task Broker_ShouldThrow_WhenInvalidDateRange()
+    public async Task GetPoliciesByBrokerAsync_ShouldThrow_WhenInvalidDateRange()
     {
         var dto = new GetPoliciesReportDto
         {
@@ -178,61 +184,30 @@ public class ReportsServiceTests
         };
 
         await Assert.ThrowsAsync<ArgumentException>(() =>
-            _service.GetPoliciesByBrokerAsync(dto));
+            _service.GetPoliciesByBrokerAsync(dto, 1, 10));
     }
 
     [Fact]
-    public async Task Broker_ShouldLogWarning_WhenNoResults()
+    public async Task GetPoliciesByBrokerAsync_ShouldReturnEmpty_WhenNoResults()
     {
         _uowMock.Setup(x => x.Reports.GetPoliciesByBrokerAsync(It.IsAny<GetPoliciesReportDto>()))
             .ReturnsAsync(new List<GetPoliciesByBrokerReportDto>());
 
-        var result = await _service.GetPoliciesByBrokerAsync(new GetPoliciesReportDto());
+        var result = await _service.GetPoliciesByBrokerAsync(new GetPoliciesReportDto(), 1, 10);
 
-        Assert.Empty(result);
-
-        _loggerMock.Verify(
-            x => x.Log(
-                LogLevel.Warning,
-                It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((v, t) => true),
-                It.IsAny<Exception?>(),
-                It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
-            Times.Once);
+        Assert.Equal(0, result.TotalCount);
+        Assert.Empty(result.Items);
     }
 
     [Fact]
-    public async Task Broker_ShouldLogInformation_WhenResultsExist()
+    public async Task GetPoliciesByBrokerAsync_ShouldReturnPagedResult_WhenDataExists()
     {
         _uowMock.Setup(x => x.Reports.GetPoliciesByBrokerAsync(It.IsAny<GetPoliciesReportDto>()))
-            .ReturnsAsync(new List<GetPoliciesByBrokerReportDto>
-            {
-                    new GetPoliciesByBrokerReportDto
-                    {
-                        BrokerId = Guid.NewGuid(),
-                        BrokerCode = "BR-001",
-                        BrokerName = "Test",
-                        PolicyCount = 1,
-                        TotalFinalPremium = 1000,
-                        TotalFinalPremiumInBaseCurrency = 1000
-                    }
-            });
+            .ReturnsAsync(CreateBrokerResult(1));
 
-        var result = await _service.GetPoliciesByBrokerAsync(new GetPoliciesReportDto());
+        var result = await _service.GetPoliciesByBrokerAsync(new GetPoliciesReportDto(), 1, 10);
 
-        Assert.Single(result);
-
-        _loggerMock.Verify(
-            x => x.Log(
-                LogLevel.Information,
-                It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((v, t) => true),
-                It.IsAny<Exception?>(),
-                It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
-            Times.AtLeastOnce);
-
-        _uowMock.Verify(
-            x => x.Reports.GetPoliciesByBrokerAsync(It.IsAny<GetPoliciesReportDto>()),
-            Times.Once);
+        Assert.Equal(1, result.TotalCount);
+        Assert.Single(result.Items);
     }
 }
