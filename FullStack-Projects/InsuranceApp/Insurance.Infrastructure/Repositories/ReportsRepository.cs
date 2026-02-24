@@ -52,149 +52,135 @@ public class ReportsRepository : IReportsRepository
         return query;
     }
 
-    public async Task<IReadOnlyList<GetPoliciesByBrokerReportDto>> GetPoliciesByBrokerAsync(GetPoliciesReportDto dto)
+    public async Task<(IReadOnlyList<GetPoliciesByBrokerReportDto> Items, int TotalCount)> GetPoliciesByBrokerAsync(GetPoliciesReportDto dto, int page, int pageSize)
     {
         IQueryable<Policy> query = _db.Policies.AsNoTracking();
         query = ApplyFilters(query, dto);
 
-        var grouped = await query
+        var groupedQuery = query
             .GroupBy(p => new
             {
-                BrokerId = p.BrokerId,
-                BrokerCode = p.Broker.BrokerCode,
-                BrokerName = p.Broker.Name,
+                p.BrokerId,
+                p.Broker.BrokerCode,
+                p.Broker.Name,
                 CurrencyCode = p.Currency.Code,
                 ExchangeRate = p.Currency.ExchangeRateToBase
             })
-            .Select(g => new
+            .Select(g => new GetPoliciesByBrokerReportDto
             {
-                g.Key.BrokerId,
-                g.Key.BrokerCode,
-                g.Key.BrokerName,
-                g.Key.CurrencyCode,
+                BrokerId = g.Key.BrokerId,
+                BrokerCode = g.Key.BrokerCode,
+                BrokerName = g.Key.Name,
+                CurrencyCode = g.Key.CurrencyCode,
                 PolicyCount = g.Count(),
                 TotalFinalPremium = g.Sum(x => x.FinalPremium),
                 TotalFinalPremiumInBaseCurrency = g.Sum(x => x.FinalPremium * g.Key.ExchangeRate)
-            })
+            });
+
+        var totalCount = await groupedQuery.CountAsync();
+
+        var items = await groupedQuery
+            .OrderByDescending(x => x.TotalFinalPremiumInBaseCurrency)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync();
 
-        return grouped
-            .Select(x => new GetPoliciesByBrokerReportDto
-            {
-                BrokerId = x.BrokerId,
-                BrokerCode = x.BrokerCode,
-                BrokerName = x.BrokerName,
-                CurrencyCode = x.CurrencyCode,
-                PolicyCount = x.PolicyCount,
-                TotalFinalPremium = x.TotalFinalPremium,
-                TotalFinalPremiumInBaseCurrency = x.TotalFinalPremiumInBaseCurrency
-            })
-            .OrderByDescending(x => x.TotalFinalPremiumInBaseCurrency)
-            .ToList();
+        return (items, totalCount);
     }
 
-    public async Task<IReadOnlyList<GetPoliciesByCountryReportDto>> GetPoliciesByCountryAsync(GetPoliciesReportDto dto)
+    public async Task<(IReadOnlyList<GetPoliciesByCountryReportDto> Items, int TotalCount)> GetPoliciesByCountryAsync(GetPoliciesReportDto dto, int page, int pageSize)
     {
         IQueryable<Policy> query = _db.Policies.AsNoTracking();
         query = ApplyFilters(query, dto);
 
-        var grouped = await query
+        var groupedQuery = query
             .GroupBy(p => new
             {
                 CountryName = p.Building.City.County.Country.Name,
                 CurrencyCode = p.Currency.Code,
                 ExchangeRate = p.Currency.ExchangeRateToBase
             })
-            .Select(g => new
+            .Select(g => new GetPoliciesByCountryReportDto
             {
-                g.Key.CountryName,
-                g.Key.CurrencyCode,
+                CountryName = g.Key.CountryName,
+                CurrencyCode = g.Key.CurrencyCode,
                 PolicyCount = g.Count(),
                 TotalFinalPremium = g.Sum(x => x.FinalPremium),
                 TotalFinalPremiumInBaseCurrency = g.Sum(x => x.FinalPremium * g.Key.ExchangeRate)
-            })
+            });
+
+        var totalCount = await groupedQuery.CountAsync();
+
+        var items = await groupedQuery
+            .OrderByDescending(x => x.TotalFinalPremiumInBaseCurrency)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync();
 
-        return grouped
-            .Select(x => new GetPoliciesByCountryReportDto
-            {
-                CountryName = x.CountryName,
-                CurrencyCode = x.CurrencyCode,
-                PolicyCount = x.PolicyCount,
-                TotalFinalPremium = x.TotalFinalPremium,
-                TotalFinalPremiumInBaseCurrency = x.TotalFinalPremiumInBaseCurrency
-            })
-            .OrderByDescending(x => x.TotalFinalPremiumInBaseCurrency)
-            .ToList();
+        return (items, totalCount);
     }
 
-    public async Task<IReadOnlyList<GetPoliciesByCountyReportDto>> GetPoliciesByCountyAsync(GetPoliciesReportDto dto)
+    public async Task<(IReadOnlyList<GetPoliciesByCountyReportDto> Items, int TotalCount)> GetPoliciesByCountyAsync(GetPoliciesReportDto dto, int page, int pageSize)
     {
         IQueryable<Policy> query = _db.Policies.AsNoTracking();
         query = ApplyFilters(query, dto);
 
-        var grouped = await query
+        var groupedQuery = query
             .GroupBy(p => new
             {
                 CountyName = p.Building.City.County.Name,
                 CurrencyCode = p.Currency.Code,
                 ExchangeRate = p.Currency.ExchangeRateToBase
             })
-            .Select(g => new
+            .Select(g => new GetPoliciesByCountyReportDto
             {
-                g.Key.CountyName,
-                g.Key.CurrencyCode,
+                CountyName = g.Key.CountyName,
+                CurrencyCode = g.Key.CurrencyCode,
                 PolicyCount = g.Count(),
                 TotalFinalPremium = g.Sum(x => x.FinalPremium),
                 TotalFinalPremiumInBaseCurrency = g.Sum(x => x.FinalPremium * g.Key.ExchangeRate)
-            })
+            });
+
+        var totalCount = await groupedQuery.CountAsync();
+
+        var items = await groupedQuery
+            .OrderByDescending(x => x.TotalFinalPremiumInBaseCurrency)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync();
 
-        return grouped
-            .Select(x => new GetPoliciesByCountyReportDto
-            {
-                CountyName = x.CountyName,
-                CurrencyCode = x.CurrencyCode,
-                PolicyCount = x.PolicyCount,
-                TotalFinalPremium = x.TotalFinalPremium,
-                TotalFinalPremiumInBaseCurrency = x.TotalFinalPremiumInBaseCurrency
-            })
-            .OrderByDescending(x => x.TotalFinalPremiumInBaseCurrency)
-            .ToList();
+        return (items, totalCount);
     }
 
-    public async Task<IReadOnlyList<GetPoliciesByCityReportDto>> GetPoliciesByCityAsync(GetPoliciesReportDto dto)
+    public async Task<(IReadOnlyList<GetPoliciesByCityReportDto> Items, int TotalCount)> GetPoliciesByCityAsync(GetPoliciesReportDto dto, int page, int pageSize)
     {
         IQueryable<Policy> query = _db.Policies.AsNoTracking();
         query = ApplyFilters(query, dto);
 
-        var grouped = await query
+        var groupedQuery = query
             .GroupBy(p => new
             {
                 CityName = p.Building.City.Name,
                 CurrencyCode = p.Currency.Code,
                 ExchangeRate = p.Currency.ExchangeRateToBase
             })
-            .Select(g => new
+            .Select(g => new GetPoliciesByCityReportDto
             {
-                g.Key.CityName,
-                g.Key.CurrencyCode,
+                CityName = g.Key.CityName,
+                CurrencyCode = g.Key.CurrencyCode,
                 PolicyCount = g.Count(),
                 TotalFinalPremium = g.Sum(x => x.FinalPremium),
                 TotalFinalPremiumInBaseCurrency = g.Sum(x => x.FinalPremium * g.Key.ExchangeRate)
-            })
+            });
+
+        var totalCount = await groupedQuery.CountAsync();
+
+        var items = await groupedQuery
+            .OrderByDescending(x => x.TotalFinalPremiumInBaseCurrency)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync();
 
-        return grouped
-            .Select(x => new GetPoliciesByCityReportDto
-            {
-                CityName = x.CityName,
-                CurrencyCode = x.CurrencyCode,
-                PolicyCount = x.PolicyCount,
-                TotalFinalPremium = x.TotalFinalPremium,
-                TotalFinalPremiumInBaseCurrency = x.TotalFinalPremiumInBaseCurrency
-            })
-            .OrderByDescending(x => x.TotalFinalPremiumInBaseCurrency)
-            .ToList();
+        return (items, totalCount);
     }
 }

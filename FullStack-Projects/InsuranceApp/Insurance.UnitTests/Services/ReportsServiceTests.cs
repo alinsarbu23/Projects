@@ -105,8 +105,11 @@ public class ReportsServiceTests
     [Fact]
     public async Task GetPoliciesByCountryAsync_ShouldReturnEmpty_WhenNoResults()
     {
-        _uowMock.Setup(x => x.Reports.GetPoliciesByCountryAsync(It.IsAny<GetPoliciesReportDto>()))
-            .ReturnsAsync(new List<GetPoliciesByCountryReportDto>());
+        _uowMock.Setup(x => x.Reports.GetPoliciesByCountryAsync(
+                It.IsAny<GetPoliciesReportDto>(),
+                It.IsAny<int>(),
+                It.IsAny<int>()))
+            .ReturnsAsync((new List<GetPoliciesByCountryReportDto>(), 0));
 
         var result = await _service.GetPoliciesByCountryAsync(new GetPoliciesReportDto(), 1, 10);
 
@@ -117,8 +120,13 @@ public class ReportsServiceTests
     [Fact]
     public async Task GetPoliciesByCountryAsync_ShouldReturnPagedResult_WhenDataExists()
     {
-        _uowMock.Setup(x => x.Reports.GetPoliciesByCountryAsync(It.IsAny<GetPoliciesReportDto>()))
-            .ReturnsAsync(CreateCountryResult(2));
+        var data = CreateCountryResult(2);
+
+        _uowMock.Setup(x => x.Reports.GetPoliciesByCountryAsync(
+                It.IsAny<GetPoliciesReportDto>(),
+                It.IsAny<int>(),
+                It.IsAny<int>()))
+            .ReturnsAsync((data, data.Count));
 
         var result = await _service.GetPoliciesByCountryAsync(new GetPoliciesReportDto(), 1, 10);
 
@@ -129,8 +137,11 @@ public class ReportsServiceTests
     [Fact]
     public async Task GetPoliciesByCountyAsync_ShouldReturnEmpty_WhenNoResults()
     {
-        _uowMock.Setup(x => x.Reports.GetPoliciesByCountyAsync(It.IsAny<GetPoliciesReportDto>()))
-            .ReturnsAsync(new List<GetPoliciesByCountyReportDto>());
+        _uowMock.Setup(x => x.Reports.GetPoliciesByCountyAsync(
+                It.IsAny<GetPoliciesReportDto>(),
+                It.IsAny<int>(),
+                It.IsAny<int>()))
+            .ReturnsAsync((new List<GetPoliciesByCountyReportDto>(), 0));
 
         var result = await _service.GetPoliciesByCountyAsync(new GetPoliciesReportDto(), 1, 10);
 
@@ -141,8 +152,13 @@ public class ReportsServiceTests
     [Fact]
     public async Task GetPoliciesByCountyAsync_ShouldReturnPagedResult_WhenDataExists()
     {
-        _uowMock.Setup(x => x.Reports.GetPoliciesByCountyAsync(It.IsAny<GetPoliciesReportDto>()))
-            .ReturnsAsync(CreateCountyResult(1));
+        var data = CreateCountyResult(1);
+
+        _uowMock.Setup(x => x.Reports.GetPoliciesByCountyAsync(
+                It.IsAny<GetPoliciesReportDto>(),
+                It.IsAny<int>(),
+                It.IsAny<int>()))
+            .ReturnsAsync((data, data.Count));
 
         var result = await _service.GetPoliciesByCountyAsync(new GetPoliciesReportDto(), 1, 10);
 
@@ -153,8 +169,11 @@ public class ReportsServiceTests
     [Fact]
     public async Task GetPoliciesByCityAsync_ShouldReturnEmpty_WhenNoResults()
     {
-        _uowMock.Setup(x => x.Reports.GetPoliciesByCityAsync(It.IsAny<GetPoliciesReportDto>()))
-            .ReturnsAsync(new List<GetPoliciesByCityReportDto>());
+        _uowMock.Setup(x => x.Reports.GetPoliciesByCityAsync(
+                It.IsAny<GetPoliciesReportDto>(),
+                It.IsAny<int>(),
+                It.IsAny<int>()))
+            .ReturnsAsync((new List<GetPoliciesByCityReportDto>(), 0));
 
         var result = await _service.GetPoliciesByCityAsync(new GetPoliciesReportDto(), 1, 10);
 
@@ -165,8 +184,13 @@ public class ReportsServiceTests
     [Fact]
     public async Task GetPoliciesByCityAsync_ShouldReturnPagedResult_WhenDataExists()
     {
-        _uowMock.Setup(x => x.Reports.GetPoliciesByCityAsync(It.IsAny<GetPoliciesReportDto>()))
-            .ReturnsAsync(CreateCityResult(3));
+        var data = CreateCityResult(3);
+
+        _uowMock.Setup(x => x.Reports.GetPoliciesByCityAsync(
+                It.IsAny<GetPoliciesReportDto>(),
+                It.IsAny<int>(),
+                It.IsAny<int>()))
+            .ReturnsAsync((data, data.Count));
 
         var result = await _service.GetPoliciesByCityAsync(new GetPoliciesReportDto(), 1, 10);
 
@@ -190,8 +214,11 @@ public class ReportsServiceTests
     [Fact]
     public async Task GetPoliciesByBrokerAsync_ShouldReturnEmpty_WhenNoResults()
     {
-        _uowMock.Setup(x => x.Reports.GetPoliciesByBrokerAsync(It.IsAny<GetPoliciesReportDto>()))
-            .ReturnsAsync(new List<GetPoliciesByBrokerReportDto>());
+        _uowMock.Setup(x => x.Reports.GetPoliciesByBrokerAsync(
+                It.IsAny<GetPoliciesReportDto>(),
+                It.IsAny<int>(),
+                It.IsAny<int>()))
+            .ReturnsAsync((new List<GetPoliciesByBrokerReportDto>(), 0));
 
         var result = await _service.GetPoliciesByBrokerAsync(new GetPoliciesReportDto(), 1, 10);
 
@@ -202,8 +229,13 @@ public class ReportsServiceTests
     [Fact]
     public async Task GetPoliciesByBrokerAsync_ShouldReturnPagedResult_WhenDataExists()
     {
-        _uowMock.Setup(x => x.Reports.GetPoliciesByBrokerAsync(It.IsAny<GetPoliciesReportDto>()))
-            .ReturnsAsync(CreateBrokerResult(1));
+        var data = CreateBrokerResult(1);
+
+        _uowMock.Setup(x => x.Reports.GetPoliciesByBrokerAsync(
+                It.IsAny<GetPoliciesReportDto>(),
+                It.IsAny<int>(),
+                It.IsAny<int>()))
+            .ReturnsAsync((data, data.Count));
 
         var result = await _service.GetPoliciesByBrokerAsync(new GetPoliciesReportDto(), 1, 10);
 

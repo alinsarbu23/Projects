@@ -4,11 +4,11 @@ namespace Insurance.Application.Interfaces.Repositories;
 
 public interface IReportsRepository
 {
-    Task<IReadOnlyList<GetPoliciesByBrokerReportDto>> GetPoliciesByBrokerAsync(GetPoliciesReportDto filter);
+    Task<(IReadOnlyList<GetPoliciesByCountryReportDto> Items, int TotalCount)> GetPoliciesByCountryAsync(GetPoliciesReportDto filter, int page, int pageSize);
 
-    Task<IReadOnlyList<GetPoliciesByCountryReportDto>> GetPoliciesByCountryAsync(GetPoliciesReportDto filter);
+    Task<(IReadOnlyList<GetPoliciesByCountyReportDto> Items, int TotalCount)> GetPoliciesByCountyAsync(GetPoliciesReportDto filter, int page, int pageSize);
 
-    Task<IReadOnlyList<GetPoliciesByCountyReportDto>> GetPoliciesByCountyAsync(GetPoliciesReportDto filter);
+    Task<(IReadOnlyList<GetPoliciesByCityReportDto> Items, int TotalCount)> GetPoliciesByCityAsync(GetPoliciesReportDto filter, int page, int pageSize);
 
-    Task<IReadOnlyList<GetPoliciesByCityReportDto>> GetPoliciesByCityAsync(GetPoliciesReportDto filter);
+    Task<(IReadOnlyList<GetPoliciesByBrokerReportDto> Items, int TotalCount)> GetPoliciesByBrokerAsync(GetPoliciesReportDto filter, int page, int pageSize);
 }

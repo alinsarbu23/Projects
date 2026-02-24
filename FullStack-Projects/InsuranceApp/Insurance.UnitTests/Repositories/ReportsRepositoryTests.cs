@@ -119,9 +119,10 @@ public class ReportsRepositoryTests
 
         var dto = new GetPoliciesReportDto { From = new DateTime(2024, 1, 1) };
 
-        var result = await repo.GetPoliciesByBrokerAsync(dto);
+        var (items, totalCount) = await repo.GetPoliciesByBrokerAsync(dto, 1, 10);
 
-        Assert.Single(result);
+        Assert.Equal(1, totalCount);
+        Assert.Single(items);
     }
 
     [Fact]
@@ -134,9 +135,10 @@ public class ReportsRepositoryTests
 
         var dto = new GetPoliciesReportDto { BuildingTypeId = buildingTypeId };
 
-        var result = await repo.GetPoliciesByBrokerAsync(dto);
+        var (items, totalCount) = await repo.GetPoliciesByBrokerAsync(dto, 1, 10);
 
-        Assert.Single(result);
+        Assert.Equal(1, totalCount);
+        Assert.Single(items);
     }
 
     [Fact]
@@ -147,10 +149,11 @@ public class ReportsRepositoryTests
 
         var repo = new ReportsRepository(context);
 
-        var result = await repo.GetPoliciesByCountryAsync(new GetPoliciesReportDto());
+        var (items, totalCount) = await repo.GetPoliciesByCountryAsync(new GetPoliciesReportDto(), 1, 10);
 
-        Assert.Single(result);
-        Assert.Equal("Romania", result.First().CountryName);
+        Assert.Equal(1, totalCount);
+        Assert.Single(items);
+        Assert.Equal("Romania", items.First().CountryName);
     }
 
     [Fact]
@@ -161,10 +164,11 @@ public class ReportsRepositoryTests
 
         var repo = new ReportsRepository(context);
 
-        var result = await repo.GetPoliciesByCountyAsync(new GetPoliciesReportDto());
+        var (items, totalCount) = await repo.GetPoliciesByCountyAsync(new GetPoliciesReportDto(), 1, 10);
 
-        Assert.Single(result);
-        Assert.Equal("Cluj", result.First().CountyName);
+        Assert.Equal(1, totalCount);
+        Assert.Single(items);
+        Assert.Equal("Cluj", items.First().CountyName);
     }
 
     [Fact]
@@ -175,9 +179,10 @@ public class ReportsRepositoryTests
 
         var repo = new ReportsRepository(context);
 
-        var result = await repo.GetPoliciesByCityAsync(new GetPoliciesReportDto());
+        var (items, totalCount) = await repo.GetPoliciesByCityAsync(new GetPoliciesReportDto(), 1, 10);
 
-        Assert.Single(result);
-        Assert.Equal("Cluj-Napoca", result.First().CityName);
+        Assert.Equal(1, totalCount);
+        Assert.Single(items);
+        Assert.Equal("Cluj-Napoca", items.First().CityName);
     }
 }

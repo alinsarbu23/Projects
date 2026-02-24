@@ -31,11 +31,7 @@ public class ReportsService : IReportsService
     {
         Validate(dto);
 
-        _logger.LogInformation($"Generating broker report (From={dto.From}, To={dto.To}, Status={dto.Status}, Currency={dto.CurrencyCode})");
-
-        var result = await _unitOfWork.Reports.GetPoliciesByBrokerAsync(dto);
-
-        var totalCount = result.Count;
+        var (items, totalCount) = await _unitOfWork.Reports.GetPoliciesByBrokerAsync(dto, page, pageSize);
 
         if (totalCount == 0)
         {
@@ -45,11 +41,6 @@ public class ReportsService : IReportsService
         {
             _logger.LogInformation($"Broker report returned {totalCount} rows");
         }
-
-        var items = result
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .ToList();
 
         return new PagedResultDto<GetPoliciesByBrokerReportDto>
         {
@@ -64,11 +55,7 @@ public class ReportsService : IReportsService
     {
         Validate(dto);
 
-        _logger.LogInformation($"Generating country report (From={dto.From}, To={dto.To})");
-
-        var result = await _unitOfWork.Reports.GetPoliciesByCountryAsync(dto);
-
-        var totalCount = result.Count;
+        var (items, totalCount) = await _unitOfWork.Reports.GetPoliciesByCountryAsync(dto, page, pageSize);
 
         if (totalCount == 0)
         {
@@ -78,11 +65,6 @@ public class ReportsService : IReportsService
         {
             _logger.LogInformation($"Country report returned {totalCount} rows");
         }
-
-        var items = result
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .ToList();
 
         return new PagedResultDto<GetPoliciesByCountryReportDto>
         {
@@ -97,11 +79,7 @@ public class ReportsService : IReportsService
     {
         Validate(dto);
 
-        _logger.LogInformation($"Generating county report (From={dto.From}, To={dto.To})");
-
-        var result = await _unitOfWork.Reports.GetPoliciesByCountyAsync(dto);
-
-        var totalCount = result.Count;
+        var (items, totalCount) = await _unitOfWork.Reports.GetPoliciesByCountyAsync(dto, page, pageSize);
 
         if (totalCount == 0)
         {
@@ -111,11 +89,6 @@ public class ReportsService : IReportsService
         {
             _logger.LogInformation($"County report returned {totalCount} rows");
         }
-
-        var items = result
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .ToList();
 
         return new PagedResultDto<GetPoliciesByCountyReportDto>
         {
@@ -130,11 +103,7 @@ public class ReportsService : IReportsService
     {
         Validate(dto);
 
-        _logger.LogInformation($"Generating city report (From={dto.From}, To={dto.To})");
-
-        var result = await _unitOfWork.Reports.GetPoliciesByCityAsync(dto);
-
-        var totalCount = result.Count;
+        var (items, totalCount) = await _unitOfWork.Reports.GetPoliciesByCityAsync(dto, page, pageSize);
 
         if (totalCount == 0)
         {
@@ -144,11 +113,6 @@ public class ReportsService : IReportsService
         {
             _logger.LogInformation($"City report returned {totalCount} rows");
         }
-
-        var items = result
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .ToList();
 
         return new PagedResultDto<GetPoliciesByCityReportDto>
         {
