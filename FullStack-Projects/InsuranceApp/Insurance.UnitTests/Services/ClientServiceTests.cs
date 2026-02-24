@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Insurance.Application.DTOs.Clients;
+using Insurance.Application.Exceptions;
 using Insurance.Application.Interfaces.Repositories;
 using Insurance.Application.Services;
 using Insurance.Domain.Models;
@@ -31,6 +32,79 @@ public class ClientServiceTests
             MapperFactory.Create(),
             uow.Object,
             logger.Object);
+    }
+
+    [Fact]
+    public async Task CreateClientAsync_WhenDuplicateCnp_Throws()
+    {
+        var uow = new Mock<IUnitOfWork>();
+        var repo = new Mock<IClientRepository>();
+
+        repo.Setup(x => x.ExistsByCnpAsync("123"))
+            .ReturnsAsync(true);
+
+        var service = CreateService(uow, repo);
+
+        await Assert.ThrowsAsync<ArgumentException>(() =>
+            service.CreateClientAsync(new CreateClientDto
+            {
+                ClientTypeId = 1,
+                Name = "Ion",
+                Cnp = "123",
+                Email = "a@a.ro",
+                Phone = "0700000000",
+                Address = "Addr"
+            }));
+    }
+
+    [Fact]
+    public async Task GetClientByIdAsync_WhenNotFound_Throws()
+    {
+        var uow = new Mock<IUnitOfWork>();
+        var repo = new Mock<IClientRepository>();
+
+        repo.Setup(x => x.GetByIdAsync(It.IsAny<Guid>()))
+            .ReturnsAsync((Client?)null);
+
+        var service = CreateService(uow, repo);
+
+        await Assert.ThrowsAsync<NotFoundException>(() =>
+            service.GetClientByIdAsync(Guid.NewGuid()));
+    }
+
+    [Fact]
+    public async Task UpdateClientAsync_WhenSaveFails_Throws()
+    {
+        var client = new Client
+        {
+            Id = Guid.NewGuid(),
+            ClientTypeId = 1,
+            Name = "Old",
+            Email = "a@a.ro",
+            Phone = "0700000000",
+            Address = "Addr"
+        };
+
+        var uow = new Mock<IUnitOfWork>();
+        var repo = new Mock<IClientRepository>();
+
+        repo.Setup(x => x.GetByIdAsync(client.Id))
+            .ReturnsAsync(client);
+
+        uow.Setup(x => x.SaveChangesAsync())
+            .ReturnsAsync(0);
+
+        var service = CreateService(uow, repo);
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            service.UpdateClientAsync(client.Id,
+                new UpdateClientDto
+                {
+                    Name = "New",
+                    Email = "b@b.ro",
+                    Phone = "0700000000",
+                    Address = "NewAddr"
+                }));
     }
 
     [Fact]
@@ -160,6 +234,8 @@ public class ClientServiceTests
                 : c.Cui == newValue && c.Cnp == null
         )), Times.Once);
     }
+
+
 
     [Fact]
     public async Task SearchClientsAsync_ShouldSetIdentifierCorrectly()

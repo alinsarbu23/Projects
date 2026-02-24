@@ -133,6 +133,24 @@ public class DaoMapperTests
     }
 
     [Fact]
+    public void DaoClient_ShouldStoreCreatedAndUpdatedDates()
+    {
+        var now = DateTime.UtcNow;
+
+        var dao = new Insurance.Infrastructure.DAOs.Client
+        {
+            Id = Guid.NewGuid(),
+            ClientTypeId = 1,
+            Name = "Test",
+            CreatedAt = now,
+            UpdatedAt = now
+        };
+
+        dao.CreatedAt.Should().Be(now);
+        dao.UpdatedAt.Should().Be(now);
+    }
+
+    [Fact]
     public void DomainBuilding_To_DaoBuilding_ShouldMapCorrectly()
     {
         var expectedId = Guid.Parse("77777777-7777-7777-7777-777777777777");

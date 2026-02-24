@@ -14,6 +14,20 @@ namespace Insurance.UnitTests.Services;
 
 public class RiskFactorConfigurationServiceTests
 {
+
+    private static RiskFactorConfigurationService CreateService(
+        Mock<IUnitOfWork> uow,
+        Mock<IRiskFactorConfigurationRepository> repo)
+    {
+        uow.Setup(x => x.RiskFactorConfigurations)
+           .Returns(repo.Object);
+
+        return new RiskFactorConfigurationService(
+            uow.Object,
+            MapperFactory.Create(),
+            Mock.Of<ILogger<RiskFactorConfigurationService>>());
+    }
+
     [Fact]
     public async Task UpdateAsync_WhenRiskNotFound_Throws()
     {
@@ -70,6 +84,130 @@ public class RiskFactorConfigurationServiceTests
 
         await Assert.ThrowsAsync<NotFoundException>(() =>
             service.GetByIdAsync(Guid.NewGuid()));
+    }
+
+    [Fact]
+    public async Task CreateAsync_WhenInvalidLevel_Throws()
+    {
+        var uow = new Mock<IUnitOfWork>();
+
+        var service = new RiskFactorConfigurationService(
+            uow.Object,
+            MapperFactory.Create(),
+            Mock.Of<ILogger<RiskFactorConfigurationService>>());
+
+        await Assert.ThrowsAsync<ArgumentException>(() =>
+            service.CreateAsync(new CreateRiskFactorConfigurationDto
+            {
+                Level = 999,
+                ReferenceId = Guid.NewGuid()
+            }));
+    }
+
+    [Fact]
+    public async Task CreateAsync_WhenLevelInvalid_Throws()
+    {
+        var uow = new Mock<IUnitOfWork>();
+        var repo = new Mock<IRiskFactorConfigurationRepository>();
+
+        var service = CreateService(uow, repo);
+
+        await Assert.ThrowsAsync<ArgumentException>(() =>
+            service.CreateAsync(new CreateRiskFactorConfigurationDto
+            {
+                Level = 999,
+                ReferenceId = Guid.NewGuid(),
+                AdjustmentPercentage = 5
+            }));
+    }
+
+    [Fact]
+    public async Task CreateAsync_WhenSaveFails_Throws()
+    {
+        var uow = new Mock<IUnitOfWork>();
+        var repo = new Mock<IRiskFactorConfigurationRepository>();
+
+        uow.Setup(x => x.SaveChangesAsync()).ReturnsAsync(0);
+
+        var service = CreateService(uow, repo);
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            service.CreateAsync(new CreateRiskFactorConfigurationDto
+            {
+                Level = (int)RiskLevel.City,
+                ReferenceId = Guid.NewGuid(),
+                AdjustmentPercentage = 5
+            }));
+    }
+
+    [Fact]
+    public async Task UpdateAsync_WhenNotFound_Throws()
+    {
+        var uow = new Mock<IUnitOfWork>();
+        var repo = new Mock<IRiskFactorConfigurationRepository>();
+
+        repo.Setup(x => x.GetByIdAsync(It.IsAny<Guid>()))
+            .ReturnsAsync((RiskFactorConfiguration?)null);
+
+        var service = CreateService(uow, repo);
+
+        await Assert.ThrowsAsync<NotFoundException>(() =>
+            service.UpdateAsync(Guid.NewGuid(),
+                new UpdateRiskFactorConfigurationDto()));
+    }
+
+    [Fact]
+    public async Task UpdateAsync_WhenAlreadyActive_Throws()
+    {
+        var risk = new RiskFactorConfiguration
+        {
+            Id = Guid.NewGuid(),
+            Level = RiskLevel.City,
+            IsActive = true
+        };
+
+        var uow = new Mock<IUnitOfWork>();
+        var repo = new Mock<IRiskFactorConfigurationRepository>();
+
+        repo.Setup(x => x.GetByIdAsync(risk.Id))
+            .ReturnsAsync(risk);
+
+        var service = CreateService(uow, repo);
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            service.UpdateAsync(risk.Id,
+                new UpdateRiskFactorConfigurationDto
+                {
+                    IsActive = 1
+                }));
+    }
+
+    [Fact]
+    public async Task UpdateAsync_WhenSaveFails_Throws()
+    {
+        var risk = new RiskFactorConfiguration
+        {
+            Id = Guid.NewGuid(),
+            Level = RiskLevel.City,
+            IsActive = false
+        };
+
+        var uow = new Mock<IUnitOfWork>();
+        var repo = new Mock<IRiskFactorConfigurationRepository>();
+
+        repo.Setup(x => x.GetByIdAsync(risk.Id))
+            .ReturnsAsync(risk);
+
+        uow.Setup(x => x.SaveChangesAsync()).ReturnsAsync(0);
+
+        var service = CreateService(uow, repo);
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            service.UpdateAsync(risk.Id,
+                new UpdateRiskFactorConfigurationDto
+                {
+                    IsActive = 1
+                }));
     }
 
     [Fact]

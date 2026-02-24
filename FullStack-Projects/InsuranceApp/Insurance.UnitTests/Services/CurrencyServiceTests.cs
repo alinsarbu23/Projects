@@ -55,6 +55,182 @@ public class CurrencyServiceTests
     }
 
     [Fact]
+    public async Task CreateAsync_WhenDuplicateCode_Throws()
+    {
+        var uow = new Mock<IUnitOfWork>();
+
+        uow.Setup(x => x.Currencies.ExistsByCodeAsync("EUR"))
+            .ReturnsAsync(true);
+
+        var service = new CurrencyService(
+            uow.Object,
+            MapperFactory.Create(),
+            Mock.Of<ILogger<CurrencyService>>());
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            service.CreateAsync(new CreateCurrencyDto
+            {
+                Code = "eur",
+                Name = "Euro"
+            }));
+    }
+
+    [Fact]
+    public async Task UpdateAsync_WhenNotFound_Throws()
+    {
+        var uow = new Mock<IUnitOfWork>();
+
+        uow.Setup(x => x.Currencies.GetByIdAsync(It.IsAny<Guid>()))
+            .ReturnsAsync((Currency?)null);
+
+        var service = new CurrencyService(
+            uow.Object,
+            MapperFactory.Create(),
+            Mock.Of<ILogger<CurrencyService>>());
+
+        await Assert.ThrowsAsync<NotFoundException>(() =>
+            service.UpdateAsync(Guid.NewGuid(), new UpdateCurrencyDto()));
+    }
+
+    [Fact]
+    public async Task UpdateAsync_WhenAlreadyActive_Throws()
+    {
+        var currency = new Currency
+        {
+            Id = Guid.NewGuid(),
+            Code = "EUR",
+            Name = "Euro",
+            IsActive = true
+        };
+
+        var uow = new Mock<IUnitOfWork>();
+        uow.Setup(x => x.Currencies.GetByIdAsync(currency.Id))
+            .ReturnsAsync(currency);
+
+        var service = new CurrencyService(
+            uow.Object,
+            MapperFactory.Create(),
+            Mock.Of<ILogger<CurrencyService>>());
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            service.UpdateAsync(currency.Id, new UpdateCurrencyDto
+            {
+                IsActive = 1
+            }));
+    }
+
+    [Fact]
+    public async Task UpdateAsync_WhenAlreadyInactive_Throws()
+    {
+        var currency = new Currency
+        {
+            Id = Guid.NewGuid(),
+            Code = "EUR",
+            Name = "Euro",
+            IsActive = false
+        };
+
+        var uow = new Mock<IUnitOfWork>();
+        uow.Setup(x => x.Currencies.GetByIdAsync(currency.Id))
+            .ReturnsAsync(currency);
+
+        var service = new CurrencyService(
+            uow.Object,
+            MapperFactory.Create(),
+            Mock.Of<ILogger<CurrencyService>>());
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            service.UpdateAsync(currency.Id, new UpdateCurrencyDto
+            {
+                IsActive = 0
+            }));
+    }
+
+    [Fact]
+    public async Task UpdateAsync_WhenUsedInActivePolicies_Throws()
+    {
+        var currency = new Currency
+        {
+            Id = Guid.NewGuid(),
+            Code = "EUR",
+            Name = "Euro",
+            IsActive = true
+        };
+
+        var uow = new Mock<IUnitOfWork>();
+        uow.Setup(x => x.Currencies.GetByIdAsync(currency.Id))
+            .ReturnsAsync(currency);
+
+        uow.Setup(x => x.Policies.ExistsActivePolicyWithCurrencyAsync(currency.Id))
+            .ReturnsAsync(true);
+
+        var service = new CurrencyService(
+            uow.Object,
+            MapperFactory.Create(),
+            Mock.Of<ILogger<CurrencyService>>());
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            service.UpdateAsync(currency.Id, new UpdateCurrencyDto
+            {
+                IsActive = 0
+            }));
+    }
+
+    [Fact]
+    public async Task UpdateAsync_WhenSaveFails_Throws()
+    {
+        var currency = new Currency
+        {
+            Id = Guid.NewGuid(),
+            Code = "EUR",
+            Name = "Euro",
+            IsActive = true
+        };
+
+        var uow = new Mock<IUnitOfWork>();
+        uow.Setup(x => x.Currencies.GetByIdAsync(currency.Id))
+            .ReturnsAsync(currency);
+
+        uow.Setup(x => x.SaveChangesAsync())
+            .ReturnsAsync(0);
+
+        var service = new CurrencyService(
+            uow.Object,
+            MapperFactory.Create(),
+            Mock.Of<ILogger<CurrencyService>>());
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            service.UpdateAsync(currency.Id, new UpdateCurrencyDto
+            {
+                IsActive = 1
+            }));
+    }
+
+    [Fact]
+    public async Task CreateAsync_WhenSaveFails_Throws()
+    {
+        var uow = new Mock<IUnitOfWork>();
+
+        uow.Setup(x => x.Currencies.ExistsByCodeAsync(It.IsAny<string>()))
+            .ReturnsAsync(false);
+
+        uow.Setup(x => x.SaveChangesAsync())
+            .ReturnsAsync(0);
+
+        var service = new CurrencyService(
+            uow.Object,
+            MapperFactory.Create(),
+            Mock.Of<ILogger<CurrencyService>>());
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            service.CreateAsync(new CreateCurrencyDto
+            {
+                Code = "EUR",
+                Name = "Euro"
+            }));
+    }
+
+    [Fact]
     public async Task GetByIdAsync_WhenNotFound_Throws()
     {
         var unitOfWork = new Mock<IUnitOfWork>();

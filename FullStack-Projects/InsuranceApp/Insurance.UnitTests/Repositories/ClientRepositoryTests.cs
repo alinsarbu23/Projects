@@ -1,10 +1,10 @@
-﻿using Xunit;
-using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
+﻿using FluentAssertions;
+using Insurance.Domain.Models;
 using Insurance.Infrastructure;
 using Insurance.Infrastructure.Repositories;
-using Insurance.Domain.Models;
 using Insurance.UnitTests.Helpers;
+using Microsoft.EntityFrameworkCore;
+using Xunit;
 
 namespace Insurance.UnitTests.Repositories;
 
@@ -85,6 +85,52 @@ public class ClientRepositoryTests
         var exists = await repo.ExistsByCnpAsync("999");
 
         exists.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task UpdateAsync_ShouldModifyExistingClient()
+    {
+        using var db = CreateDbContext();
+        var repo = new ClientRepository(db, MapperFactory.Create());
+
+        var dao = new Insurance.Infrastructure.DAOs.Client
+        {
+            Id = Guid.NewGuid(),
+            ClientTypeId = 1,
+            Name = "Old"
+        };
+
+        db.Clients.Add(dao);
+        await db.SaveChangesAsync();
+
+        var domain = MapperFactory.Create()
+            .Map<Insurance.Domain.Models.Client>(dao);
+
+        domain.Name = "New";
+
+        await repo.UpdateAsync(domain);
+        await db.SaveChangesAsync();
+
+        db.Clients.First().Name.Should().Be("New");
+    }
+
+    [Fact]
+    public async Task CountAsync_ShouldFilterByName()
+    {
+        using var db = CreateDbContext();
+
+        db.Clients.AddRange(
+            new Insurance.Infrastructure.DAOs.Client { Id = Guid.NewGuid(), ClientTypeId = 1, Name = "Ion" },
+            new Insurance.Infrastructure.DAOs.Client { Id = Guid.NewGuid(), ClientTypeId = 1, Name = "Maria" }
+        );
+
+        await db.SaveChangesAsync();
+
+        var repo = new ClientRepository(db, MapperFactory.Create());
+
+        var count = await repo.CountAsync("Ion", null);
+
+        count.Should().Be(1);
     }
 
     [Fact]

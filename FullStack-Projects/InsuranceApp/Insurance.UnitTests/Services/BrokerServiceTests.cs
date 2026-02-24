@@ -178,4 +178,199 @@ public class BrokerServiceTests
         result.Should().HaveCount(1);
         result[0].Status.Should().Be("Active");
     }
+
+    [Fact]
+    public async Task CreateAsync_WhenDuplicateEmail_Throws()
+    {
+        var unitOfWork = new Mock<IUnitOfWork>();
+
+        unitOfWork.Setup(x => x.Brokers.GetByCodeAsync(It.IsAny<string>()))
+            .ReturnsAsync((Broker?)null);
+
+        unitOfWork.Setup(x => x.Brokers.GetByEmailAsync("dup@test.ro"))
+            .ReturnsAsync(new Broker
+            {
+                Id = Guid.NewGuid(),
+                BrokerCode = "BR-EX",
+                Name = "Existing",
+                Email = "dup@test.ro",
+                Status = BrokerStatus.Active
+            });
+
+        var service = new BrokerService(
+            unitOfWork.Object,
+            MapperFactory.Create(),
+            Mock.Of<ILogger<BrokerService>>());
+
+        await Assert.ThrowsAsync<ArgumentException>(() =>
+            service.CreateAsync(new CreateBrokerDto
+            {
+                BrokerCode = "NEW",
+                Name = "Test",
+                Email = "dup@test.ro"
+            }));
+    }
+
+    [Fact]
+    public async Task CreateAsync_WhenSaveFails_Throws()
+    {
+        var repo = new Mock<IBrokerRepository>();
+
+        var unitOfWork = new Mock<IUnitOfWork>();
+        unitOfWork.Setup(x => x.Brokers).Returns(repo.Object);
+        unitOfWork.Setup(x => x.Brokers.GetByCodeAsync(It.IsAny<string>()))
+            .ReturnsAsync((Broker?)null);
+        unitOfWork.Setup(x => x.Brokers.GetByEmailAsync(It.IsAny<string>()))
+            .ReturnsAsync((Broker?)null);
+        unitOfWork.Setup(x => x.SaveChangesAsync())
+            .ReturnsAsync(0);
+
+        var service = new BrokerService(
+            unitOfWork.Object,
+            MapperFactory.Create(),
+            Mock.Of<ILogger<BrokerService>>());
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            service.CreateAsync(new CreateBrokerDto
+            {
+                BrokerCode = "NEW",
+                Name = "Broker",
+                Email = "a@test.ro"
+            }));
+    }
+
+    [Fact]
+    public async Task UpdateAsync_WhenSaveFails_Throws()
+    {
+        var broker = new Broker
+        {
+            Id = Guid.NewGuid(),
+            BrokerCode = "BR-01",
+            Name = "Old Name",
+            Status = BrokerStatus.Inactive
+        };
+
+        var unitOfWork = new Mock<IUnitOfWork>();
+        unitOfWork.Setup(x => x.Brokers.GetByIdAsync(broker.Id))
+            .ReturnsAsync(broker);
+        unitOfWork.Setup(x => x.SaveChangesAsync())
+            .ReturnsAsync(0);
+
+        var service = new BrokerService(
+            unitOfWork.Object,
+            MapperFactory.Create(),
+            Mock.Of<ILogger<BrokerService>>());
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            service.UpdateAsync(broker.Id, new UpdateBrokerDto
+            {
+                Name = "New Name"
+            }));
+    }
+
+    [Fact]
+    public async Task ActivateAsync_WhenNotFound_Throws()
+    {
+        var unitOfWork = new Mock<IUnitOfWork>();
+        unitOfWork.Setup(x => x.Brokers.GetByIdAsync(It.IsAny<Guid>()))
+            .ReturnsAsync((Broker?)null);
+
+        var service = new BrokerService(
+            unitOfWork.Object,
+            MapperFactory.Create(),
+            Mock.Of<ILogger<BrokerService>>());
+
+        await Assert.ThrowsAsync<NotFoundException>(() =>
+            service.ActivateAsync(Guid.NewGuid()));
+    }
+
+    [Fact]
+    public async Task ActivateAsync_WhenAlreadyActive_Throws()
+    {
+        var broker = new Broker
+        {
+            Id = Guid.NewGuid(),
+            BrokerCode = "BR-01",
+            Name = "Test Broker",
+            Status = BrokerStatus.Active
+        };
+
+        var unitOfWork = new Mock<IUnitOfWork>();
+        unitOfWork.Setup(x => x.Brokers.GetByIdAsync(broker.Id))
+            .ReturnsAsync(broker);
+
+        var service = new BrokerService(
+            unitOfWork.Object,
+            MapperFactory.Create(),
+            Mock.Of<ILogger<BrokerService>>());
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            service.ActivateAsync(broker.Id));
+    }
+
+    [Fact]
+    public async Task DeactivateAsync_WhenNotFound_Throws()
+    {
+        var unitOfWork = new Mock<IUnitOfWork>();
+        unitOfWork.Setup(x => x.Brokers.GetByIdAsync(It.IsAny<Guid>()))
+            .ReturnsAsync((Broker?)null);
+
+        var service = new BrokerService(
+            unitOfWork.Object,
+            MapperFactory.Create(),
+            Mock.Of<ILogger<BrokerService>>());
+
+        await Assert.ThrowsAsync<NotFoundException>(() =>
+            service.DeactivateAsync(Guid.NewGuid()));
+    }
+
+    [Fact]
+    public async Task DeactivateAsync_WhenAlreadyInactive_Throws()
+    {
+        var broker = new Broker
+        {
+            Id = Guid.NewGuid(),
+            BrokerCode = "BR-01",
+            Name = "Test Broker",
+            Status = BrokerStatus.Inactive
+        };
+
+        var unitOfWork = new Mock<IUnitOfWork>();
+        unitOfWork.Setup(x => x.Brokers.GetByIdAsync(broker.Id))
+            .ReturnsAsync(broker);
+
+        var service = new BrokerService(
+            unitOfWork.Object,
+            MapperFactory.Create(),
+            Mock.Of<ILogger<BrokerService>>());
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            service.DeactivateAsync(broker.Id));
+    }
+
+    [Fact]
+    public async Task DeactivateAsync_WhenSaveFails_Throws()
+    {
+        var broker = new Broker
+        {
+            Id = Guid.NewGuid(),
+            BrokerCode = "BR-01",
+            Name = "Test Broker",
+            Status = BrokerStatus.Active
+        };
+
+        var unitOfWork = new Mock<IUnitOfWork>();
+        unitOfWork.Setup(x => x.Brokers.GetByIdAsync(broker.Id))
+            .ReturnsAsync(broker);
+        unitOfWork.Setup(x => x.SaveChangesAsync())
+            .ReturnsAsync(0);
+
+        var service = new BrokerService(
+            unitOfWork.Object,
+            MapperFactory.Create(),
+            Mock.Of<ILogger<BrokerService>>());
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            service.DeactivateAsync(broker.Id));
+    }
 }
