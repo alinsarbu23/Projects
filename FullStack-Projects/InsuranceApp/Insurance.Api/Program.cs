@@ -11,7 +11,6 @@ using Insurance.Infrastructure.AuthService;
 using Insurance.Infrastructure.Identity;
 using Insurance.Infrastructure.Mappers;
 using Insurance.Infrastructure.Repositories;
-using Insurance.Infrastructure.Seed;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -184,14 +183,25 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-await DatabaseSeeder.SeedAsync(app.Services);
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<InsuranceDbContext>();
+    db.Database.Migrate();
+}
+
+
+//await DatabaseSeeder.SeedAsync(app.Services);
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI();
+//}
+
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 if (!app.Environment.IsEnvironment("Testing"))
 {

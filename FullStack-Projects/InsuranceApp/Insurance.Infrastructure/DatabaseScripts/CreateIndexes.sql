@@ -1,5 +1,4 @@
-﻿USE InsuranceDb;
-GO
+﻿
 
 CREATE UNIQUE INDEX UX_ClientTypes_Code ON ClientTypes(Code);
 GO

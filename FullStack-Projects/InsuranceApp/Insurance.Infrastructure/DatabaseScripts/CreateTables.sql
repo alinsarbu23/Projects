@@ -1,6 +1,4 @@
-﻿USE InsuranceDb;
-GO
-
+﻿
 IF OBJECT_ID('Policies', 'U') IS NOT NULL DROP TABLE Policies;
 IF OBJECT_ID('RiskFactorConfigurations', 'U') IS NOT NULL DROP TABLE RiskFactorConfigurations;
 IF OBJECT_ID('FeeConfigurations', 'U') IS NOT NULL DROP TABLE FeeConfigurations;
