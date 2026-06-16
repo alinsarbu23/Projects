@@ -1,6 +1,6 @@
 # Project Collection
 
-This repository contains a variety of projects representing implementations of different algorithms, mobile and desktop applications developed using popular IDEs such as **Visual Studio** and **IntelliJ**. The projects utilize programming languages like **Java** and **C#**, with data storage, management, and handling through databases such as **MySQL** and **PostgreSQL**.
+This repository contains a collection of academic and personal projects developed using **Java**, **C#**, and **Python**. The projects include desktop applications, algorithm implementations, database-driven systems, and machine learning models created throughout my studies and personal learning journey.
 
 ---
 
@@ -24,8 +24,8 @@ This repository contains a variety of projects representing implementations of d
 6. **🎮 Other Games and Mini Projects**  
    A collection of pre-implemented games and small-scale projects, showcasing different programming techniques and algorithm implementations.
 
- 7. **CNN Model for Image Classification**
-    This project implements a Convolutional Neural Network (CNN) for image classification. It uses a dataset of images for training the model, which classifies the images into predefined categories
+7. **🧠 CNN Model for Image Classification**
+   Implementation of a Convolutional Neural Network (CNN) using Python for image classification tasks. The model is trained on image datasets and predicts predefined categories.
 ---
 
 ## 🛠 Technologies Used
@@ -33,8 +33,23 @@ This repository contains a variety of projects representing implementations of d
 - **Programming Languages:** Java, C#, Python
 - **IDEs:** Visual Studio, IntelliJ, Jupyter Notebook
 - **Databases:** MySQL, PostgreSQL, SQLite
-- **Concepts:** CRUD operations, Graph Algorithms (DFS, Topological Sorting), UI/UX design, Deep Learning (CNN, Image Classification)
+- **Concepts:** CRUD Operations, Data Structures, Graph Algorithms (DFS, Topological Sorting), UI/UX Design, Machine Learning, Deep Learning (CNN)
 
 ---
 
+## 📚 Topics Covered
+
+- Object-Oriented Programming
+- CRUD Applications
+- Database Design
+- Data Structures and Algorithms
+- Graph Algorithms
+- Desktop Application Development
+- Machine Learning
+- Deep Learning
+
 ## 🚀 Getting Started
+
+## 📄 License
+
+This project is licensed under the MIT License. See the LICENSE file for details.
