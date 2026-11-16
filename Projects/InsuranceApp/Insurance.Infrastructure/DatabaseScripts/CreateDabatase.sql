@@ -1,0 +1,12 @@
+﻿USE master;
+GO
+
+IF EXISTS (SELECT 1 FROM sys.databases WHERE name = 'InsuranceDb')
+BEGIN
+    ALTER DATABASE InsuranceDb SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+    DROP DATABASE InsuranceDb;
+END
+GO
+
+CREATE DATABASE InsuranceDb;
+GO

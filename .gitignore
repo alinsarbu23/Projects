@@ -1,0 +1,22 @@
+# Visual Studio
+.vs/
+.vscode/
+*.user
+*.suo
+
+# Build outputs
+**/bin/
+**/obj/
+**/TestResults/
+
+# Temporary files
+*.tmp
+*.log
+
+# Secrets and local configuration
+**/appsettings.Development.json
+**/appsettings.Testing.json
+**/appsettings.Local.json
+**/secrets.json
+.env
+.env.*
