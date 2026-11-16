@@ -1,5 +1,4 @@
-﻿USE InsuranceDb;
-GO
+﻿
 
 ALTER TABLE Counties
 ADD CONSTRAINT FK_Counties_Countries

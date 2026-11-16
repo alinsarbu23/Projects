@@ -8,11 +8,11 @@ public static class MapperFactory
 {
     public static IMapper Create()
     {
-        var config = new MapperConfiguration(cfg =>
+        var config = new MapperConfiguration((cfg) =>
         {
             cfg.AddProfile<DtoMapperConfig>();
             cfg.AddProfile<DaoMapperConfig>();
-        });
+        }, null);
 
         return config.CreateMapper();
     }

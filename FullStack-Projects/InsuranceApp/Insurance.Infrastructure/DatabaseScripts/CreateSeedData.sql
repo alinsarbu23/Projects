@@ -1,5 +1,4 @@
-﻿USE InsuranceDb;
-GO
+﻿
 
 DELETE FROM Policies;
 DELETE FROM Buildings;
